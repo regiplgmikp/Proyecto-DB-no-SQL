@@ -1,6 +1,6 @@
 from cassandra.cluster import Cluster # type: ignore
 from pymongo import MongoClient # type: ignore
-import model
+import models.model as model
 import os
 
 # Read env vars releated to Cassandra App
@@ -25,13 +25,3 @@ if __name__ == "__main__":
     mongo_db = connect_mongodb()
     print("Conexión establecida con Cassandra y MongoDB")
 
-    
-    # Para llenar la base de datos
-    # users_data = [
-    #     {
-    #         "name": "Jaime",
-    #         "edad": "20"
-    #     }
-    # ]
-    # mongo_db["users"].insert_many(users_data)
-    # print("Datos insertados en MongoDB")
