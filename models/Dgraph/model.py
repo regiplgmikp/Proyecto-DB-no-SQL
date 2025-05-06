@@ -158,3 +158,54 @@ def create_data(client):
     finally:
         txn.discard()
     print("Datos cargados exitosamente en DGraph.")
+
+# ---------------------------------------------------------------------------------------
+
+# 4. Consultas
+
+def print_json(res):
+    print(json.dumps(json.loads(res.json), indent=2, ensure_ascii=False))
+
+# 4.1 Mostrar agente por empresa
+def search_agentes_by_empresa(client, empresa_id):
+    query = """
+    query all($empresa_id: string) {
+      all(func: has(TRABAJA)) @filter(eq(TRABAJA, $empresa_id)) {
+        idAgente
+        nombreAgente
+      }
+    }
+    """
+    variables = {'$empresa_id': empresa_id}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_json(res)
+
+# 4.2 Mostrar clientes por empresa
+def search_clientes_by_empresa(client, empresa_id):
+    query = """
+    query all($empresa_id: string) {
+      all(func: has(AFILIADO_A)) @filter(eq(AFILIADO_A, $empresa_id)) {
+        idCliente
+        nombreCliente
+      }
+    }
+    """
+    variables = {'$empresa_id': empresa_id}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_json(res)
+
+# 4.3 Mostrar cliente por ticket
+def search_cliente_by_ticket(client, ticket_id):
+    query = """
+    query all($ticket_id: string) {
+      all(func: has(LE_CORRESPONDE)) @filter(eq(LE_CORRESPONDE, $ticket_id)) {
+        idCliente
+        nombreCliente
+      }
+    }
+    """
+    variables = {'$ticket_id': ticket_id}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_json(res)
+
+# 4.4 Mostrar tickets por empresa
