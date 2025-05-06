@@ -208,4 +208,4 @@ def search_cliente_by_ticket(client, ticket_id):
     res = client.txn(read_only=True).query(query, variables=variables)
     print_json(res)
 
-# 4.4 Mostrar tickets por empresa
+# 4.4 Mostrar tickets por empresa :)
