@@ -1,101 +1,101 @@
-idTicket, tipoProblema, descripción
-6ba7b810-9dad-11d1-80b4-00c04fd430c1,2,"Optimización de base de datos por lentitud en facturación"
-6ba7b811-9dad-11d1-80b4-00c04fd430c2,1,"Restablecimiento de contraseña de acceso"
-6ba7b812-9dad-11d1-80b4-00c04fd430c3,8,"Cliente no proporcionó información requerida"
-6ba7b813-9dad-11d1-80b4-00c04fd430c4,2,"Actualización de software para módulo de reportes"
-6ba7b814-9dad-11d1-80b4-00c04fd430c5,8,"Requerimiento fuera de alcance del contrato"
-6ba7b815-9dad-11d1-80b4-00c04fd430c6,6,"Actualización de VPN para conexión remota"
-6ba7b816-9dad-11d1-80b4-00c04fd430c7,4,"Configuración de impresora en red corporativa"
-6ba7b817-9dad-11d1-80b4-00c04fd430c8,8,"Cliente agresivo - Escalado a supervisor"
-6ba7b818-9dad-11d1-80b4-00c04fd430c9,3,"Migración de datos a nueva plataforma"
-6ba7b819-9dad-11d1-80b4-00c04fd430d0,2,"Investigación de integración con API"
-6ba7b820-9dad-11d1-80b4-00c04fd430d1,5,"Recuperación de archivos eliminados"
-6ba7b821-9dad-11d1-80b4-00c04fd430d2,8,"Cliente no envió datos necesarios"
-6ba7b822-9dad-11d1-80b4-00c04fd430d3,3,"Actualización de seguridad en estación de trabajo"
-6ba7b823-9dad-11d1-80b4-00c04fd430d4,8,"Capacitación en módulo contable"
-6ba7b824-9dad-11d1-80b4-00c04fd430d5,8,"Esperando aprobación de presupuesto"
-6ba7b825-9dad-11d1-80b4-00c04fd430d6,4,"Reemplazo de equipo por daño eléctrico"
-6ba7b826-9dad-11d1-80b4-00c04fd430d7,6,"Configuración de correo en dispositivo móvil"
-6ba7b827-9dad-11d1-80b4-00c04fd430d8,8,"Cliente insatisfecho con tiempo de respuesta"
-6ba7b828-9dad-11d1-80b4-00c04fd430d9,3,"Instalación de software especializado"
-6ba7b829-9dad-11d1-80b4-00c04fd430e0,2,"Monitoreo de problema intermitente en servidor"
-6ba7b830-9dad-11d1-80b4-00c04fd430e1,5,"Recuperación de datos de disco duro"
-6ba7b831-9dad-11d1-80b4-00c04fd430e2,3,"Actualización de licencias corporativas"
-6ba7b832-9dad-11d1-80b4-00c04fd430e3,2,"Esperando repuesto para reparación"
-6ba7b833-9dad-11d1-80b4-00c04fd430e4,2,"Reinicio de servicio en la nube"
-6ba7b834-9dad-11d1-80b4-00c04fd430e5,8,"Cliente no confirmó solución implementada"
-6ba7b835-9dad-11d1-80b4-00c04fd430e6,3,"Migración a nuevo sistema operativo"
-6ba7b836-9dad-11d1-80b4-00c04fd430e7,7,"Configuración de firewall para nuevo departamento"
-6ba7b837-9dad-11d1-80b4-00c04fd430e8,2,"Análisis de integración con sistemas legacy"
-6ba7b838-9dad-11d1-80b4-00c04fd430e9,4,"Reemplazo de batería en UPS de servidor"
-6ba7b839-9dad-11d1-80b4-00c04fd430f0,2,"Cliente reportó nuevo error post-solución"
-6ba7b840-9dad-11d1-80b4-00c04fd430f1,8,"Capacitación en seguridad informática"
-6ba7b841-9dad-11d1-80b4-00c04fd430f2,8,"Esperando autorización para cambios"
-6ba7b842-9dad-11d1-80b4-00c04fd430f3,2,"Optimización de consultas SQL"
-6ba7b843-9dad-11d1-80b4-00c04fd430f4,2,"Solución a problema de sincronización móvil"
-6ba7b844-9dad-11d1-80b4-00c04fd430f5,8,"Cliente rechazó solución propuesta"
-6ba7b845-9dad-11d1-80b4-00c04fd430f6,4,"Instalación de puntos de acceso WiFi"
-6ba7b846-9dad-11d1-80b4-00c04fd430f7,2,"Análisis de integración con sistema de terceros"
-6ba7b847-9dad-11d1-80b4-00c04fd430f8,7,"Actualización de política de contraseñas"
-6ba7b848-9dad-11d1-80b4-00c04fd430f9,5,"Respaldo de información crítica"
-6ba7b849-9dad-11d1-80b4-00c04fd43100,8,"Cliente reporta problema persistente"
-6ba7b850-9dad-11d1-80b4-00c04fd43101,4,"Configuración de impresora multifuncional"
-6ba7b851-9dad-11d1-80b4-00c04fd43102,8,"Esperando llegada de equipo nuevo"
-6ba7b852-9dad-11d1-80b4-00c04fd43103,4,"Solución a problema de visualización 4K"
-6ba7b853-9dad-11d1-80b4-00c04fd43104,8,"Cliente no sigue instrucciones"
-6ba7b854-9dad-11d1-80b4-00c04fd43105,6,"Migración a plataforma de correo nueva"
-6ba7b855-9dad-11d1-80b4-00c04fd43106,2,"Investigación de driver de impresora defectuoso"
-6ba7b856-9dad-11d1-80b4-00c04fd43107,4,"Actualización de firmware en switches"
-6ba7b857-9dad-11d1-80b4-00c04fd43108,8,"Solicitud fuera del alcance del contrato"
-6ba7b858-9dad-11d1-80b4-00c04fd43109,6,"Configuración de VPN para teletrabajo"
-6ba7b859-9dad-11d1-80b4-00c04fd43110,8,"Esperando confirmación del cliente"
-6ba7b860-9dad-11d1-80b4-00c04fd43111,8,"Ticket generado automáticamente por sistema"
-6ba7b861-9dad-11d1-80b4-00c04fd43112,2,"Error en generación de reportes PDF"
-6ba7b862-9dad-11d1-80b4-00c04fd43113,3,"Actualización de driver gráfico"
-6ba7b863-9dad-11d1-80b4-00c04fd43114,8,"Soporte para nuevo departamento"
-6ba7b864-9dad-11d1-80b4-00c04fd43115,6,"Problema de sincronización en la nube"
-6ba7b865-9dad-11d1-80b4-00c04fd43116,4,"Reemplazo de memoria RAM defectuosa"
-6ba7b866-9dad-11d1-80b4-00c04fd43117,2,"Error 404 en página interna"
-6ba7b867-9dad-11d1-80b4-00c04fd43118,4,"Configuración de impresora en red"
-6ba7b868-9dad-11d1-80b4-00c04fd43119,3,"Solución a problema de audio"
-6ba7b869-9dad-11d1-80b4-00c04fd43120,8,"Solicitud de capacitación en software nuevo"
-6ba7b870-9dad-11d1-80b4-00c04fd43121,6,"Problema intermitente con VPN"
-6ba7b871-9dad-11d1-80b4-00c04fd43122,7,"Actualización de certificado SSL"
-6ba7b872-9dad-11d1-80b4-00c04fd43123,2,"Error en acceso a base de datos secundaria"
-6ba7b873-9dad-11d1-80b4-00c04fd43124,8,"Asistencia remota urgente requerida"
-6ba7b874-9dad-11d1-80b4-00c04fd43125,7,"Restauración de acceso a carpeta compartida"
-6ba7b875-9dad-11d1-80b4-00c04fd43126,8,"Reporte de phishing por empleado"
-6ba7b876-9dad-11d1-80b4-00c04fd43127,4,"Problema con scanner de documentos"
-6ba7b877-9dad-11d1-80b4-00c04fd43128,7,"Configuración de usuario en Active Directory"
-6ba7b878-9dad-11d1-80b4-00c04fd43129,8,"Solicitud de software especializado"
-6ba7b879-9dad-11d1-80b4-00c04fd43130,6,"Error en conexión a impresora de red"
-6ba7b880-9dad-11d1-80b4-00c04fd43131,1,"Solución a problema de doble autenticación"
-6ba7b881-9dad-11d1-80b4-00c04fd43132,2,"Caída momentánea de servidor de archivos"
-6ba7b882-9dad-11d1-80b4-00c04fd43133,2,"Cliente no puede acceder a aplicación web"
-6ba7b883-9dad-11d1-80b4-00c04fd43134,3,"Actualización de Java en estaciones críticas"
-6ba7b884-9dad-11d1-80b4-00c04fd43135,8,"Problema con firma digital en documentos"
-6ba7b885-9dad-11d1-80b4-00c04fd43136,6,"Error en sincronización de calendario Outlook"
-6ba7b886-9dad-11d1-80b4-00c04fd43137,4,"Reemplazo de teclado defectuoso"
-6ba7b887-9dad-11d1-80b4-00c04fd43138,8,"Solicitud de aumento de almacenamiento en nube"
-6ba7b888-9dad-11d1-80b4-00c04fd43139,2,"Problema con macro compleja de Excel"
-6ba7b889-9dad-11d1-80b4-00c04fd43140,4,"Configuración de punto de acceso inalámbrico"
-6ba7b890-9dad-11d1-80b4-00c04fd43141,2,"Error al imprimir desde aplicación contable"
-6ba7b891-9dad-11d1-80b4-00c04fd43142,2,"Lentitud en aplicación ERP reportada"
-6ba7b892-9dad-11d1-80b4-00c04fd43143,2,"Solución a problema de conexión con BD"
-6ba7b893-9dad-11d1-80b4-00c04fd43144,8,"Solicitud de correos temporales"
-6ba7b894-9dad-11d1-80b4-00c04fd43145,2,"Error en generación de facturas electrónicas"
-6ba7b895-9dad-11d1-80b4-00c04fd43146,7,"Restablecimiento de acceso a usuario"
-6ba7b896-9dad-11d1-80b4-00c04fd43147,8,"Problema con certificado digital caducado"
-6ba7b897-9dad-11d1-80b4-00c04fd43148,2,"Cliente no puede visualizar archivos PDF"
-6ba7b898-9dad-11d1-80b4-00c04fd43149,5,"Actualización de sistema de respaldo"
-6ba7b899-9dad-11d1-80b4-00c04fd43150,2,"Error en integración con sistema de nómina"
-6ba7b900-9dad-11d1-80b4-00c04fd43151,4,"Problema con reconocimiento de huella digital"
-6ba7b901-9dad-11d1-80b4-00c04fd43152,4,"Configuración de servidor de impresión"
-6ba7b902-9dad-11d1-80b4-00c04fd43153,8,"Solicitud de software estadístico"
-6ba7b903-9dad-11d1-80b4-00c04fd43154,2,"Error en cálculo de reporte financiero"
-6ba7b904-9dad-11d1-80b4-00c04fd43155,5,"Migración de datos a nueva tabla"
-6ba7b905-9dad-11d1-80b4-00c04fd43156,8,"Problema con reconocimiento de voz"
-6ba7b906-9dad-11d1-80b4-00c04fd43157,2,"Error al exportar datos a CSV"
-6ba7b907-9dad-11d1-80b4-00c04fd43158,4,"Reparación de cableado de red"
-6ba7b908-9dad-11d1-80b4-00c04fd43159,8,"Solicitud de capacitación en ciberseguridad"
-6ba7b909-9dad-11d1-80b4-00c04fd43160,2,"Problema con actualización automática de Windows"
+idTicket,tipoProblema,descripción
+6ba7b810-9dad-11d1-80b4-00c04fd430c1,2,Optimización de base de datos por lentitud en facturación
+6ba7b811-9dad-11d1-80b4-00c04fd430c2,1,Restablecimiento de contraseña de acceso
+6ba7b812-9dad-11d1-80b4-00c04fd430c3,8,Cliente no proporcionó información requerida
+6ba7b813-9dad-11d1-80b4-00c04fd430c4,2,Actualización de software para módulo de reportes
+6ba7b814-9dad-11d1-80b4-00c04fd430c5,8,Requerimiento fuera de alcance del contrato
+6ba7b815-9dad-11d1-80b4-00c04fd430c6,6,Actualización de VPN para conexión remota
+6ba7b816-9dad-11d1-80b4-00c04fd430c7,4,Configuración de impresora en red corporativa
+6ba7b817-9dad-11d1-80b4-00c04fd430c8,8,Cliente agresivo - Escalado a supervisor
+6ba7b818-9dad-11d1-80b4-00c04fd430c9,3,Migración de datos a nueva plataforma
+6ba7b819-9dad-11d1-80b4-00c04fd430d0,2,Investigación de integración con API
+6ba7b820-9dad-11d1-80b4-00c04fd430d1,5,Recuperación de archivos eliminados
+6ba7b821-9dad-11d1-80b4-00c04fd430d2,8,Cliente no envió datos necesarios
+6ba7b822-9dad-11d1-80b4-00c04fd430d3,3,Actualización de seguridad en estación de trabajo
+6ba7b823-9dad-11d1-80b4-00c04fd430d4,8,Capacitación en módulo contable
+6ba7b824-9dad-11d1-80b4-00c04fd430d5,8,Esperando aprobación de presupuesto
+6ba7b825-9dad-11d1-80b4-00c04fd430d6,4,Reemplazo de equipo por daño eléctrico
+6ba7b826-9dad-11d1-80b4-00c04fd430d7,6,Configuración de correo en dispositivo móvil
+6ba7b827-9dad-11d1-80b4-00c04fd430d8,8,Cliente insatisfecho con tiempo de respuesta
+6ba7b828-9dad-11d1-80b4-00c04fd430d9,3,Instalación de software especializado
+6ba7b829-9dad-11d1-80b4-00c04fd430e0,2,Monitoreo de problema intermitente en servidor
+6ba7b830-9dad-11d1-80b4-00c04fd430e1,5,Recuperación de datos de disco duro
+6ba7b831-9dad-11d1-80b4-00c04fd430e2,3,Actualización de licencias corporativas
+6ba7b832-9dad-11d1-80b4-00c04fd430e3,2,Esperando repuesto para reparación
+6ba7b833-9dad-11d1-80b4-00c04fd430e4,2,Reinicio de servicio en la nube
+6ba7b834-9dad-11d1-80b4-00c04fd430e5,8,Cliente no confirmó solución implementada
+6ba7b835-9dad-11d1-80b4-00c04fd430e6,3,Migración a nuevo sistema operativo
+6ba7b836-9dad-11d1-80b4-00c04fd430e7,7,Configuración de firewall para nuevo departamento
+6ba7b837-9dad-11d1-80b4-00c04fd430e8,2,Análisis de integración con sistemas legacy
+6ba7b838-9dad-11d1-80b4-00c04fd430e9,4,Reemplazo de batería en UPS de servidor
+6ba7b839-9dad-11d1-80b4-00c04fd430f0,2,Cliente reportó nuevo error post-solución
+6ba7b840-9dad-11d1-80b4-00c04fd430f1,8,Capacitación en seguridad informática
+6ba7b841-9dad-11d1-80b4-00c04fd430f2,8,Esperando autorización para cambios
+6ba7b842-9dad-11d1-80b4-00c04fd430f3,2,Optimización de consultas SQL
+6ba7b843-9dad-11d1-80b4-00c04fd430f4,2,Solución a problema de sincronización móvil
+6ba7b844-9dad-11d1-80b4-00c04fd430f5,8,Cliente rechazó solución propuesta
+6ba7b845-9dad-11d1-80b4-00c04fd430f6,4,Instalación de puntos de acceso WiFi
+6ba7b846-9dad-11d1-80b4-00c04fd430f7,2,Análisis de integración con sistema de terceros
+6ba7b847-9dad-11d1-80b4-00c04fd430f8,7,Actualización de política de contraseñas
+6ba7b848-9dad-11d1-80b4-00c04fd430f9,5,Respaldo de información crítica
+6ba7b849-9dad-11d1-80b4-00c04fd43100,8,Cliente reporta problema persistente
+6ba7b850-9dad-11d1-80b4-00c04fd43101,4,Configuración de impresora multifuncional
+6ba7b851-9dad-11d1-80b4-00c04fd43102,8,Esperando llegada de equipo nuevo
+6ba7b852-9dad-11d1-80b4-00c04fd43103,4,Solución a problema de visualización 4K
+6ba7b853-9dad-11d1-80b4-00c04fd43104,8,Cliente no sigue instrucciones
+6ba7b854-9dad-11d1-80b4-00c04fd43105,6,Migración a plataforma de correo nueva
+6ba7b855-9dad-11d1-80b4-00c04fd43106,2,Investigación de driver de impresora defectuoso
+6ba7b856-9dad-11d1-80b4-00c04fd43107,4,Actualización de firmware en switches
+6ba7b857-9dad-11d1-80b4-00c04fd43108,8,Solicitud fuera del alcance del contrato
+6ba7b858-9dad-11d1-80b4-00c04fd43109,6,Configuración de VPN para teletrabajo
+6ba7b859-9dad-11d1-80b4-00c04fd43110,8,Esperando confirmación del cliente
+6ba7b860-9dad-11d1-80b4-00c04fd43111,8,Ticket generado automáticamente por sistema
+6ba7b861-9dad-11d1-80b4-00c04fd43112,2,Error en generación de reportes PDF
+6ba7b862-9dad-11d1-80b4-00c04fd43113,3,Actualización de driver gráfico
+6ba7b863-9dad-11d1-80b4-00c04fd43114,8,Soporte para nuevo departamento
+6ba7b864-9dad-11d1-80b4-00c04fd43115,6,Problema de sincronización en la nube
+6ba7b865-9dad-11d1-80b4-00c04fd43116,4,Reemplazo de memoria RAM defectuosa
+6ba7b866-9dad-11d1-80b4-00c04fd43117,2,Error 404 en página interna
+6ba7b867-9dad-11d1-80b4-00c04fd43118,4,Configuración de impresora en red
+6ba7b868-9dad-11d1-80b4-00c04fd43119,3,Solución a problema de audio
+6ba7b869-9dad-11d1-80b4-00c04fd43120,8,Solicitud de capacitación en software nuevo
+6ba7b870-9dad-11d1-80b4-00c04fd43121,6,Problema intermitente con VPN
+6ba7b871-9dad-11d1-80b4-00c04fd43122,7,Actualización de certificado SSL
+6ba7b872-9dad-11d1-80b4-00c04fd43123,2,Error en acceso a base de datos secundaria
+6ba7b873-9dad-11d1-80b4-00c04fd43124,8,Asistencia remota urgente requerida
+6ba7b874-9dad-11d1-80b4-00c04fd43125,7,Restauración de acceso a carpeta compartida
+6ba7b875-9dad-11d1-80b4-00c04fd43126,8,Reporte de phishing por empleado
+6ba7b876-9dad-11d1-80b4-00c04fd43127,4,Problema con scanner de documentos
+6ba7b877-9dad-11d1-80b4-00c04fd43128,7,Configuración de usuario en Active Directory
+6ba7b878-9dad-11d1-80b4-00c04fd43129,8,Solicitud de software especializado
+6ba7b879-9dad-11d1-80b4-00c04fd43130,6,Error en conexión a impresora de red
+6ba7b880-9dad-11d1-80b4-00c04fd43131,1,Solución a problema de doble autenticación
+6ba7b881-9dad-11d1-80b4-00c04fd43132,2,Caída momentánea de servidor de archivos
+6ba7b882-9dad-11d1-80b4-00c04fd43133,2,Cliente no puede acceder a aplicación web
+6ba7b883-9dad-11d1-80b4-00c04fd43134,3,Actualización de Java en estaciones críticas
+6ba7b884-9dad-11d1-80b4-00c04fd43135,8,Problema con firma digital en documentos
+6ba7b885-9dad-11d1-80b4-00c04fd43136,6,Error en sincronización de calendario Outlook
+6ba7b886-9dad-11d1-80b4-00c04fd43137,4,Reemplazo de teclado defectuoso
+6ba7b887-9dad-11d1-80b4-00c04fd43138,8,Solicitud de aumento de almacenamiento en nube
+6ba7b888-9dad-11d1-80b4-00c04fd43139,2,Problema con macro compleja de Excel
+6ba7b889-9dad-11d1-80b4-00c04fd43140,4,Configuración de punto de acceso inalámbrico
+6ba7b890-9dad-11d1-80b4-00c04fd43141,2,Error al imprimir desde aplicación contable
+6ba7b891-9dad-11d1-80b4-00c04fd43142,2,Lentitud en aplicación ERP reportada
+6ba7b892-9dad-11d1-80b4-00c04fd43143,2,Solución a problema de conexión con BD
+6ba7b893-9dad-11d1-80b4-00c04fd43144,8,Solicitud de correos temporales
+6ba7b894-9dad-11d1-80b4-00c04fd43145,2,Error en generación de facturas electrónicas
+6ba7b895-9dad-11d1-80b4-00c04fd43146,7,Restablecimiento de acceso a usuario
+6ba7b896-9dad-11d1-80b4-00c04fd43147,8,Problema con certificado digital caducado
+6ba7b897-9dad-11d1-80b4-00c04fd43148,2,Cliente no puede visualizar archivos PDF
+6ba7b898-9dad-11d1-80b4-00c04fd43149,5,Actualización de sistema de respaldo
+6ba7b899-9dad-11d1-80b4-00c04fd43150,2,Error en integración con sistema de nómina
+6ba7b900-9dad-11d1-80b4-00c04fd43151,4,Problema con reconocimiento de huella digital
+6ba7b901-9dad-11d1-80b4-00c04fd43152,4,Configuración de servidor de impresión
+6ba7b902-9dad-11d1-80b4-00c04fd43153,8,Solicitud de software estadístico
+6ba7b903-9dad-11d1-80b4-00c04fd43154,2,Error en cálculo de reporte financiero
+6ba7b904-9dad-11d1-80b4-00c04fd43155,5,Migración de datos a nueva tabla
+6ba7b905-9dad-11d1-80b4-00c04fd43156,8,Problema con reconocimiento de voz
+6ba7b906-9dad-11d1-80b4-00c04fd43157,2,Error al exportar datos a CSV
+6ba7b907-9dad-11d1-80b4-00c04fd43158,4,Reparación de cableado de red
+6ba7b908-9dad-11d1-80b4-00c04fd43159,8,Solicitud de capacitación en ciberseguridad
+6ba7b909-9dad-11d1-80b4-00c04fd43160,2,Problema con actualización automática de Windows
