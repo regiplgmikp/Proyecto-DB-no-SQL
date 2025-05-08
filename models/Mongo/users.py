@@ -1,6 +1,6 @@
 # Poblado de usuarios
 
-import conection
+import models.conection as conection
 
 users_types = {
     "name": str,
