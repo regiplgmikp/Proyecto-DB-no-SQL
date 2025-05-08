@@ -1,4 +1,4 @@
-idCliente, nombre, teléfono, correo, estadoCuenta, idEmpresa
+idCliente,nombre,teléfono,correo,estadoCuenta, idEmpresa
 550e8400-e29b-41d4-a716-446655440000,Alejandro Mendoza,5551122334,alejandro.mendoza@gmail.com,1,9f8e7d6c-5b4a-3c2b-1a0b-9c8d7e6f5a4b
 550e8400-e29b-41d4-a716-446655440001,Beatriz Nuñez,5552233445,beatriz.nunez@hotmail.com,1,9f8e7d6c-5b4a-3c2b-1a0b-9c8d7e6f5a4b
 550e8400-e29b-41d4-a716-446655440002,César Jiménez,5553344556,cesar.jimenez@gmail.com,2,8e7d6c5b-4a3c-2b1a-0b9c-8d7e6f5a4b3c
