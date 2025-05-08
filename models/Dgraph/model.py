@@ -13,69 +13,69 @@ sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 
 def set_schema(client):
     schema = """
-
     type Empresa {
-            idEmpresa
-            nombreEmpresa
-            ubicacion
+        idEmpresa
+        nombreEmpresa
+        ubicacion
+        
+        DA_SERVICIO: [Ticket]
+        TIENE: [Agente]
+        GUARDA: [Ticket]
+    }
 
-            DA_SERVICIO
-            TIENE
-            GUARDA
-        }
+    type Agente {
+        idAgente
+        nombreAgente
+        
+        TRABAJA: Empresa
+        SOLUCIONA: [Ticket]
+    }
 
-        type Agente {
-            idAgente
-            nombreAgente
+    type Cliente {
+        idCliente
+        nombreCliente
+        
+        AFILIADO_A: Empresa
+        ABRE: [Ticket]
+    }
 
-            TRABAJA
-        }
+    type Ticket {
+        idTicket
+        tipoProblema
+        descripcion
+        
+        SOLUCIONA: Agente
+        LE_CORRESPONDE: Cliente
+        PERTENECE: Empresa
+        ABRE: Cliente
+    }
 
-        type Cliente {
-            idCliente
-            nombreCliente
+    idEmpresa: string @index(exact) @upsert .
+    nombreEmpresa: string @index(term) .
+    ubicacion: geo .
 
-            AFILIADO_A
-            ABRE
-        }
+    idAgente: string @index(exact) @upsert .
+    nombreAgente: string @index(term) .
 
-        type Ticket {
-            idTicket
-            tipoProblema
-            descripcion
+    idCliente: string @index(exact) @upsert .
+    nombreCliente: string @index(term) .
 
-            SOLUCIONA
-            LE_CORRESPONDE
-            PERTENECE_EMPRESA
-            PERTENECE_CLIENTE
-        }
+    idTicket: string @index(exact) @upsert .
+    tipoProblema: int .
+    descripcion: string @index(fulltext) .
 
-        idEmpresa: string @index(exact) @upsert .
-        nombreEmpresa: string @index(term) .
-        ubicacion: geo .
-
-        idAgente: string @index(exact) @upsert .
-        nombreAgente: string @index(term) .
-
-        idCliente: string @index(exact) @upsert .
-        nombreCliente: string @index(term) .
-
-        idTicket: string @index(exact) @upsert .
-        TipoProblema: int .
-        descripcion: string @index(fulltext) .
-
-        DA_SERVICIO: [uid] @reverse .
-        TIENE: [uid] @reverse .
-        TRABAJA: uid @reverse .
-        SOLUCIONA: uid @reverse .
-        LE_CORRESPONDE: uid @reverse .
-        ABRE: uid @reverse .
-        PERTENECE_EMPRESA: uid @reverse .
-        PERTENECE_CLIENTE: uid @reverse .
-        AFILIADO_A: uid @reverse .
+    DA_SERVICIO: [uid] @reverse .
+    TIENE: [uid] @reverse .
+    TRABAJA: uid @reverse .
+    SOLUCIONA: [uid] @reverse .
+    LE_CORRESPONDE: uid @reverse .
+    ABRE: [uid] @reverse .
+    PERTENECE: uid @reverse .
+    AFILIADO_A: uid @reverse .
+    GUARDA: [uid] @reverse .
     """
     op = pydgraph.Operation(schema=schema)
-    client.alter(op)
+    client.alter(op) 
 # ---------------------------------------------------------------------------------------
 
 # 3- Carga de datos
@@ -86,18 +86,20 @@ def create_data(client):
 
     try:
         #Carga de datos de la empresa
-        with open('data/empresas.csv', 'r', encoding='utf-8') as file:
+        ith open('data/empresas.csv', 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 empresa = {
+                    'uid': '_:{}'.format(row['idEmpresa']),
                     'idEmpresa': row['idEmpresa'],
                     'nombreEmpresa': row['nombreEmpresa'],
                     'ubicacion': row['ubicacion']
                 }
-                empresa_uid = txn.mutate(set_obj=empresa, commit_now=True)
-                empresa_uids[empresa['idEmpresa']] = empresa_uid.get('uid')
-        txn.mutate(set_obj=empresas)
-        empresa_uids = get_existing_uids(client, "idEmpresa", [e['idEmpresa'] for e in empresas])
+                empresas.append(empresa)
+
+        response = txn.mutate(set_obj=empresas, commit_now=True)
+        for empresa in empresas:
+            empresa_uids[empresa['idEmpresa']] = response.uids.get(empresa['uid'][2:], '')
 
 
     agente_uids = {}
@@ -108,14 +110,16 @@ def create_data(client):
             reader = csv.DictReader(file)
             for row in reader:
                 agente = {
+                    'uid': '_:{}'.format(row['idAgente']),
                     'idAgente': row['idAgente'],
                     'nombreAgente': row['nombreAgente'],
-                    'TRABAJA': empresa_uids.get(row['empresa'])
+                    'TRABAJA': {'uid': empresa_uids.get(row['empresa'])}
                 }
-                agente_uid = txn.mutate(set_obj=agente, commit_now=True)
-                agente_uids[agente['idAgente']] = agente_uid.get('uid')
-        txn.mutate(set_obj=agentes)
-        agente_uids = get_existing_uids(client, "idAgente", [a['idAgente'] for a in agentes])
+                agentes.append(agente)
+
+        response = txn.mutate(set_obj=agentes, commit_now=True)
+        for agente in agentes:
+            agente_uids[agente['idAgente']] = response.uids.get(agente['uid'][2:], '')
 
     cliente_uids = {}
     txn = client.txn()
@@ -125,14 +129,16 @@ def create_data(client):
             reader = csv.DictReader(file)
             for row in reader:
                 cliente = {
+                    'uid': '_:{}'.format(row['idCliente']),
                     'idCliente': row['idCliente'],
                     'nombreCliente': row['nombreCliente'],
-                    'AFILIADO_A': empresa_uids.get(row['empresa'])
+                    'AFILIADO_A': {'uid': empresa_uids.get(row['empresa'])}
                 }
-                cliente_uid = txn.mutate(set_obj=cliente, commit_now=True)
-                cliente_uids[cliente['idCliente']] = cliente_uid.get('uid')
-        txn.mutate(set_obj=clientes)
-        cliente_uids = get_existing_uids(client, "idCliente", [c['idCliente'] for c in clientes])
+                clientes.append(cliente)
+
+        response = txn.mutate(set_obj=clientes, commit_now=True)
+        for cliente in clientes:
+            cliente_uids[cliente['idCliente']] = response.uids.get(cliente['uid'][2:], '')
 
     ticket_uids = {}
     txn = client.txn()
@@ -142,21 +148,46 @@ def create_data(client):
             reader = csv.DictReader(file)
             for row in reader:
                 ticket = {
+                    'uid': '_:{}'.format(row['idTicket']),
                     'idTicket': row['idTicket'],
                     'tipoProblema': int(row['tipoProblema']),
                     'descripcion': row['descripcion'],
-                    'SOLUCIONA': agente_uids.get(row['agente']),
-                    'LE_CORRESPONDE': cliente_uids.get(row['cliente']),
-                    'PERTENECE_EMPRESA': empresa_uids.get(row['empresa']),
-                    'PERTENECE_CLIENTE': cliente_uids.get(row['cliente'])
+                    'SOLUCIONA': {'uid': agente_uids.get(row['agente'])},
+                    'LE_CORRESPONDE': {'uid': cliente_uids.get(row['cliente'])},
+                    'PERTENECE': {'uid': empresa_uids.get(row['empresa'])},
+                    'ABRE': {'uid': cliente_uids.get(row['cliente'])}
                 }
-                ticket_uid = txn.mutate(set_obj=ticket, commit_now=True)
-                ticket_uids[ticket['idTicket']] = ticket_uid.get('uid')
-        txn.mutate(set_obj=tickets)
-        ticket_uids = get_existing_uids(client, "idTicket", [t['idTicket'] for t in tickets])
+                tickets.append(ticket)
+
+        response = txn.mutate(set_obj=tickets, commit_now=True)
+        for ticket in tickets:
+            ticket_uids[ticket['idTicket']] = response.uids.get(ticket['uid'][2:], '')
+        
+        # Cargar relaciones desde relaciones.csv
+        all_uids = {**empresa_uids, **agente_uids, **cliente_uids, **ticket_uids}
+
+        with open('data/relaciones.csv', 'r', encoding='utf-8') as file:
+            reader = csv.DictReader(file)
+            for row in reader:
+                origen_id = row['origen'].strip()
+                tipo_relacion = row['relacion'].strip()
+                destino_id = row['destino'].strip()
+
+                origen_uid = all_uids.get(origen_id)
+                destino_uid = all_uids.get(destino_id)
+
+                if origen_uid and destino_uid:
+                    relacion = {
+                        'uid': origen_uid,
+                        tipo_relacion: {'uid': destino_uid}
+                    }
+                    txn.mutate(set_obj=relacion, commit_now=True)
+                else:
+                    print(f"UIDs no encontrados: origen={origen_id}, destino={destino_id}")
 
     finally:
         txn.discard()
+
     print("Datos cargados exitosamente en DGraph.")
 
 # ---------------------------------------------------------------------------------------
