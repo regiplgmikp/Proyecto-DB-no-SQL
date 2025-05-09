@@ -2,6 +2,10 @@ from pydantic import BaseModel, Field, field_validator
 from uuid import UUID, uuid4
 from datetime import datetime
 import re
+from models.Utils.regularExpresions import (
+    correo_regex,
+    telefono_regex,
+)
 
 class AgenteValidationError(Exception):
     """Excepción personalizada para errores de validación de agentes"""
@@ -28,14 +32,14 @@ class Agente(BaseModel):
     @field_validator('correo')
     @classmethod
     def validar_formato_correo(cls, correo):
-        if not re.match(r'^[\w\.-]+@[\w\.-]+\.\w+$', correo):
+        if not re.match(correo_regex, correo):
             raise ValueError('Formato de correo electrónico inválido')
         return correo.lower()
 
     @field_validator('telefono')
     @classmethod
     def validar_telefono(cls, telefono):
-        if not re.match(r'^\d{10,15}$', telefono):  # Admite números internacionales
+        if not re.match(telefono_regex, telefono):  # Admite números internacionales
             raise ValueError('El teléfono debe contener solo números (10-15 dígitos)')
         return telefono
 
