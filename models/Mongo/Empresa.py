@@ -1,8 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 from uuid import UUID, uuid4
-from datetime import datetime
 import re
-from models.Utils.dictionaries import estadoEnEmpresa as estadoEnEmpresaDict
 from models.Utils.regularExpresions import (
     correo_regex,
     telefono_regex,
@@ -20,13 +18,6 @@ class Empresa(BaseModel):
     correo: str
     telefono: str
     direccion: str
-
-    @field_validator('nombre')
-    @classmethod
-    def validar_nombre_completo(cls, nombre):
-        if len(nombre.strip().split()) < 2:
-            raise ValueError('El nombre debe contener al menos nombre y apellido')
-        return nombre.title()
 
     @field_validator('correo')
     @classmethod
