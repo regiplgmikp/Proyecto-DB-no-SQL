@@ -2,6 +2,7 @@ from pydantic import BaseModel, Field, field_validator
 from uuid import UUID, uuid4
 from datetime import datetime
 import re
+from models.Utils.dictionaries import estadoEnEmpresa as estadoEnEmpresaDict
 from models.Utils.regularExpresions import (
     correo_regex,
     telefono_regex,
@@ -18,7 +19,7 @@ class Agente(BaseModel):
     nombre: str
     correo: str
     telefono: str
-    estadoEmpresa: int
+    estadoEnEmpresa: int
     idEmpresa: UUID
     fechaIngreso: datetime
 
@@ -43,7 +44,7 @@ class Agente(BaseModel):
             raise ValueError('El teléfono debe contener solo números (10-15 dígitos)')
         return telefono
 
-    @field_validator('estadoEmpresa')
+    @field_validator('estadoEnEmpresa')
     @classmethod
     def validar_estado(cls, estadoEmpresa):
         estados_validos = [1, 2, 3]
