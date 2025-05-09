@@ -110,7 +110,7 @@ def create_data(client):
             empresa_uids[row['idEmpresa']] = response.uids.get(row['uid'][2:], '')
     finally:
         txn.discard()
-    print("👌 Empresas cargadas con éxito.")
+    print("👌 Empresas cargadas con éxito en Dgraph.")
 
     # 2️ AGENTES
     agente_uids = {}
@@ -133,7 +133,7 @@ def create_data(client):
             agente_uids[row['idAgente']] = response.uids.get(row['uid'][2:], '')
     finally:
         txn.discard()
-    print("👌 Agentes cargados con éxito.")
+    print("👌 Agentes cargados con éxito en Dgraph.")
 
     # 3️ CLIENTES
     cliente_uids = {}
@@ -156,7 +156,7 @@ def create_data(client):
             cliente_uids[row['idCliente']] = response.uids.get(row['uid'][2:], '')
     finally:
         txn.discard()
-    print("👌 Clientes cargados con éxito.")
+    print("👌 Clientes cargados con éxito en Dgraph.")
 
     # 4️ TICKETS
     ticket_uids = {}
@@ -180,7 +180,7 @@ def create_data(client):
             ticket_uids[row['idTicket']] = response.uids.get(row['uid'][2:], '')
     finally:
         txn.discard()
-    print("👌 Tickets cargados con éxito.")
+    print("👌 Tickets cargados con éxito en Dgraph.")
 
     # 5️ RELACIONES
     txn = client.txn()
@@ -213,4 +213,6 @@ def create_data(client):
     finally:
         txn.discard()
 
-    
+#---------------------------------------------------------------------------------------------#
+
+#========================================== QUERYS ===========================================#
