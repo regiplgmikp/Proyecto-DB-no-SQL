@@ -18,7 +18,7 @@ def populate_agentes(csv_path: str):
                     'nombre': row['nombre'],
                     'correo': row['correo'],
                     'telefono': row['telefono'],
-                    'estadoEmpresa': int(row['estadoEmpresa']),
+                    'estadoEnEmpresa': int(row['estadoEnEmpresa']),
                     'idEmpresa': UUID(row['idEmpresa']),
                     'fechaIngreso': datetime.strptime(
                         row['fechaIngreso'], 
@@ -44,6 +44,6 @@ def populate_agentes(csv_path: str):
         if errores:
             print("\nDetalle de errores:")
             for error in errores[:3]:
-                print(f"Fila {error['fila']}: {error['error']}")
+                print(f"Fila {error['fila']}\nError: {error['error']}")
                 print(f"Datos: {error['datos']}\n")
 

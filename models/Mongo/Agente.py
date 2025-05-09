@@ -46,11 +46,11 @@ class Agente(BaseModel):
 
     @field_validator('estadoEnEmpresa')
     @classmethod
-    def validar_estado(cls, estadoEmpresa):
-        estados_validos = [1, 2, 3]
-        if estadoEmpresa not in estados_validos:
-            raise ValueError(f'Estado inválido. Opciones válidas: {", ".join(estados_validos)}')
-        return estadoEmpresa
+    def validar_estado(cls, estadoEnEmpresa):
+        estados_validos = list(estadoEnEmpresaDict.keys())
+        if estadoEnEmpresa not in estados_validos:
+            raise ValueError(f'Estado inválido. estados válidos: {estados_validos}')
+        return estadoEnEmpresa
 
     @classmethod
     def crear_desde_dict(cls, data: dict):

@@ -13,7 +13,6 @@ db.agentes.create_index('idAgente', unique=True)
 def insertar_agente(agente):
     try:
         collection = db['agentes']
-
         agente = Agente.crear_desde_dict(agente)
         
         # Convertir UUIDs a Binary para MongoDB
@@ -23,4 +22,4 @@ def insertar_agente(agente):
         
         collection.insert_one(agente_dict)
     except Exception as e:
-        print(f"Error al insertar el agente: {e}")
+        raise e
