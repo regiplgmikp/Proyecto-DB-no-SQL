@@ -8,6 +8,9 @@ db = conection.connect_mongodb()
 if 'agentes' not in db.list_collection_names():
     db.create_collection('agentes')
 
+if 'empresas' not in db.list_collection_names():
+    db.create_collection('empresas')
+
 # Creación de indices
 # Agentes:
 db.agentes.create_index('idAgente', unique=True)
@@ -32,12 +35,12 @@ def insertar_agente(agente):
 
 def insertar_empresa(empresa):
     try:
-        collection = db['agentes']
+        collection = db['empresas']
         empresa = Empresa.crear_desde_dict(empresa)
         
         # Convertir UUIDs a Binary para MongoDB
         empresa_dict = empresa.model_dump(by_alias=True)
-        empresa_dict['iEmpresa'] = Binary.from_uuid(empresa_dict['idEmpresa'])
+        empresa_dict['idEmpresa'] = Binary.from_uuid(empresa_dict['idEmpresa'])
         
         collection.insert_one(empresa_dict)
     except Exception as e:
