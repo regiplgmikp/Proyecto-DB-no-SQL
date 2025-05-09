@@ -6,6 +6,7 @@ from models.Utils.dictionaries import estadoEnEmpresa as estadoEnEmpresaDict
 from models.Utils.regularExpresions import (
     correo_regex,
     telefono_regex,
+    nombre_regex
 )
 
 class AgenteValidationError(Exception):
@@ -15,7 +16,7 @@ class AgenteValidationError(Exception):
         super().__init__(cls.message)
 
 class Agente(BaseModel):
-    idAgente: UUID = Field(default_factory=uuid4)
+    idAgente: UUID = Field(default_factory=uuid4) # Si no se proporciona un ID, se genera uno nuevo
     nombre: str
     correo: str
     telefono: str
@@ -26,9 +27,9 @@ class Agente(BaseModel):
     @field_validator('nombre')
     @classmethod
     def validar_nombre_completo(cls, nombre):
-        if len(nombre.strip().split()) < 2:
+        if not re.match(nombre_regex, nombre):
             raise ValueError('El nombre debe contener al menos nombre y apellido')
-        return nombre.title()
+        return nombre.lower()
 
     @field_validator('correo')
     @classmethod
@@ -40,7 +41,7 @@ class Agente(BaseModel):
     @field_validator('telefono')
     @classmethod
     def validar_telefono(cls, telefono):
-        if not re.match(telefono_regex, telefono):  # Admite números internacionales
+        if not re.match(telefono_regex, telefono):
             raise ValueError('El teléfono debe contener solo números (10-15 dígitos)')
         return telefono
 
