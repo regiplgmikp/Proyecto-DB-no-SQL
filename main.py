@@ -131,6 +131,7 @@ def main():
             # Se puede cambiar el path a la carpeta donde se encuentran los csv
             populate.populate_agentes('data/Mongo/agentes.csv')
             populate.populate_empresas('data/Mongo/empresas.csv')
+            populate.populate_clientes('data/Mongo/clientes.csv')
 
         # Registro de datos
         elif option == 1:

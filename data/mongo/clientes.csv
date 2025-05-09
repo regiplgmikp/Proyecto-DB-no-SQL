@@ -1,4 +1,4 @@
-idCliente,nombre,teléfono,correo,estadoCuenta,idEmpresa
+idCliente,nombre,telefono,correo,estadoCuenta,idEmpresa
 b8ad4d3d-87e7-4b7e-ac3a-4216cb8f25dd,Alejandro Mendoza,5551122334,alejandro.mendoza@gmail.com,1,7fd525ac-af03-4273-ac28-894fe935cd87
 f75c3b2f-76d6-4e91-a99f-873457f81e13,Beatriz Nuñez,5552233445,beatriz.nunez@hotmail.com,1,7fd525ac-af03-4273-ac28-894fe935cd87
 8d96bb42-600b-49b9-9a9e-1303d28be252,César Jiménez,5553344556,cesar.jimenez@gmail.com,2,de1dc603-1a62-4378-a11d-3d1def3309e3

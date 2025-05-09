@@ -1,6 +1,7 @@
 import models.conection as conection
 from .Agente import Agente
 from .Empresa import Empresa
+from .Cliente import Cliente
 from bson import Binary
 
 db = conection.connect_mongodb()
@@ -11,12 +12,18 @@ if 'agentes' not in db.list_collection_names():
 if 'empresas' not in db.list_collection_names():
     db.create_collection('empresas')
 
+if 'clientes' not in db.list_collection_names():
+    db.create_collection('clientes')
+
 # Creación de indices
 # Agentes:
 db.agentes.create_index('idAgente', unique=True)
 
 # Empresas:
 db.empresas.create_index('idEmpresa', unique=True)
+
+# Clientes:
+db.clientes.create_index('idCliente', unique=True)
 
 
 def insertar_agente(agente):
@@ -43,5 +50,19 @@ def insertar_empresa(empresa):
         empresa_dict['idEmpresa'] = Binary.from_uuid(empresa_dict['idEmpresa'])
         
         collection.insert_one(empresa_dict)
+    except Exception as e:
+        raise e
+
+def insertar_cliente(cliente):
+    try:
+        collection = db['clientes']
+        cliente = Cliente.crear_desde_dict(cliente)
+        
+        # Convertir UUIDs a Binary para MongoDB
+        cliente_dict = cliente.model_dump(by_alias=True)
+        cliente_dict['idCliente'] = Binary.from_uuid(cliente_dict['idCliente'])
+        cliente_dict['idEmpresa'] = Binary.from_uuid(cliente_dict['idEmpresa'])
+        
+        collection.insert_one(cliente_dict)
     except Exception as e:
         raise e
