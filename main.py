@@ -1,4 +1,5 @@
 # import models.conection as conection
+import models.Mongo.populate as populate
 
 
 def printMenu(option=0):
@@ -127,6 +128,8 @@ def main():
         # Poblar de datos
         if option == 0:
             # Hacer el poblado de datos en la base de datos
+            # Se puede cambiar el path a la carpeta donde se encuentran los csv
+            populate.populate_agentes('data/Mongo/agentes.csv')
             print("Los datos han sido cargados correctamente.")
 
         # Registro de datos
