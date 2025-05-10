@@ -43,15 +43,27 @@ def populate_agentes(csv_path: str):
                     'datos': row
                 })
 
-        print(f"\nResultado de la importación de agentes:")
-        print(f"• Registros exitosos: {exitosos}")
-        print(f"• Errores: {len(errores)}")
+        result = []
+        result.append(f"""
+\nResultado de la importación de Agentes:
+• Registros exitosos: {exitosos}
+• Errores: {len(errores)}
+
+""")
         
         if errores:
-            print("\nDetalle de errores:")
+            result[0] += "Detalle de errores:"
             for error in errores[:3]:
-                print(f"Fila {error['fila']}\nError: {error['error']}")
-                print(f"Datos: {error['datos']}\n")
+                result[0] += f"""
+Fila: {error['fila']}\nError: {error['error']}
+Datos: {error['datos']}\n
+"""
+        result.append({
+            'exitosos': exitosos,
+            'errores': len(errores)
+            })
+
+    return result
 
 def populate_empresas(csv_path: str):
     
@@ -82,15 +94,28 @@ def populate_empresas(csv_path: str):
                     'datos': row
                 })
 
-        print(f"\nResultado de la importación de Empresas:")
-        print(f"• Registros exitosos: {exitosos}")
-        print(f"• Errores: {len(errores)}")
+
+        result = []
+        result.append(f"""
+\nResultado de la importación de Empresas:
+• Registros exitosos: {exitosos}
+• Errores: {len(errores)}
+
+""")
         
         if errores:
-            print("\nDetalle de errores:")
+            result[0] += "Detalle de errores:"
             for error in errores[:3]:
-                print(f"Fila {error['fila']}\nError: {error['error']}")
-                print(f"Datos: {error['datos']}\n")
+                result[0] += f"""
+Fila: {error['fila']}\nError: {error['error']}
+Datos: {error['datos']}\n
+"""
+        result.append({
+            'exitosos': exitosos,
+            'errores': len(errores)
+            })
+
+    return result
 
 def populate_clientes(csv_path: str):
     
@@ -122,15 +147,27 @@ def populate_clientes(csv_path: str):
                     'datos': row
                 })
 
-        print(f"\nResultado de la importación de Clientes:")
-        print(f"• Registros exitosos: {exitosos}")
-        print(f"• Errores: {len(errores)}")
+        result = []
+        result.append(f"""
+\nResultado de la importación de Clientes:
+• Registros exitosos: {exitosos}
+• Errores: {len(errores)}
+
+""")
         
         if errores:
-            print("\nDetalle de errores:")
+            result[0] += "Detalle de errores:"
             for error in errores[:3]:
-                print(f"Fila {error['fila']}\nError: {error['error']}")
-                print(f"Datos: {error['datos']}\n")
+                result[0] += f"""
+Fila: {error['fila']}\nError: {error['error']}
+Datos: {error['datos']}\n
+"""
+        result.append({
+            'exitosos': exitosos,
+            'errores': len(errores)
+            })
+
+    return result
 
 def populate_tickets(csv_path: str):
     
@@ -171,13 +208,47 @@ def populate_tickets(csv_path: str):
                     'datos': row
                 })
 
-        print(f"\nResultado de la importación de tickets:")
-        print(f"• Registros exitosos: {exitosos}")
-        print(f"• Errores: {len(errores)}")
+        result = []
+        result.append(f"""
+\nResultado de la importación de Tickets:
+• Registros exitosos: {exitosos}
+• Errores: {len(errores)}
+
+""")
         
         if errores:
-            print("\nDetalle de errores:")
+            result[0] += "Detalle de errores:"
             for error in errores[:3]:
-                print(f"Fila {error['fila']}\nError: {error['error']}")
-                print(f"Datos: {error['datos']}\n")
+                result[0] += f"""
+Fila: {error['fila']}\nError: {error['error']}
+Datos: {error['datos']}\n
+"""
+        result.append({
+            'exitosos': exitosos,
+            'errores': len(errores)
+            })
 
+    return result
+
+def populate_all(csv_path):
+    """
+    Esta función carga datos desde archivos CSV específicos ubicados en el directorio `csv_path`.
+
+    Se espera que dentro de `csv_path` existan los siguientes archivos con estos nombres exactos:
+    - `agentes.csv`
+    - `empresas.csv`
+    - `clientes.csv`
+    - `tickets.csv`
+
+    Si alguno de estos archivos no está presente, la función podría generar errores.
+    """
+    result = {}
+    try:
+        result['agentes'] = (populate_agentes(csv_path + 'agentes.csv'))
+        result['empresas'] = (populate_empresas(csv_path + 'empresas.csv'))
+        result['clientes'] = (populate_clientes(csv_path + 'clientes.csv'))
+        result['tickets'] = (populate_tickets(csv_path + 'tickets.csv'))
+
+        return result
+    except FileNotFoundError as e:
+        raise FileNotFoundError(f"{str(e)}\nAsegurarse que los archivos agentes, empresas, clientes y tickets en formato csv estén presentes dentro del path")
