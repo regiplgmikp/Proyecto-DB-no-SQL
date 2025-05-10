@@ -4,7 +4,7 @@ from uuid import UUID, uuid4
 from datetime import datetime
 
 from models.Utils.dictionaries import (
-    estado as prioridadDict, 
+    estado as estadoDict, 
     prioridad as prioridadDict
     )
 
@@ -34,7 +34,7 @@ class Ticket(BaseModel):
     @field_validator('estado')
     @classmethod
     def validar_estado(cls, estado):
-        estados_validos = list(prioridadDict.keys())
+        estados_validos = list(estadoDict.keys())
         if estado not in estados_validos:
             raise ValueError(f'Estado inválido. Estados válidos: {estados_validos}')
         return estado
