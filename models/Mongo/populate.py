@@ -249,6 +249,17 @@ def populate_all(csv_path):
         result['clientes'] = (populate_clientes(csv_path + 'clientes.csv'))
         result['tickets'] = (populate_tickets(csv_path + 'tickets.csv'))
 
+        result['resumen'] = f"""
+Resultado populate Mongo:
+Agentes:
+{result['agentes'][1]}
+Empresas:
+{result['empresas'][1]}
+Clientes:
+{result['clientes'][1]}
+Tickets:
+{result['tickets'][1]}
+"""
         return result
     except FileNotFoundError as e:
         raise FileNotFoundError(f"{str(e)}\nAsegurarse que los archivos agentes, empresas, clientes y tickets en formato csv estén presentes dentro del path")
