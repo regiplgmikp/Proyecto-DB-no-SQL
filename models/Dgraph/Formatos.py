@@ -1,6 +1,7 @@
 # Formatos.py
 import json
 from typing import Dict, Any
+import webbrowser
 
 class Formatos:
     @staticmethod
@@ -284,6 +285,8 @@ class Formatos:
                 output.append(Formatos._divisor())
                 output.append("🗺️ Enlace a Google Maps:")
                 output.append(f"  {google_maps_link}")
+                # Abre el enlace en el navegador
+                webbrowser.open_new_tab(google_maps_link)
             else:
                 output.append("⚠️ No hay datos de ubicación disponibles")
             
