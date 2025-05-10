@@ -66,9 +66,17 @@ class Formatos:
             ticket = data['ticket'][0]
             cliente = ticket.get('~ABRE', [{}])[0] if ticket.get('~ABRE') else {}
             
+            # Obtener código y descripción del tipo de problema
+            codigo_problema = ticket.get('tipoProblema')
+            if codigo_problema is not None:
+                descripcion_problema = tipoProblema.get(codigo_problema, f"Desconocido ({codigo_problema})")
+                problema_str = f"{codigo_problema} - {descripcion_problema}"  # Número + texto
+            else:
+                problema_str = "N/A"
+            
             output.append(Formatos._encabezado("INFORMACIÓN DE TICKET"))
             output.append(f"🎫 Ticket ID: {ticket.get('idTicket', 'N/A')}")
-            output.append(f"🔧 Tipo Problema: {ticket.get('tipoProblema', 'N/A')}")
+            output.append(f"🔧 Tipo Problema: {problema_str}")  # Muestra Código - Descripción
             output.append(f"📝 Descripción: {ticket.get('descripcion', 'N/A')}")
             output.append(Formatos._divisor())
             
@@ -88,45 +96,70 @@ class Formatos:
 # 4. Tickets por empresa
     @staticmethod
     def tickets_empresa(data: Dict[str, Any]) -> str:
-        """Formatea tickets por empresa"""
-        empresa = data['empresa'][0]
         output = []
-        
-        output.append(Formatos._encabezado("TICKETS REPORTE"))
-        output.append(f"🏢 Empresa: {empresa.get('nombreEmpresa', 'N/A')}")
-        output.append(Formatos._divisor())
-        
-        for ticket in empresa.get('~PERTENECE', []):
-            output.append(f"🎫 Ticket ID: {ticket.get('idTicket', 'N/A')}")
-            output.append(f"📝 Descripción: {ticket.get('descripcion', 'N/A')}")
-            output.append(f"🔧 Tipo Problema: {ticket.get('tipoProblema', 'N/A')}")
+        if 'empresa' in data and data['empresa']:
+            empresa = data['empresa'][0]
+            
+            output.append(Formatos._encabezado("TICKETS REPORTE"))
+            output.append(f"🏢 Empresa: {empresa.get('nombreEmpresa', 'N/A')}")
             output.append(Formatos._divisor())
+            
+            for ticket in empresa.get('~PERTENECE', []):
+                # Obtener código y descripción del problema
+                codigo_problema = ticket.get('tipoProblema')
+                if codigo_problema is not None:
+                    descripcion = tipoProblema.get(codigo_problema, f"Desconocido ({codigo_problema})")
+                    problema_str = f"{codigo_problema} - {descripcion}"  # Formato "Código - Descripción"
+                else:
+                    problema_str = "N/A"
+                
+                output.extend([
+                    f"🎫 Ticket ID: {ticket.get('idTicket', 'N/A')}",
+                    f"📝 Descripción: {ticket.get('descripcion', 'N/A')}",
+                    f"🔧 Tipo Problema: {problema_str}",  # Muestra código y texto
+                    Formatos._divisor()
+                ])
+            
+            output.append(f"🔍 Total tickets: {len(empresa.get('~PERTENECE', []))}")
+        else:
+            output.append("❌ No se encontraron datos de empresa")
         
-        output.append(f"🔍 Total tickets: {len(empresa.get('~PERTENECE', []))}")
         output.append("=" * 90)
-        
         return '\n'.join(output)
 
 # 5. Tickets por cliente
     @staticmethod
-    def tickets_cliente(data: Dict[str, Any]) -> str:
+    def tickets_cliente(data: Dict[str, Any]) -> str:  # Elimina el parámetro tipo_problema
         """Tickets por cliente"""
-        cliente = data['cliente'][0]
         output = []
         
+        if not data.get('cliente'):
+            return "❌ No se encontraron datos del cliente"
+
+        cliente = data['cliente'][0]
         output.append(Formatos._encabezado("TICKETS POR CLIENTE"))
         output.append(f"👤 Cliente: {cliente.get('nombreCliente', 'N/A')}")
         output.append(Formatos._divisor())
+
+        tickets = cliente.get('ABRE', [])
         
-        for ticket in cliente.get('ABRE', []):
-            output.append(f"🎫 Ticket ID: {ticket.get('idTicket', 'N/A')}")
-            output.append(f"📝 Descripción: {ticket.get('descripcion', 'N/A')}")
-            output.append(f"🔧 Tipo Problema: {ticket.get('tipoProblema', 'N/A')}")
-            output.append(Formatos._divisor())
-        
-        output.append(f"🔍 Total tickets: {len(cliente.get('ABRE', []))}")
+        for ticket in tickets:
+            codigo_problema = ticket.get('tipoProblema')
+            if codigo_problema is not None:
+                descripcion = tipoProblema.get(codigo_problema, f"Desconocido ({codigo_problema})")  # Usa el import directo
+                problema_str = f"{codigo_problema} - {descripcion}"
+            else:
+                problema_str = "N/A"
+
+            output.extend([
+                f"🎫 Ticket ID: {ticket.get('idTicket', 'N/A')}",
+                f"📝 Descripción: {ticket.get('descripcion', 'N/A')}",
+                f"🔧 Tipo Problema: {problema_str}",
+                Formatos._divisor()
+            ])
+
+        output.append(f"🔍 Total tickets: {len(tickets)}")
         output.append("=" * 90)
-        
         return '\n'.join(output)
 
 # 6. Agentes por ticket
@@ -159,7 +192,7 @@ class Formatos:
 # 7. Tickets de agente de una empresa por tipo de problema.
     @staticmethod
     def tickets_agente_empresa_tipo(data: Dict[str, Any]) -> str:
-        """Formatea tickets filtrados por empresa y tipo de problema"""
+        """Formatea tickets filtrados por empresa mostrando código y descripción del problema"""
         output = []
         
         if 'empresa' in data and len(data['empresa']) > 0:
@@ -168,17 +201,35 @@ class Formatos:
             
             output.append(Formatos._encabezado("TICKETS POR TIPO DE PROBLEMA"))
             output.append(f"🏢 Empresa: {empresa.get('nombreEmpresa', 'N/A')}")
-            output.append(f"🔧 Tipo de Problema: {tickets[0].get('tipoProblema', 'N/A') if tickets else 'N/A'}")
+            
+            # Obtener y formatear el tipo de problema principal
+            tipo_problema_cod = tickets[0].get('tipoProblema') if tickets else None
+            if tipo_problema_cod is not None:
+                problema_desc = tipoProblema.get(tipo_problema_cod, f"Desconocido ({tipo_problema_cod})")
+                output.append(f"🔧 Tipo de Problema: {tipo_problema_cod} - {problema_desc}")
+            else:
+                output.append("🔧 Tipo de Problema: N/A")
+            
             output.append(Formatos._divisor())
             
             if tickets:
                 output.append("🎫 Tickets encontrados:")
                 for ticket in tickets:
-                    output.append(f"\n  • ID: {ticket.get('idTicket', 'N/A')}")
-                    output.append(f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}")
-                    output.append(f"  🔧 Tipo: {ticket.get('tipoProblema', 'N/A')}")
-                    output.append(Formatos._divisor(60))  # Divisor más corto para items
-                output.append(f"\n🔍 Total tickets: {len(tickets)}")
+                    # Formatear tipo de problema para cada ticket
+                    ticket_problema_cod = ticket.get('tipoProblema')
+                    if ticket_problema_cod is not None:
+                        ticket_problema_desc = tipoProblema.get(ticket_problema_cod, f"Desconocido ({ticket_problema_cod})")
+                        problema_str = f"{ticket_problema_cod} - {ticket_problema_desc}"
+                    else:
+                        problema_str = "N/A"
+                    
+                    output.extend([
+                        f"\n  • ID: {ticket.get('idTicket', 'N/A')}",
+                        f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}",
+                        f"  🔧 Tipo: {problema_str}",
+                        Formatos._divisor(60)
+                    ])
+                output.append(f"🔍 Total tickets: {len(tickets)}")
             else:
                 output.append("ℹ️ No se encontraron tickets para este tipo de problema")
             
