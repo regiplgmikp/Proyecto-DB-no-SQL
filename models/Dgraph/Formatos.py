@@ -2,6 +2,7 @@
 import json
 from typing import Dict, Any
 import webbrowser
+from Utils.dictionaries import tipoProblema
 
 class Formatos:
     @staticmethod
@@ -242,7 +243,7 @@ class Formatos:
 # 8. Ticket por empresa por medio de palabras clave.
     @staticmethod
     def tickets_empresa_palabras(data: Dict[str, Any]) -> str:
-        """Formatea tickets encontrados por palabras clave en una empresa"""
+        """Formatea tickets encontrados por palabras clave mostrando código y descripción del problema"""
         output = []
         
         if 'empresa' in data and len(data['empresa']) > 0:
@@ -254,13 +255,24 @@ class Formatos:
             output.append(Formatos._divisor())
             
             if tickets:
-                output.append("🔍 Tickets encontrados:")
+                output.append("🎫 Tickets encontrados:")
                 for ticket in tickets:
-                    output.append(f"\n  • ID: {ticket.get('idTicket', 'N/A')}")
-                    output.append(f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}")
-                    output.append(f"  🔧 Tipo: {ticket.get('tipoProblema', 'N/A')}")
-                    output.append(Formatos._divisor(60))
-                output.append(f"\n🔍 Total tickets encontrados: {len(tickets)}")
+                    # Obtener código y descripción del tipo de problema
+                    codigo_problema = ticket.get('tipoProblema')
+                    if codigo_problema is not None:
+                        descripcion = tipoProblema.get(codigo_problema, f"Desconocido ({codigo_problema})")
+                        problema_str = f"{codigo_problema} - {descripcion}"
+                    else:
+                        problema_str = "N/A"
+                    
+                    output.extend([
+                        f"\n  • ID: {ticket.get('idTicket', 'N/A')}",
+                        f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}",
+                        f"  🔧 Tipo Problema: {problema_str}",
+                        f"  🚦 Prioridad: {ticket.get('prioridad', 'N/A')}",
+                        Formatos._divisor(60)
+                    ])
+                output.append(f"🔍 Total tickets encontrados: {len(tickets)}")
             else:
                 output.append("ℹ️ No se encontraron tickets con las palabras clave especificadas")
             
@@ -273,7 +285,7 @@ class Formatos:
 # 9. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
     @staticmethod
     def tickets_agente_empresa_palabras(data: Dict[str, Any]) -> str:
-        """Formatea tickets encontrados por agente, empresa y palabras clave"""
+        """Formatea tickets encontrados por agente, empresa y palabras clave con descripciones completas"""
         output = []
         
         if 'empresa' in data and len(data['empresa']) > 0:
@@ -285,7 +297,7 @@ class Formatos:
             output.append(Formatos._divisor())
             
             if agentes:
-                agente = agentes[0]  # Solo debería haber uno por el filtro de ID
+                agente = agentes[0]  # Debería ser único por el filtro de ID
                 tickets = agente.get('SOLUCIONA', [])
                 
                 output.append(f"👤 Agente: {agente.get('nombreAgente', 'N/A')} (ID: {agente.get('idAgente', 'N/A')})")
@@ -294,19 +306,35 @@ class Formatos:
                 if tickets:
                     output.append("🔍 Tickets encontrados:")
                     for ticket in tickets:
-                        output.append(f"\n  • ID: {ticket.get('idTicket', 'N/A')}")
-                        output.append(f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}")
-                        output.append(f"  🔧 Tipo: {ticket.get('tipoProblema', 'N/A')}")
-                        output.append(Formatos._divisor(60))
-                    output.append(f"\n🔍 Total tickets encontrados: {len(tickets)}")
+                        # Formatear tipo de problema con código y descripción
+                        codigo_problema = ticket.get('tipoProblema')
+                        if codigo_problema is not None:
+                            desc_problema = tipoProblema.get(codigo_problema, f"Desconocido ({codigo_problema})")
+                            problema_str = f"{codigo_problema} - {desc_problema}"
+                        else:
+                            problema_str = "N/A"
+                        
+                        # Formatear prioridad si existe
+                        prioridad = ticket.get('prioridad')
+                        prioridad_str = f"{prioridad} - {prioridad.get(prioridad, 'N/A')}" if prioridad else "N/A"
+                        
+                        output.extend([
+                            f"\n  • ID: {ticket.get('idTicket', 'N/A')}",
+                            f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}",
+                            f"  🔧 Tipo Problema: {problema_str}",
+                            f"  🚦 Prioridad: {prioridad_str}",
+                            f"  📌 Estado: {ticket.get('estado', 'N/A')}",
+                            Formatos._divisor(60)
+                        ])
+                    output.append(f"🔍 Total tickets encontrados: {len(tickets)}")
                 else:
-                    output.append("ℹ️ No se encontraron tickets con las palabras clave especificadas para este agente")
+                    output.append("ℹ️   No se encontraron tickets con las palabras clave para este agente")
             else:
-                output.append("⚠️ No se encontró el agente especificado en esta empresa")
+                output.append("⚠️ Agente no encontrado en esta empresa")
             
             output.append("=" * 90)
         else:
-            output.append("❌ No se encontró la empresa especificada")
+            output.append("❌ Empresa no encontrada")
         
         return '\n'.join(output)
 
