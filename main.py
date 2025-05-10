@@ -129,9 +129,10 @@ def main():
         if option == 0:
             # Hacer el poblado de datos en la base de datos
             # Se puede cambiar el path a la carpeta donde se encuentran los csv
-            populate.populate_agentes('data/Mongo/agentes.csv')
-            populate.populate_empresas('data/Mongo/empresas.csv')
-            populate.populate_clientes('data/Mongo/clientes.csv')
+            populate.populate_agentes('data/mongo/agentes.csv')
+            populate.populate_empresas('data/mongo/empresas.csv')
+            populate.populate_clientes('data/mongo/clientes.csv')
+            populate.populate_tickets('data/mongo/tickets.csv')
 
         # Registro de datos
         elif option == 1:

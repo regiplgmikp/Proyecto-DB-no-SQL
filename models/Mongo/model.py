@@ -2,6 +2,7 @@ import models.conection as conection
 from .Agente import Agente
 from .Empresa import Empresa
 from .Cliente import Cliente
+from .Ticket import Ticket
 from bson import Binary
 
 db = conection.connect_mongodb()
@@ -15,6 +16,9 @@ if 'empresas' not in db.list_collection_names():
 if 'clientes' not in db.list_collection_names():
     db.create_collection('clientes')
 
+if 'tickets' not in db.list_collection_names():
+    db.create_collection('tickets')
+
 # Creación de indices
 # Agentes:
 db.agentes.create_index('idAgente', unique=True)
@@ -24,6 +28,9 @@ db.empresas.create_index('idEmpresa', unique=True)
 
 # Clientes:
 db.clientes.create_index('idCliente', unique=True)
+
+# Clientes:
+db.tickets.create_index('idTicket', unique=True)
 
 
 def insertar_agente(agente):
@@ -64,5 +71,21 @@ def insertar_cliente(cliente):
         cliente_dict['idEmpresa'] = Binary.from_uuid(cliente_dict['idEmpresa'])
         
         collection.insert_one(cliente_dict)
+    except Exception as e:
+        raise e
+
+def insertar_ticket(ticket):
+    try:
+        collection = db['tickets']
+        ticket = Ticket.crear_desde_dict(ticket)
+        
+        # Convertir UUIDs a Binary para MongoDB
+        ticket_dict = ticket.model_dump(by_alias=True)
+        ticket_dict['idTicket'] = Binary.from_uuid(ticket_dict['idTicket'])
+        ticket_dict['idCliente'] = Binary.from_uuid(ticket_dict['idCliente'])
+        ticket_dict["idAgente"] = Binary.from_uuid(ticket_dict["idAgente"]) if ticket_dict["idAgente"] is not None else None
+        ticket_dict['idEmpresa'] = Binary.from_uuid(ticket_dict['idEmpresa'])
+        
+        collection.insert_one(ticket_dict)
     except Exception as e:
         raise e
