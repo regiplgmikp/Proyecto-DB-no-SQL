@@ -1,5 +1,4 @@
 import models.conection as conection
-from pydantic import BaseModel
 from typing import Type, Union
 from .Agente import Agente
 from .Empresa import Empresa
@@ -77,13 +76,14 @@ class MongoModel:
         collection = cls.db[collection_name]
         documento = collection.find_one({id_field: Binary.from_uuid(id_value)})
 
-        if documento:
-            # Convertir todos los campos que sean Binary a UUID
-            for key, value in documento.items():
-                if isinstance(value, Binary):
-                    documento[key] = UUID(bytes=value)
+        if not documento:
+            return None
+        # Convertir todos los campos que sean Binary a UUID
+        for key, value in documento.items():
+            if isinstance(value, Binary):
+                documento[key] = UUID(bytes=value)
 
-            # Eliminar el campo '_id' para evitar confusión
-            documento.pop('_id', None)
+        # Eliminar el campo '_id' para evitar confusión
+        documento.pop('_id', None)
 
         return documento
