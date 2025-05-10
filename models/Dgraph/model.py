@@ -7,7 +7,6 @@ import pydgraph
 import csv
 import sys
 import io
-=======
 from Formatos import print_formatted
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 
@@ -81,8 +80,6 @@ def set_schema(client):
 # ---------------------------------------------------------------------------------------
 
 # 3- Carga de datos
-
-=======
 import csv
 
 def create_data(client):
@@ -109,7 +106,6 @@ def create_data(client):
                 empresas.append(empresa)
 
         response = txn.mutate(set_obj=empresas, commit_now=True)
-=======
         for row in empresas:
             empresa_uids[row['idEmpresa']] = response.uids.get(row['uid'][2:], '')
     finally:
@@ -133,7 +129,6 @@ def create_data(client):
                 agentes.append(agente)
 
         response = txn.mutate(set_obj=agentes, commit_now=True)
-=======
         for row in agentes:
             agente_uids[row['idAgente']] = response.uids.get(row['uid'][2:], '')
     finally:
@@ -157,7 +152,6 @@ def create_data(client):
                 clientes.append(cliente)
 
         response = txn.mutate(set_obj=clientes, commit_now=True)
-=======
         for row in clientes:
             cliente_uids[row['idCliente']] = response.uids.get(row['uid'][2:], '')
     finally:
@@ -182,7 +176,6 @@ def create_data(client):
                 tickets.append(ticket)
 
         response = txn.mutate(set_obj=tickets, commit_now=True)
-=======
         for row in tickets:
             ticket_uids[row['idTicket']] = response.uids.get(row['uid'][2:], '')
     finally:
@@ -212,7 +205,6 @@ def create_data(client):
                         tipo_relacion: {'uid': destino_uid}
                     }
 
-=======
                     txn.mutate(set_obj=relacion)
                 else:
                     print(f"🤦‍♀️ UIDs no encontrados: origen={origen_id}, destino={destino_id}")
@@ -225,11 +217,10 @@ def create_data(client):
 #---------------------------------------------------------------------------------------------#
 
 #========================================== QUERYS ===========================================#
->>>>>>> d145937f71d064e37ba0be88a77443808406e576
 
 def print_json(res):
     print(json.dumps(json.loads(res.json), indent=2, ensure_ascii=False))
-=======
+
 # 1. Agentes por empresa
 
 def Agentes_por_empresa(client, id_empresa):
