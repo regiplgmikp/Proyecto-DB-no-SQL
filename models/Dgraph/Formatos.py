@@ -2,6 +2,7 @@
 import json
 from typing import Dict, Any
 import webbrowser
+from Utils.dictionaries import tipoProblema
 
 class Formatos:
     @staticmethod
@@ -242,7 +243,7 @@ class Formatos:
 # 8. Ticket por empresa por medio de palabras clave.
     @staticmethod
     def tickets_empresa_palabras(data: Dict[str, Any]) -> str:
-        """Formatea tickets encontrados por palabras clave en una empresa"""
+        """Formatea tickets encontrados por palabras clave mostrando código y descripción del problema"""
         output = []
         
         if 'empresa' in data and len(data['empresa']) > 0:
@@ -254,13 +255,24 @@ class Formatos:
             output.append(Formatos._divisor())
             
             if tickets:
-                output.append("🔍 Tickets encontrados:")
+                output.append("🎫 Tickets encontrados:")
                 for ticket in tickets:
-                    output.append(f"\n  • ID: {ticket.get('idTicket', 'N/A')}")
-                    output.append(f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}")
-                    output.append(f"  🔧 Tipo: {ticket.get('tipoProblema', 'N/A')}")
-                    output.append(Formatos._divisor(60))
-                output.append(f"\n🔍 Total tickets encontrados: {len(tickets)}")
+                    # Obtener código y descripción del tipo de problema
+                    codigo_problema = ticket.get('tipoProblema')
+                    if codigo_problema is not None:
+                        descripcion = tipoProblema.get(codigo_problema, f"Desconocido ({codigo_problema})")
+                        problema_str = f"{codigo_problema} - {descripcion}"
+                    else:
+                        problema_str = "N/A"
+                    
+                    output.extend([
+                        f"\n  • ID: {ticket.get('idTicket', 'N/A')}",
+                        f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}",
+                        f"  🔧 Tipo Problema: {problema_str}",
+                        f"  🚦 Prioridad: {ticket.get('prioridad', 'N/A')}",
+                        Formatos._divisor(60)
+                    ])
+                output.append(f"🔍 Total tickets encontrados: {len(tickets)}")
             else:
                 output.append("ℹ️ No se encontraron tickets con las palabras clave especificadas")
             
