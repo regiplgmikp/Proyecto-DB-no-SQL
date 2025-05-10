@@ -1,4 +1,5 @@
 # import models.conection as conection
+import models.Mongo.populate as populate
 
 
 def printMenu(option=0):
@@ -127,7 +128,11 @@ def main():
         # Poblar de datos
         if option == 0:
             # Hacer el poblado de datos en la base de datos
-            print("Los datos han sido cargados correctamente.")
+            # Se puede cambiar el path a la carpeta donde se encuentran los csv
+            try:
+                print(populate.populate_all("data/mongo/")['resumen'])
+            except FileNotFoundError as e:
+                print(e)
 
         # Registro de datos
         elif option == 1:

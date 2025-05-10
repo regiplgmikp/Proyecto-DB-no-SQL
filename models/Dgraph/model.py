@@ -7,6 +7,8 @@ import pydgraph
 import csv
 import sys
 import io
+=======
+from Formatos import print_formatted
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 
 # 2- Definición de esquema
@@ -80,97 +82,125 @@ def set_schema(client):
 
 # 3- Carga de datos
 
-def create_data(client):
-     empresa_uids = {}
-    txn = client.txn()
+=======
+import csv
 
+def create_data(client):
+    empresa_uids = {}
+    empresas = []
+
+    # 1️ EMPRESAS
+    txn = client.txn()
     try:
-        #Carga de datos de la empresa
-        ith open('data/empresas.csv', 'r', encoding='utf-8') as file:
+        with open('data/dgraph/empresas.csv', 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
+                coords = json.loads(row['ubicacion'])
+                lat, lon = coords
                 empresa = {
-                    'uid': '_:{}'.format(row['idEmpresa']),
+                    'uid': f"_:{row['idEmpresa']}",
                     'idEmpresa': row['idEmpresa'],
                     'nombreEmpresa': row['nombreEmpresa'],
-                    'ubicacion': row['ubicacion']
+                    'ubicacion': {
+                        'type': 'Point',
+                        'coordinates': [lon, lat]
+                    }
                 }
                 empresas.append(empresa)
 
         response = txn.mutate(set_obj=empresas, commit_now=True)
-        for empresa in empresas:
-            empresa_uids[empresa['idEmpresa']] = response.uids.get(empresa['uid'][2:], '')
+=======
+        for row in empresas:
+            empresa_uids[row['idEmpresa']] = response.uids.get(row['uid'][2:], '')
+    finally:
+        txn.discard()
+    print("👌 Empresas cargadas con éxito en Dgraph.")
 
-
+    # 2️ AGENTES
     agente_uids = {}
+    agentes = []
+
     txn = client.txn()
     try:
-        #Carga de datos de los agentes
-        with open('data/agentes.csv', 'r', encoding='utf-8') as file:
+        with open('data/dgraph/agentes.csv', 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 agente = {
-                    'uid': '_:{}'.format(row['idAgente']),
+                    'uid': f"_:{row['idAgente']}",
                     'idAgente': row['idAgente'],
-                    'nombreAgente': row['nombreAgente'],
-                    'TRABAJA': {'uid': empresa_uids.get(row['empresa'])}
+                    'nombreAgente': row['nombreAgente']
                 }
                 agentes.append(agente)
 
         response = txn.mutate(set_obj=agentes, commit_now=True)
-        for agente in agentes:
-            agente_uids[agente['idAgente']] = response.uids.get(agente['uid'][2:], '')
+=======
+        for row in agentes:
+            agente_uids[row['idAgente']] = response.uids.get(row['uid'][2:], '')
+    finally:
+        txn.discard()
+    print("👌 Agentes cargados con éxito en Dgraph.")
 
+    # 3️ CLIENTES
     cliente_uids = {}
+    clientes = []
+
     txn = client.txn()
     try:
-        #Carga de datos de los clientes
-        with open('data/clientes.csv', 'r', encoding='utf-8') as file:
+        with open('data/dgraph/clientes.csv', 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 cliente = {
-                    'uid': '_:{}'.format(row['idCliente']),
+                    'uid': f"_:{row['idCliente']}",
                     'idCliente': row['idCliente'],
-                    'nombreCliente': row['nombreCliente'],
-                    'AFILIADO_A': {'uid': empresa_uids.get(row['empresa'])}
+                    'nombreCliente': row['nombreCliente']
                 }
                 clientes.append(cliente)
 
         response = txn.mutate(set_obj=clientes, commit_now=True)
-        for cliente in clientes:
-            cliente_uids[cliente['idCliente']] = response.uids.get(cliente['uid'][2:], '')
+=======
+        for row in clientes:
+            cliente_uids[row['idCliente']] = response.uids.get(row['uid'][2:], '')
+    finally:
+        txn.discard()
+    print("👌 Clientes cargados con éxito en Dgraph.")
 
+    # 4️ TICKETS
     ticket_uids = {}
+    tickets = []
+
     txn = client.txn()
     try:
-        #Carga de datos de los tickets
-        with open('data/tickets.csv', 'r', encoding='utf-8') as file:
+        with open('data/dgraph/tickets.csv', 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
                 ticket = {
-                    'uid': '_:{}'.format(row['idTicket']),
+                    'uid': f"_:{row['idTicket']}",
                     'idTicket': row['idTicket'],
                     'tipoProblema': int(row['tipoProblema']),
-                    'descripcion': row['descripcion'],
-                    'SOLUCIONA': {'uid': agente_uids.get(row['agente'])},
-                    'LE_CORRESPONDE': {'uid': cliente_uids.get(row['cliente'])},
-                    'PERTENECE': {'uid': empresa_uids.get(row['empresa'])},
-                    'ABRE': {'uid': cliente_uids.get(row['cliente'])}
+                    'descripción': row['descripción']
                 }
                 tickets.append(ticket)
 
         response = txn.mutate(set_obj=tickets, commit_now=True)
-        for ticket in tickets:
-            ticket_uids[ticket['idTicket']] = response.uids.get(ticket['uid'][2:], '')
-        
-        # Cargar relaciones desde relaciones.csv
-        all_uids = {**empresa_uids, **agente_uids, **cliente_uids, **ticket_uids}
+=======
+        for row in tickets:
+            ticket_uids[row['idTicket']] = response.uids.get(row['uid'][2:], '')
+    finally:
+        txn.discard()
+    print("👌 Tickets cargados con éxito en Dgraph.")
 
-        with open('data/relaciones.csv', 'r', encoding='utf-8') as file:
+    # 5️ RELACIONES
+    txn = client.txn()
+    try:
+        all_uids = {**empresa_uids, **agente_uids, **cliente_uids, **ticket_uids}
+        with open('data/dgraph/relaciones.csv', 'r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for row in reader:
+                # No toma en cuenta las filas vacías 
+                if not row['origen'].strip() or not row['relacion'].strip() or not row['destino'].strip():
+                    continue
                 origen_id = row['origen'].strip()
-                tipo_relacion = row['relacion'].strip()
+                tipo_relacion = row['relacion'].strip().strip('"')
                 destino_id = row['destino'].strip()
 
                 origen_uid = all_uids.get(origen_id)
@@ -181,62 +211,210 @@ def create_data(client):
                         'uid': origen_uid,
                         tipo_relacion: {'uid': destino_uid}
                     }
-                    txn.mutate(set_obj=relacion, commit_now=True)
-                else:
-                    print(f"UIDs no encontrados: origen={origen_id}, destino={destino_id}")
 
+=======
+                    txn.mutate(set_obj=relacion)
+                else:
+                    print(f"🤦‍♀️ UIDs no encontrados: origen={origen_id}, destino={destino_id}")
+
+        txn.commit()
+        print("👌 Todas las relaciones cargadas con éxito.")
     finally:
         txn.discard()
 
-    print("Datos cargados exitosamente en DGraph.")
+#---------------------------------------------------------------------------------------------#
 
-# ---------------------------------------------------------------------------------------
-
-# 4. Consultas
+#========================================== QUERYS ===========================================#
+>>>>>>> d145937f71d064e37ba0be88a77443808406e576
 
 def print_json(res):
     print(json.dumps(json.loads(res.json), indent=2, ensure_ascii=False))
+=======
+# 1. Agentes por empresa
 
-# 4.1 Mostrar agente por empresa
-def search_agentes_by_empresa(client, empresa_id):
+def Agentes_por_empresa(client, id_empresa):
     query = """
-    query all($empresa_id: string) {
-      all(func: has(TRABAJA)) @filter(eq(TRABAJA, $empresa_id)) {
-        idAgente
-        nombreAgente
+    query AgentesPorEmpresa($idEmpresa: string) {
+      empresa(func: eq(idEmpresa, $idEmpresa)) {
+        idEmpresa
+        nombreEmpresa
+        TIENE {
+          idAgente
+          nombreAgente
+        }
       }
     }
     """
-    variables = {'$empresa_id': empresa_id}
+    variables = {"$idEmpresa": id_empresa}
     res = client.txn(read_only=True).query(query, variables=variables)
-    print_json(res)
+    print_formatted(res, "agentes_empresa")
 
-# 4.2 Mostrar clientes por empresa
-def search_clientes_by_empresa(client, empresa_id):
+# 2. Clientes por empresa
+
+def Clientes_por_empresa(client, id_empresa):
     query = """
-    query all($empresa_id: string) {
-      all(func: has(AFILIADO_A)) @filter(eq(AFILIADO_A, $empresa_id)) {
+    query clientesPorEmpresa($idEmpresa: string) {
+      empresa(func: eq(idEmpresa, $idEmpresa)) {
+        idEmpresa
+        nombreEmpresa
+        clientes: ~AFILIADO_A {
+          idCliente
+          nombreCliente
+        }
+      }
+    }
+    """
+    variables = {'$idEmpresa': id_empresa}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "clientes_empresa")
+
+# 3. Cliente por ticket
+
+def Cliente_por_ticket(client, idTicket):
+    query = """
+    query clientePorTicket($idTicket: string) {
+      ticket(func: eq(idTicket, $idTicket)) {
+        idTicket
+        tipoProblema
+        descripcion
+        ~ABRE {  
+          idCliente
+          nombreCliente
+        }
+      }
+    }
+    """
+    variables = {'$idTicket': idTicket}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "clientes_ticket")
+
+# 4. Tickets por empresa
+def Tickets_por_empresa(client, id_empresa):
+    query = """
+    query ticketsPorEmpresa($idEmpresa: string) {
+      empresa(func: eq(idEmpresa, $idEmpresa)) {
+        nombreEmpresa
+        ~PERTENECE {
+          idTicket
+          tipoProblema
+          descripcion
+        }
+      }
+    }
+    """
+    variables = {'$idEmpresa': id_empresa}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "tickets_empresa")
+
+# 5. Tickets por cliente
+def Tickets_por_cliente(client, nombre_cliente):
+    query = """
+    query ticketsPorCliente($nombreCliente: string) {
+      cliente(func: eq(nombreCliente, $nombreCliente)) {
         idCliente
         nombreCliente
+        ABRE {
+          idTicket
+          tipoProblema
+          descripcion
+        }
       }
     }
     """
-    variables = {'$empresa_id': empresa_id}
+    variables = {'$nombreCliente': nombre_cliente}
     res = client.txn(read_only=True).query(query, variables=variables)
-    print_json(res)
+    #print_json(res)
+    print_formatted(res, "tickets_cliente")
 
-# 4.3 Mostrar cliente por ticket
-def search_cliente_by_ticket(client, ticket_id):
+# 6. Agentes por ticket
+def Agentes_por_ticket(client, id_ticket):
     query = """
-    query all($ticket_id: string) {
-      all(func: has(LE_CORRESPONDE)) @filter(eq(LE_CORRESPONDE, $ticket_id)) {
-        idCliente
-        nombreCliente
+    query agentesPorTicket($idTicket: string) {
+      ticket(func: eq(idTicket, $idTicket)) {
+        idTicket
+         ~SOLUCIONA {
+          idAgente
+          nombreAgente
+        }
       }
     }
     """
-    variables = {'$ticket_id': ticket_id}
+    variables = {'$idTicket': id_ticket}
     res = client.txn(read_only=True).query(query, variables=variables)
-    print_json(res)
+    print_formatted(res, "agente_ticket")
 
-# 4.4 Mostrar tickets por empresa :)
+# 7. Tickets de agente de una empresa por tipo de problema.
+def Tickets_por_agente_empresa_tipo(client, id_empresa,tipo_problema):
+    query = """
+    query ticketsPorAgenteEmpresaTipo($idEmpresa: string, $tipoProblema: int) {
+      empresa(func: eq(idEmpresa, $idEmpresa)) {
+        nombreEmpresa
+        ~PERTENECE @filter(eq(tipoProblema, $tipoProblema)) {
+          idTicket
+          tipoProblema
+          descripcion
+        }
+      }
+    }
+    """
+    variables = {'$idEmpresa':id_empresa,'$tipoProblema': tipo_problema}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "tickets_agente_empresa_tipo")
+
+
+# 8. Ticket por empresa por medio de palabras clave.
+def Ticket_por_empresa_palabras(client, empresa_id, palabras_clave):
+    query = """
+    query ticketsPorEmpresaPalabras($empresa_id: string, $palabras_clave: string) {
+      empresa(func: eq(idEmpresa, $empresa_id)) {
+        nombreEmpresa
+        ~PERTENECE @filter(anyofterms(descripcion, $palabras_clave)) {
+          idTicket
+          descripcion
+          tipoProblema
+        }
+      }
+    }
+    """
+    variables = {'$empresa_id': empresa_id, '$palabras_clave': palabras_clave}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "tickets_empresa_palabras")
+
+# 9. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
+def Ticket_por_agente_empresa_palabras(client, empresa_id, agente_id, palabras_clave):
+    query = """
+    query buscarTicketsAgenteEmpresa($idEmpresa: string, $idAgente: string, $palabras_clave: string) {
+      empresa(func: eq(idEmpresa, $idEmpresa)) {
+        nombreEmpresa
+        TIENE @filter(eq(idAgente, $idAgente)) {
+          nombreAgente
+          SOLUCIONA @filter(anyofterms(descripcion, $palabras_clave)) {
+            idTicket
+            descripcion
+            tipoProblema
+          }
+        }
+      }
+    }
+    """
+    variables = {'$idEmpresa': empresa_id,'$idAgente': agente_id,'$palabras_clave': palabras_clave}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "tickets_agente_empresa_palabras")
+
+# 10. Dirección de la empresa por medio de su ID.
+
+def Direccion_empresa_por_id(client, idEmpresa):
+    query = """
+    query ubicacionEmpresa($idEmpresa: string) {
+      empresa(func: eq(idEmpresa, $idEmpresa)) {
+        nombreEmpresa
+        ubicacion {
+          type
+          coordinates
+        }
+      }
+    }
+    """
+    variables = {'$idEmpresa': idEmpresa}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "direccion_empresa")
