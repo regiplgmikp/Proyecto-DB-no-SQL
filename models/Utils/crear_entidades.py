@@ -1,5 +1,5 @@
 import uuid
-import models.Mongo.model as MongoModel
+from models.Mongo.MongoModel import MongoModel
 import models.Dgraph.model as DgraphModel
 import models.Cassandra.model as CassandraModel
 from uuid import UUID
