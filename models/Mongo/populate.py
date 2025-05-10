@@ -2,12 +2,7 @@ import csv
 from uuid import UUID
 from datetime import datetime
 import ast
-from .model import (
-    insertar_agente,
-    insertar_empresa,
-    insertar_cliente,
-    insertar_ticket
-) 
+from models.Mongo.MongoModel import MongoModel
 
 def populate_agentes(csv_path: str):
     
@@ -15,7 +10,7 @@ def populate_agentes(csv_path: str):
         csv_reader = csv.DictReader(file)
         
         exitosos = 0
-        errores = []
+        errores = []    
 
         for num_fila, row in enumerate(csv_reader, 2):
             try:
@@ -32,7 +27,7 @@ def populate_agentes(csv_path: str):
                     )
                 }
                 
-                insertar_agente(data)
+                MongoModel.insertar_agente(data)
 
                 exitosos += 1
                 
@@ -83,7 +78,7 @@ def populate_empresas(csv_path: str):
                     'direccion': row['direccion'],
                 }
                 
-                insertar_empresa(data)
+                MongoModel.insertar_empresa(data)
 
                 exitosos += 1
                 
@@ -136,7 +131,7 @@ def populate_clientes(csv_path: str):
                     'idEmpresa': UUID(row['idEmpresa'])
                 }
                 
-                insertar_cliente(data)
+                MongoModel.insertar_cliente(data)
 
                 exitosos += 1
                 
@@ -197,7 +192,7 @@ def populate_tickets(csv_path: str):
                     'prioridad': int(row['prioridad'])
                 }
                 
-                insertar_ticket(data)
+                MongoModel.insertar_ticket(data)
 
                 exitosos += 1
                 
