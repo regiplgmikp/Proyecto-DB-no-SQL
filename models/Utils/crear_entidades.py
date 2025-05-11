@@ -1,10 +1,22 @@
 import uuid
-import models.Mongo.model as MongoModel
-import models.Dgraph.model as DgraphModel
-import models.Cassandra.model as CassandraModel
-from uuid import UUID
-from datetime import datetime
+from models.Mongo.MongoModel import MongoModel
+# import models.Dgraph.model as DgraphModel
+# import models.Cassandra.model as CassandraModel
+
 import models.Utils.dictionaries as dictionaries
+from models.Utils.validaciones import Validaciones
+
+def solicitar_input(mensaje, validacion_func=None):
+    """Solicita un input al usuario y lo valida si es necesario."""
+    while True:
+        valor = input(mensaje)
+        if validacion_func:
+            try:
+                return validacion_func(valor)
+            except ValueError as e:
+                print(f"\tError: {e}")
+        else:
+            return valor
 
 def create_agente():
     mongo_agente = {}
@@ -15,12 +27,12 @@ def create_agente():
 
     # Obtener los datos del agente
     idAgente = uuid.uuid4() 
-    nombre = input("Ingrese el nombre del agente: ")
-    correo = input("Ingrese el correo del agente: ")
-    telefono = input("Ingrese el teléfono del agente: ")
-    estadoEnEmpresa = int(input(f"Ingrese el numero del estado en empresa del agente \n\tEstados posibles: {estadoEnEmpresa}): "))  
-    idEmpresa = UUID(input("Ingrese el idEmpresa del agente: ")) 
-    fechaIngreso = datetime.strptime(input("Ingrese la fecha de ingreso (YYYY-MM-DD HH:MM:SS): "), "%Y-%m-%d %H:%M:%S")  # Convertir a datetime
+    nombre = solicitar_input("Ingrese el nombre del agente: ", Validaciones.validar_nombre)
+    correo = solicitar_input("Ingrese el correo del agente: ", Validaciones.validar_formato_correo)
+    telefono = solicitar_input("Ingrese el teléfono del agente: ", Validaciones.validar_telefono)
+    estadoEnEmpresa = solicitar_input(f"Ingrese el numero del estado en empresa del agente \n\tEstados posibles: {estadoEnEmpresa}): ", Validaciones.validar_estadoEnEmpresa) 
+    idEmpresa = solicitar_input("Ingrese el id de la empresa del agente: ", Validaciones.validar_idEmpresaExistente)
+    fechaIngreso = solicitar_input("Ingrese la fecha de ingreso (YYYY-MM-DD HH:MM:SS): ", Validaciones.validar_fecha)  # Convertir a datetime
     # Agreguen los datos que necesiten obtener de sus entidades -----------------------------------------------------------
 
     # Asignar valores al diccionario
@@ -36,12 +48,16 @@ def create_agente():
 
     # Insertar agentes (Se asume que todos tienen su método insertar_agente() dentro de archivo model)
     # Insertar en MongoDB
-    MongoModel.insertar_agente(mongo_agente)
+    try:
+        MongoModel.insertar_agente(mongo_agente)
+    
     # Insertar en Dgraph
-    DgraphModel.insertar_atente(dgraph_agente)
+    # DgraphModel.insertar_atente(dgraph_agente)
     # Insertar en Cassandra
-    CassandraModel.insertar_atente(cassandra_agente)
+    # CassandraModel.insertar_atente(cassandra_agente)
 
+    except Exception as e:
+        print(f"Erro en la inserción de agente: {e}")
 # Repetir funciones para inserciones de demás entidades
 def create_empresa():
     pass
