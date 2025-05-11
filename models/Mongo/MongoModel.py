@@ -31,13 +31,13 @@ class MongoModel:
     def obtener_agente_por_id(cls, idAgente: UUID):
         if not isinstance(idAgente, UUID):
             idAgente = UUID(idAgente)
-        agente = cls._obtener_documentos_por_campo('agentes', idAgente, 'idAgente')
+        agente = cls.buscar_documentos('agentes', {'idAgente': idAgente})
         if agente:
             return Agente.crear_desde_dict(agente[0])
 
     @classmethod
     def obtener_agente_por_nombre(cls, nombreAgente: str):
-        agentes = cls._obtener_documentos_por_campo('agentes', nombreAgente, 'nombre')
+        agentes = cls.buscar_documentos('agentes', {'nombre': nombreAgente})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
         if agentes:
@@ -77,7 +77,7 @@ class MongoModel:
         if not isinstance(idEmpresa, UUID):
             idEmpresa = UUID(idEmpresa)
 
-        empresa = cls._obtener_documentos_por_campo('empresas', idEmpresa, 'idEmpresa')
+        empresa = cls.buscar_documentos('empresas', {'idEmpresa': idEmpresa, })
         if empresa:
             return Empresa.crear_desde_dict(empresa[0])
 
@@ -89,13 +89,13 @@ class MongoModel:
     def obtener_cliente_por_id(cls, idCliente: UUID):
         if not isinstance(idCliente, UUID):
             idCliente = UUID(idCliente)
-        cliente = cls._obtener_documentos_por_campo('clientes', idCliente, 'idCliente')
+        cliente = cls.buscar_documentos('clientes', {'idCliente': idCliente})
         if cliente:
             return Cliente.crear_desde_dict(cliente[0])
     
     @classmethod
     def obtener_cliente_por_nombre(cls, nombreCliente: str):
-        clientes = cls._obtener_documentos_por_campo('clientes', nombreCliente, 'nombre')
+        clientes = cls.buscar_documentos('clientes', {'nombre': nombreCliente})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
         if clientes:
@@ -135,8 +135,9 @@ class MongoModel:
         # Retornamos solo el ticket, no una lista
         if not isinstance(idTicket, UUID):
             idTicket = UUID(idTicket)
-        ticket = cls._obtener_documentos_por_campo('tickets', idTicket, 'idTicket')
+        ticket = cls.buscar_documentos('tickets', {'idTicket': idTicket})
         if ticket:
+            print(ticket)
             return Ticket.crear_desde_dict(ticket[0])
 
     @classmethod
@@ -180,18 +181,19 @@ class MongoModel:
 
 
     @classmethod
-    def _obtener_documentos_por_campo(cls, collection_name: str, field_value, field_name: str):
+    def buscar_documentos(cls, collection_name: str, query: dict):
         """ Recibe un nombre de colleción a buscar, el nombre del campo en base al que se va a buscar y el valor que se quiere buscar
             Retorna los documentos encontrados con esas caracteristicas o lista vacía si no encuentra ninguno en la base de datos
         """
         collection = cls.db[collection_name]
 
         # Si el valor es un UUID, convertirlo a Binary para la consulta
-        if isinstance(field_value, UUID):
-            field_value = Binary.from_uuid(field_value)
+        for key, value in query.items():
+            if isinstance(value, UUID):
+                query[key] = Binary.from_uuid(value)
 
         # Se buscan documentos con campos recibidos
-        documentos = list(collection.find({field_name: field_value}))
+        documentos = list(collection.find(query))
 
         # Convertir todos los campos que sean Binary a UUID
         for documento in documentos:
