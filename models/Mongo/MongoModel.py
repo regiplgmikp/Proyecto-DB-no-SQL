@@ -29,7 +29,7 @@ class MongoModel:
 
     @classmethod
     def obtener_agente_por_id(cls, idAgente: UUID):
-        return cls._obtener_documento_por_campo('agentes', idAgente, 'idAgente')
+        return Agente.crear_desde_dict(cls._obtener_documentos_por_campo('agentes', idAgente, 'idAgente')[0])
     
     @classmethod
     def actualizar_agente(cls, idAgente: UUID, cambios: dict):
@@ -58,7 +58,7 @@ class MongoModel:
 
     @classmethod
     def obtener_empresa_por_id(cls, idEmpresa: UUID):
-        return cls._obtener_documento_por_campo('empresas', idEmpresa, 'idEmpresa')
+        return Empresa.crear_desde_dict(cls._obtener_documentos_por_campo('empresas', idEmpresa, 'idEmpresa')[0])
 
     @classmethod
     def insertar_cliente(cls, cliente):
@@ -66,7 +66,7 @@ class MongoModel:
 
     @classmethod
     def obtener_cliente_por_id(cls, idCliente: UUID):
-        return cls._obtener_documento_por_campo('clientes', idCliente, 'idCliente')
+        return Cliente.crear_desde_dict(cls._obtener_documentos_por_campo('clientes', idCliente, 'idCliente')[0])
     
     @classmethod
     def actualizar_cliente(cls, idCliente: UUID, cambios: dict):
@@ -95,7 +95,8 @@ class MongoModel:
 
     @classmethod
     def obtener_ticket_por_id(cls, idTicket: UUID):
-        return cls._obtener_documento_por_campo('tickets', idTicket, 'idTicket')
+        # Retornamos solo el ticket, no una lista
+        return Ticket.crear_desde_dict(cls._obtener_documentos_por_campo('tickets', idTicket, 'idTicket')[0])
 
     @classmethod
     def actualizar_ticket(cls, idTicket: UUID, cambios: dict):
@@ -138,9 +139,9 @@ class MongoModel:
 
 
     @classmethod
-    def _obtener_documento_por_campo(cls, collection_name: str, field_value, field_name: str):
+    def _obtener_documentos_por_campo(cls, collection_name: str, field_value, field_name: str):
         """ Recibe un nombre de colleción a buscar, el nombre del campo en base al que se va a buscar y el valor que se quiere buscar
-            Retorna los documentos encontrados con esas caracteristicas o None si no encuentra ninguno en la base de datos
+            Retorna los documentos encontrados con esas caracteristicas o lista vacía si no encuentra ninguno en la base de datos
         """
         collection = cls.db[collection_name]
 
@@ -149,16 +150,15 @@ class MongoModel:
             field_value = Binary.from_uuid(field_value)
 
         # Se buscan documentos con campos recibidos
-        documento = collection.find_one({field_name: field_value})
+        documentos = list(collection.find({field_name: field_value}))
 
-        if not documento:
-            return None
         # Convertir todos los campos que sean Binary a UUID
-        for key, value in documento.items():
-            if isinstance(value, Binary):
-                documento[key] = UUID(bytes=value)
+        for documento in documentos:
+            for key, value in documento.items():
+                if isinstance(value, Binary):
+                    documento[key] = UUID(bytes=value)
 
-        # Eliminar el campo '_id' para evitar confusión
-        documento.pop('_id', None)
+            # Eliminar el campo '_id' para evitar confusión
+            documento.pop('_id', None)
 
-        return documento
+        return documentos
