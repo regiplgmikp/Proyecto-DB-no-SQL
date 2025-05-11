@@ -13,6 +13,23 @@ from models.Utils.dictionaries import (
     prioridad as prioridadTicketDict
 )
 
+def solicitar_input(mensaje, validacion_func=None, canBeNone=False):
+    """Solicita un input al usuario y lo valida si es necesario, si se establece como True la variable
+    canBeNone, significa que se acepta retornar vacio, sino, se llama a la función de validación, aún con valor vacio y
+    esta función de validación se encargará de manejar el valor vacio
+    """
+    while True:
+        valor = input(mensaje)
+        if canBeNone and not valor:
+            return None
+        if validacion_func:
+            try:
+                return validacion_func(valor)
+            except ValueError as e:
+                print(f"\tError: {e}")
+        else:
+            return valor
+
 class Validaciones:
 
     @staticmethod
