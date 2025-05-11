@@ -406,3 +406,12 @@ def Direccion_empresa_por_id(client, idEmpresa):
     variables = {'$idEmpresa': idEmpresa}
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "direccion_empresa")
+
+# 12. BORRAR DATOS
+def drop_all(client):
+    try:
+        op = pydgraph.Operation(drop_all=True)
+        client.alter(op)
+        print("Se ha eliminado todo el esquema y los datos de Dgraph.")
+    except Exception as e:
+        print(f"Error al eliminar todo: {e}")
