@@ -59,51 +59,50 @@ def printMenu(option=0):
     # Consultas de clientes
     mm_option4 = {
         0: "Regresar a menú principal",
-        1: "Mostrar clientes por empresa",
-        2: "Mostrar cliente por ticket",
-        3: "Obtener id de cliente en base a su nombre",
-        4: "Obtener información de cliente en base a su ID",
-        5: "Mostrar clientes con tickets abiertos desde x fecha hasta la actualidad",
-        6: "Historial de estado de cuenta de cliente"
+        1: "Obtener información de cliente en base a su ID", #Mongo
+        3: "Obtener información de cliente en base a su nombre", # Mongo
+        4: "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
+        5: "Mostrar clientes por empresa", # Dgraph
+        6: "Mostrar cliente por ticket", # Dgraph
+        7: "Historial de estado de cuenta de cliente" # Cassandra
     }
 
     # Consultas de tickets
     mm_option5 = {
-        0: "Regresar a menú principal",
-        1: "Mostrar tickets por empresa",
-        2: "Mostrar tickets por cliente",
-        3: "Mostrar tickets de una empresa por tipo de problema ",
-        4: "Mostrar tickets de agentes por empresa por tipo de problema ",
-        5: "Mostrar una lista ordenada del tipo de problema más frecuente al menor en una empresa en un rango de fechas.",
-        6: "Búsqueda de tickets por palabras clave (por empresa)",
-        7: "Búsqueda de tickets por palabra clave por agente y empresa",
-        8: "Mostrar tickets cerrados por agente",
-        9: "Mostrar tickets pendientes por agente",
-        10:	"Mostrar tickets cerrados por empresa",
-        11:	"Mostrar tickets pendientes por empresa",
-        12:	"Mostrar tickets abiertos por empresa",
-        13:	"Mostrar tickets cerrados por cliente",
-        14:	"Mostrar tickets pendientes por cliente",
-        15:	"Mostrar tickets abiertos por cliente",
-        16:	"Obtener información de ticket en base a su ID",
-        17:	"Mostrar tickets con una antigüedad mayor a “x” fecha",
-        18:	"Mostrar tickets cerrados en un periodo de tiempo por agente",
-        19:	"Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo",
-        20:	"Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo",
-        21:	"Filtrar tickets de empresa por prioridad",
-        22:	"Mostrar historial de comentarios de ticket en base al id del ticket",
-        23:	"Historial de cambios en la prioridad de un ticket",
-        24:	"Historial de asignación de agentes a un ticket",
-        25:	"Historial de estados del ticket",
-        26:	"Historial de tickets creados en empresa"
+        1: "Regresar a menú principal", 
+        2:	"Obtener información de ticket en base a su ID", # Mongo
+        3: "Mostrar Tickets con estado “Cerrado” por Agente", # Mongo
+        4: "Mostrar Tickets con estado “Pendiente” por Agente", # Mongo
+        5: "Mostrar Tickets con estado “Cerrado” por Empresa", # Mongo
+        6:	"Mostrar Tickets con estado “Pendiente” por Empresa", # Mongo
+        7:	"Mostrar Tickets con estado “Abierto” por Empresa", # Mongo
+        8: "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
+        9: "Mostrar Tickets con estado “Pendiente” por Cliente.", # Mongo
+        10: "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
+        11:	"Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
+        12:	"Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
+        13:	"Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
+        14:	"Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
+        15:	"Filtrar tickets de empresa por prioridad", # Mongo
+        16: "Mostrar tickets por empresa", # Dgraph
+        17: "Mostrar tickets por cliente", # Dgraph
+        18: "Mostrar tickets de una empresa por tipo de problema ", # Dgraph
+        19: "Mostrar tickets de un agente de una empresa por tipo de problema ", # Dgraph
+        20: "Búsqueda de Ticket por empresa por medio de palabras clave", # Dgraph
+        21: "Búsqueda de Ticket por Agente y Empresa por medio de palabras clave", # Dgraph
+        22:	"Historial de comentarios de ticket en base al id del ticket", # Cassandra
+        23:	"Historial de cambios en la prioridad de un ticket", # Cassandra
+        24:	"Historial de asignación de agentes a un ticket", # Cassandra
+        25:	"Historial de estados del ticket", # Cassandra
+        26:	"Historial de tickets creados en empresa" # Cassandra
     }
 
     # Consultas de empresas
     mm_option6 = {
         0: "Regresar a menú principal",
-        1: "Mostrar ubicación de la empresa por medio de su id",
-        2: "Obtener id de empresa en base a su nombre",
-        3: "Obtener informacion de empresa en base a su id"
+        1: "Obtener información de empresa en base a su nombre", # Mongo
+        2: "Obtener información de empresa en base a su id", # Mongo
+        3: "Mostrar ubicación de la empresa por medio de su id" # Dgraph
     }
 
     if option == 0:
