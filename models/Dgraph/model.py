@@ -80,7 +80,6 @@ def set_schema(client):
 # ---------------------------------------------------------------------------------------
 
 # 3- Carga de datos
-
 import csv
 
 def create_data(client):
@@ -172,7 +171,7 @@ def create_data(client):
                     'uid': f"_:{row['idTicket']}",
                     'idTicket': row['idTicket'],
                     'tipoProblema': int(row['tipoProblema']),
-                    'descripción': row['descripción']
+                    'descripcion': row['descripcion']
                 }
                 tickets.append(ticket)
 
@@ -205,6 +204,7 @@ def create_data(client):
                         'uid': origen_uid,
                         tipo_relacion: {'uid': destino_uid}
                     }
+
                     txn.mutate(set_obj=relacion)
                 else:
                     print(f"🤦‍♀️ UIDs no encontrados: origen={origen_id}, destino={destino_id}")
@@ -213,9 +213,6 @@ def create_data(client):
         print("👌 Todas las relaciones cargadas con éxito.")
     finally:
         txn.discard()
-
-#---------------------------------------------------------------------------------------------#
-
 #========================================== QUERYS ===========================================#
 
 def print_json(res):
@@ -409,3 +406,12 @@ def Direccion_empresa_por_id(client, idEmpresa):
     variables = {'$idEmpresa': idEmpresa}
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "direccion_empresa")
+
+# 12. BORRAR DATOS
+def drop_all(client):
+    try:
+        op = pydgraph.Operation(drop_all=True)
+        client.alter(op)
+        print("Se ha eliminado todo el esquema y los datos de Dgraph.")
+    except Exception as e:
+        print(f"Error al eliminar todo: {e}")
