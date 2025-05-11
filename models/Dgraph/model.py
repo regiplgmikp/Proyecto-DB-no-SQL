@@ -7,7 +7,7 @@ import pydgraph
 import csv
 import sys
 import io
-from Formatos import print_formatted
+from .Formatos import print_formatted
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 
 # 2- Definición de esquema
@@ -80,7 +80,6 @@ def set_schema(client):
 # ---------------------------------------------------------------------------------------
 
 # 3- Carga de datos
-
 import csv
 
 def create_data(client):
@@ -172,7 +171,7 @@ def create_data(client):
                     'uid': f"_:{row['idTicket']}",
                     'idTicket': row['idTicket'],
                     'tipoProblema': int(row['tipoProblema']),
-                    'descripción': row['descripción']
+                    'descripcion': row['descripcion']
                 }
                 tickets.append(ticket)
 
@@ -205,6 +204,7 @@ def create_data(client):
                         'uid': origen_uid,
                         tipo_relacion: {'uid': destino_uid}
                     }
+
                     txn.mutate(set_obj=relacion)
                 else:
                     print(f"🤦‍♀️ UIDs no encontrados: origen={origen_id}, destino={destino_id}")
@@ -213,9 +213,6 @@ def create_data(client):
         print("👌 Todas las relaciones cargadas con éxito.")
     finally:
         txn.discard()
-
-#---------------------------------------------------------------------------------------------#
-
 #========================================== QUERYS ===========================================#
 
 def print_json(res):
@@ -334,8 +331,8 @@ def Agentes_por_ticket(client, id_ticket):
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "agente_ticket")
 
-# 7. Tickets de agente de una empresa por tipo de problema.
-def Tickets_por_agente_empresa_tipo(client, id_empresa,tipo_problema):
+# 7. Tickets de empresa por tipo de problema.
+def Tickets_por_empresa_tipo(client, id_empresa,tipo_problema):
     query = """
     query ticketsPorAgenteEmpresaTipo($idEmpresa: string, $tipoProblema: int) {
       empresa(func: eq(idEmpresa, $idEmpresa)) {
@@ -350,10 +347,29 @@ def Tickets_por_agente_empresa_tipo(client, id_empresa,tipo_problema):
     """
     variables = {'$idEmpresa':id_empresa,'$tipoProblema': tipo_problema}
     res = client.txn(read_only=True).query(query, variables=variables)
-    print_formatted(res, "tickets_agente_empresa_tipo")
+    print_formatted(res, "tickets_empresa_tipo")
+
+# 8. Tickets por agente por tipo de problema.
+
+def Tickets_por_agente_tipo(client, id_agente,tipo_problema):
+    query = """
+    query ticketsPorAgenteTipo($idAgente: string, $tipoProblema: int) {
+      agente(func: eq(idAgente, $idAgente)) {
+        nombreAgente
+        SOLUCIONA @filter(eq(tipoProblema, $tipoProblema)) {
+          idTicket
+          tipoProblema
+          descripcion
+        }
+      }
+    }
+    """
+    variables = {'$idAgente': id_agente,'$tipoProblema': tipo_problema}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "tickets_agente_tipo")
 
 
-# 8. Ticket por empresa por medio de palabras clave.
+# 9. Ticket por empresa por medio de palabras clave.
 def Ticket_por_empresa_palabras(client, empresa_id, palabras_clave):
     query = """
     query ticketsPorEmpresaPalabras($empresa_id: string, $palabras_clave: string) {
@@ -371,7 +387,7 @@ def Ticket_por_empresa_palabras(client, empresa_id, palabras_clave):
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "tickets_empresa_palabras")
 
-# 9. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
+# 10. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
 def Ticket_por_agente_empresa_palabras(client, empresa_id, agente_id, palabras_clave):
     query = """
     query buscarTicketsAgenteEmpresa($idEmpresa: string, $idAgente: string, $palabras_clave: string) {
@@ -392,7 +408,7 @@ def Ticket_por_agente_empresa_palabras(client, empresa_id, agente_id, palabras_c
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "tickets_agente_empresa_palabras")
 
-# 10. Dirección de la empresa por medio de su ID.
+# 11. Dirección de la empresa por medio de su ID.
 
 def Direccion_empresa_por_id(client, idEmpresa):
     query = """
@@ -409,3 +425,12 @@ def Direccion_empresa_por_id(client, idEmpresa):
     variables = {'$idEmpresa': idEmpresa}
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "direccion_empresa")
+
+# 12. BORRAR DATOS
+def drop_all(client):
+    try:
+        op = pydgraph.Operation(drop_all=True)
+        client.alter(op)
+        print("Se ha eliminado todo el esquema y los datos de Dgraph.")
+    except Exception as e:
+        print(f"Error al eliminar todo: {e}")
