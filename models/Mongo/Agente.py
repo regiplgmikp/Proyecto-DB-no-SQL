@@ -36,7 +36,7 @@ class Agente(BaseModel):
 
     @field_validator('idEmpresa')
     def validar_idEmpresa(idEmpresa):
-        return Validaciones.validar_idEmpresaExistente(idEmpresa)['idEmpresa']
+        return Validaciones.validar_idEmpresaExistente(idEmpresa).idEmpresa
 
     @classmethod
     def crear_desde_dict(cls, data: dict):
