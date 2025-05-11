@@ -29,6 +29,7 @@ class MongoModel:
 
     @classmethod
     def obtener_agente_por_id(cls, idAgente: UUID):
+        idAgente = UUID(idAgente)
         agente = cls._obtener_documentos_por_campo('agentes', idAgente, 'idAgente')
         if agente:
             return Agente.crear_desde_dict(agente[0])
@@ -60,6 +61,7 @@ class MongoModel:
 
     @classmethod
     def obtener_empresa_por_id(cls, idEmpresa: UUID):
+        idEmpresa = UUID(idEmpresa)
         empresa = cls._obtener_documentos_por_campo('empresas', idEmpresa, 'idEmpresa')
         if empresa:
             return Empresa.crear_desde_dict(empresa[0])
@@ -70,6 +72,7 @@ class MongoModel:
 
     @classmethod
     def obtener_cliente_por_id(cls, idCliente: UUID):
+        idCliente = UUID(idCliente)
         cliente = cls._obtener_documentos_por_campo('clientes', idCliente, 'idCliente')
         if cliente:
             return Cliente.crear_desde_dict(cliente[0])
@@ -102,6 +105,7 @@ class MongoModel:
     @classmethod
     def obtener_ticket_por_id(cls, idTicket: UUID):
         # Retornamos solo el ticket, no una lista
+        idTicket = UUID(idTicket)
         ticket = cls._obtener_documentos_por_campo('tickets', idTicket, 'idTicket')
         if ticket:
             return Ticket.crear_desde_dict(ticket[0])
