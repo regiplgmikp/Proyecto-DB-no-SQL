@@ -49,7 +49,7 @@ def printMenu(option=0):
     # Consultas de agentes
     mm_option3 = {
         0: "Regresar a menú principal",
-        1: "Obtener id de agente en base a su nombre", # Mongo
+        1: "Obtener información de agente en base a su nombre", # Mongo
         2: "Obtener información de agente en base a su ID", # Mongo
         3: "Mostrar agentes por empresa", # Dgraph
         4: "Mostrar agente por ticket", # Draph
@@ -213,8 +213,13 @@ def main():
                     # "Obtener id de agente en base a su nombre", # Mongo
                     nombreAgente = solicitar_input("Ingrese el nombre del agente del que desea obtener información (vacío para volver): ", Validaciones.validar_nombre, True)
                     if nombreAgente:
-                        agente = MongoModel.obtener_agente_por_nombre(nombreAgente)
-                        print(f"Agente encontrado: \n{agente}" if agente else f"Agente con nombre {nombreAgente} no encontrado")
+                        agentes = MongoModel.obtener_agente_por_nombre(nombreAgente)
+                        if agentes:
+                            print("Agente(s) encontrado(s) con ese nombre: ")
+                            for agente in agentes:
+                                print(agente)
+                        else:
+                            print(f"Agente con nombre {nombreAgente} no encontrado")
                     else:
                         print("Volviendo a menú principal\n")
                 elif option == 2: 

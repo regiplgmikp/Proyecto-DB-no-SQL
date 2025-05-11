@@ -18,6 +18,17 @@ class Agente(BaseModel):
     idEmpresa: UUID
     fechaIngreso: datetime
 
+    def __str__(self):
+        result = f"""
+    IdAgente: {self.idAgente}
+    Nombre: {self.nombre}
+    Correo: {self.correo}
+    Teléfono: {self.telefono}
+    Estado en empresa: {self.estadoEnEmpresa}
+    IdEmresa: {self.idEmpresa}
+    Fecha de ingreso: {self.fechaIngreso}"""
+        return result
+
     @field_validator('nombre')
     def validar_nombre_completo(nombre):
         return Validaciones.validar_nombre(nombre)

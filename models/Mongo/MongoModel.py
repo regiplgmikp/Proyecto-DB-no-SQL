@@ -34,7 +34,19 @@ class MongoModel:
         agente = cls._obtener_documentos_por_campo('agentes', idAgente, 'idAgente')
         if agente:
             return Agente.crear_desde_dict(agente[0])
-    
+
+    @classmethod
+    def obtener_agente_por_nombre(cls, nombreAgente: str):
+        agentes = cls._obtener_documentos_por_campo('agentes', nombreAgente, 'nombre')
+
+        # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
+        if agentes:
+            result = []
+            for agente in agentes:
+                result.append(Agente.crear_desde_dict(agente))
+
+            return result
+        
     @classmethod
     def actualizar_agente(cls, idAgente: UUID, cambios: dict):
         """Actualiza el estado y teléfono de un agente en la base de datos."""
