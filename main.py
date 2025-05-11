@@ -60,12 +60,12 @@ def printMenu(option=0):
     # Consultas de clientes
     mm_option4 = {
         0: "Regresar a menú principal",
-        1: "Obtener información de cliente en base a su ID", #Mongo
-        3: "Obtener información de cliente en base a su nombre", # Mongo
-        4: "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
-        5: "Mostrar clientes por empresa", # Dgraph
-        6: "Mostrar cliente por ticket", # Dgraph
-        7: "Historial de estado de cuenta de cliente" # Cassandra
+        1: "Obtener información de cliente en base a su nombre", # Mongo
+        2: "Obtener información de cliente en base a su ID", #Mongo
+        3: "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
+        4: "Mostrar clientes por empresa", # Dgraph
+        5: "Mostrar cliente por ticket", # Dgraph
+        6: "Historial de estado de cuenta de cliente" # Cassandra
     }
 
     # Consultas de tickets
@@ -208,9 +208,9 @@ def main():
                 
                 elif option == 2: 
                     # "Obtener información de agente en base a su ID", # Mongo
-                    idAgente = input("Ingrese el ID del agente del que desea obtener información: ")
-                    agente = MongoModel.obtener_agente_por_id(idAgente)
-                    print(f"Agente encontrado: \n{agente}" if agente else f"Agente con ID {idAgente} no encontrado")
+                    id = input("Ingrese el ID del agente del que desea obtener información: ")
+                    entidad = MongoModel.obtener_agente_por_id(id)
+                    print(f"Agente encontrado: \n{entidad}\n" if entidad else f"Agente con ID {id} no encontrado")
 
                 elif option == 3: 
                     # "Mostrar agentes por empresa", # Dgraph
@@ -233,6 +233,29 @@ def main():
                 # Regresa al menu principal
                 if option == 0:
                     continue
+                # "Obtener información de cliente en base a su nombre", # Mongo
+                elif option == 1: 
+                    print(obtenerEntidades("Ingrese el nombre del cliente del que desea obtener información (Enter para volver): ", MongoModel.obtener_cliente_por_nombre, Validaciones.validar_nombre))
+
+                # "Obtener información de cliente en base a su ID", #Mongo
+                elif option == 2: 
+                    id = input("Ingrese el ID del cliente del que desea obtener información: ")
+                    entidad = MongoModel.obtener_cliente_por_id(id)
+                    print(f"Cliente encontrado: \n{entidad}\n" if entidad else f"Cliente con ID {id} no encontrado")
+
+                # "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
+                elif option == 3: 
+                    pass
+                # "Mostrar clientes por empresa", # Dgraph
+                elif option == 4: 
+                    pass
+                # "Mostrar cliente por ticket", # Dgraph
+                elif option == 5: 
+                    pass
+                # "Historial de estado de cuenta de cliente" # Cassandra
+                elif option == 6: 
+                    pass
+
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue

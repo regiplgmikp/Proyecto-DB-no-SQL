@@ -12,7 +12,7 @@ def obtenerEntidades(input_message, get_function, val_function):
             for entidad in entidades:
                 result += str(entidad) + "\n"
         else:
-            result += f"Ninguna información encontrada relacionada a '{campoObtenido}'"
+            result += f"Ninguna información encontrada relacionada a '{campoObtenido}'\n"
     else:
         result += "Volviendo a menú principal\n"
 

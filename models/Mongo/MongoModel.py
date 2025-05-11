@@ -94,6 +94,18 @@ class MongoModel:
             return Cliente.crear_desde_dict(cliente[0])
     
     @classmethod
+    def obtener_cliente_por_nombre(cls, nombreCliente: str):
+        clientes = cls._obtener_documentos_por_campo('clientes', nombreCliente, 'nombre')
+
+        # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
+        if clientes:
+            result = []
+            for cliente in clientes:
+                result.append(Cliente.crear_desde_dict(cliente))
+
+            return result
+
+    @classmethod
     def actualizar_cliente(cls, idCliente: UUID, cambios: dict):
         """Actualiza el telefono, correo, estadoCuenta de un cliente en la base de datos."""
         try:
