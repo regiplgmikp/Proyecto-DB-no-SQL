@@ -24,7 +24,7 @@ class MongoModel:
 
     @classmethod
     def insertar_agente(cls, agente):
-        cls._insertar_documento('agentes', agente, Agente)
+        return cls._insertar_documento('agentes', agente, Agente)
 
     @classmethod
     def obtener_agente_por_id(cls, idAgente: UUID):
@@ -32,7 +32,7 @@ class MongoModel:
 
     @classmethod
     def insertar_empresa(cls, empresa):
-        cls._insertar_documento('empresas', empresa, Empresa)
+        return cls._insertar_documento('empresas', empresa, Empresa)
 
     @classmethod
     def obtener_empresa_por_id(cls, idEmpresa: UUID):
@@ -40,7 +40,7 @@ class MongoModel:
 
     @classmethod
     def insertar_cliente(cls, cliente):
-        cls._insertar_documento('clientes', cliente, Cliente)
+        return cls._insertar_documento('clientes', cliente, Cliente)
 
     @classmethod
     def obtener_cliente_por_id(cls, idCliente: UUID):
@@ -48,7 +48,7 @@ class MongoModel:
 
     @classmethod
     def insertar_ticket(cls, ticket):
-        cls._insertar_documento('tickets', ticket, Ticket)
+        return cls._insertar_documento('tickets', ticket, Ticket)
 
     @classmethod
     def obtener_ticket_por_id(cls, idTicket: UUID):
@@ -67,6 +67,7 @@ class MongoModel:
                     data_dict[key] = Binary.from_uuid(value)
 
             collection.insert_one(data_dict)
+            return data # Si hay algún error en la insersión, no se llega a esta linea, solo si todo salio correctamente, se retorna la coleccion creada
         except Exception as e:
             raise e
 
