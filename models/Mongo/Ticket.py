@@ -2,11 +2,7 @@ from pydantic import BaseModel, Field, field_validator, model_validator
 from typing import Optional
 from uuid import UUID, uuid4
 from datetime import datetime
-
-from models.Utils.dictionaries import (
-    estado as estadoDict, 
-    prioridad as prioridadDict
-    )
+from models.Utils.validaciones import Validaciones
 
 class TicketValidationError(Exception):
     """Excepción personalizada para errores de validación de Tickets"""
@@ -25,6 +21,21 @@ class Ticket(BaseModel):
     estado: int
     prioridad: int
 
+    # Validar que entidades relacionadas a UUIDs existan
+    @field_validator('idCliente')
+    def validar_idCliente(idCliente):
+        return Validaciones.validar_idClienteExistente(idCliente)['idCliente']
+
+    @field_validator('idAgente')
+    def validar_idAgente(idAgente):
+        if idAgente:
+            return Validaciones.validar_idAgenteExistente(idAgente)['idAgente']
+        return None
+
+    @field_validator('idEmpresa')
+    def validar_idEmpresa(idEmpresa):
+        return Validaciones.validar_idEmpresaExistente(idEmpresa)['idEmpresa']
+
     @model_validator(mode='after')
     def validar_fechas(self):
         if self.fechaCierre and self.fechaCierre < self.fechaCreacion:
@@ -32,22 +43,13 @@ class Ticket(BaseModel):
         return self
 
     @field_validator('estado')
-    @classmethod
-    def validar_estado(cls, estado):
-        estados_validos = list(estadoDict.keys())
-        if estado not in estados_validos:
-            raise ValueError(f'Estado inválido. Estados válidos: {estados_validos}')
-        return estado
+    def validar_estado(estado):
+        return Validaciones.validar_estadoTicket(estado)
 
     @field_validator('prioridad')
-    @classmethod
-    def validar_prioridad(cls, prioridad):
-        prioridades_validas = list(prioridadDict.keys())
-        if prioridad not in prioridades_validas:
-            raise ValueError(f'Prioridad inválida. Prioridades válidas: {prioridades_validas}')
-        return prioridad
+    def validar_prioridad(prioridad):
+        return Validaciones.validar_prioridadTicket(prioridad)
 
-    
     @classmethod
     def crear_desde_dict(cls, data: dict):
         try:

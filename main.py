@@ -1,5 +1,16 @@
 # import models.conection as conection
 import models.Mongo.populate as populate
+from models.Utils.crear_entidades import (
+    crear_agente,
+    crear_empresa,
+    crear_cliente,
+    crear_ticket
+)
+from models.Utils.actualizar_entidades import (
+    actualizar_agente,
+    actualizar_cliente,
+    actualizar_ticket
+)
 
 
 def printMenu(option=0):
@@ -139,6 +150,21 @@ def main():
             printMenu(1)
             try:
                 option = int(input("Seleccione una opción: "))
+                # Registro de Agente
+                if option == 0:
+                    continue
+                elif option == 1:
+                    crear_agente()
+                # Registro de Cliente
+                elif option == 1:
+                    crear_cliente()
+                # Registro de Ticket
+                elif option == 1:
+                    crear_ticket()
+                # Registro de Empresa
+                elif option == 1:
+                    crear_empresa()
+                    
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue
@@ -152,6 +178,18 @@ def main():
             printMenu(2)
             try:
                 option = int(input("Seleccione una opción: "))
+                if option == 0:
+                    continue
+                # Actualización de agente
+                elif option == 1:
+                    print(actualizar_agente())
+                # Actualización de cliente
+                elif option == 2:
+                    print(actualizar_cliente())
+                # Actualización de Ticket
+                elif option == 3:
+                    print(actualizar_ticket())
+
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue

@@ -1,13 +1,7 @@
 from pydantic import BaseModel, Field, field_validator
 from uuid import UUID, uuid4
 from datetime import datetime
-import re
-from models.Utils.dictionaries import estadoEnEmpresa as estadoEnEmpresaDict
-from models.Utils.regularExpresions import (
-    correo_regex,
-    telefono_regex,
-    nombre_regex
-)
+from models.Utils.validaciones import Validaciones
 
 class AgenteValidationError(Exception):
     """Excepción personalizada para errores de validación de agentes"""
@@ -25,33 +19,24 @@ class Agente(BaseModel):
     fechaIngreso: datetime
 
     @field_validator('nombre')
-    @classmethod
-    def validar_nombre_completo(cls, nombre):
-        if not re.match(nombre_regex, nombre):
-            raise ValueError('El nombre debe contener al menos nombre y apellido')
-        return nombre.lower()
+    def validar_nombre_completo(nombre):
+        return Validaciones.validar_nombre(nombre)
 
     @field_validator('correo')
-    @classmethod
-    def validar_formato_correo(cls, correo):
-        if not re.match(correo_regex, correo):
-            raise ValueError('Formato de correo electrónico inválido')
-        return correo.lower()
+    def validar_formato_correo(correo):
+        return Validaciones.validar_formato_correo(correo)
 
     @field_validator('telefono')
-    @classmethod
-    def validar_telefono(cls, telefono):
-        if not re.match(telefono_regex, telefono):
-            raise ValueError('El teléfono debe contener solo números (10-15 dígitos)')
-        return telefono
+    def validar_telefono(telefono):
+        return Validaciones.validar_telefono(telefono)
 
     @field_validator('estadoEnEmpresa')
-    @classmethod
-    def validar_estado(cls, estadoEnEmpresa):
-        estados_validos = list(estadoEnEmpresaDict.keys())
-        if estadoEnEmpresa not in estados_validos:
-            raise ValueError(f'Estado inválido. estados válidos: {estados_validos}')
-        return estadoEnEmpresa
+    def validar_estadoEnEmpresa(estadoEnEmpresa):
+        return Validaciones.validar_estadoEnEmpresa(estadoEnEmpresa)
+
+    @field_validator('idEmpresa')
+    def validar_idEmpresa(idEmpresa):
+        return Validaciones.validar_idEmpresaExistente(idEmpresa)['idEmpresa']
 
     @classmethod
     def crear_desde_dict(cls, data: dict):

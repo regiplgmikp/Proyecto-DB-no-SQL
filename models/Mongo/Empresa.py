@@ -1,10 +1,6 @@
 from pydantic import BaseModel, Field, field_validator
 from uuid import UUID, uuid4
-import re
-from models.Utils.regularExpresions import (
-    correo_regex,
-    telefono_regex,
-)
+from models.Utils.validaciones import Validaciones
 
 class EmpresaValidationError(Exception):
     """Excepción personalizada para errores de validación de Empresas"""
@@ -20,18 +16,12 @@ class Empresa(BaseModel):
     direccion: str
 
     @field_validator('correo')
-    @classmethod
-    def validar_formato_correo(cls, correo):
-        if not re.match(correo_regex, correo):
-            raise ValueError('Formato de correo electrónico inválido')
-        return correo.lower()
+    def validar_formato_correo(correo):
+        return Validaciones.validar_formato_correo(correo)
 
     @field_validator('telefono')
-    @classmethod
-    def validar_telefono(cls, telefono):
-        if not re.match(telefono_regex, telefono):
-            raise ValueError('El teléfono debe contener solo números (10-15 dígitos)')
-        return telefono
+    def validar_telefono(telefono):
+        return Validaciones.validar_telefono(telefono)
 
     @classmethod
     def crear_desde_dict(cls, data: dict):
