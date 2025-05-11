@@ -7,7 +7,7 @@ from datetime import datetime
 import models.Utils.dictionaries as dictionaries
 from models.Utils.validaciones import (Validaciones, solicitar_input)
 
-def create_agente():
+def crear_agente():
     mongo_agente = {}
     cassandra_agente = {}
     dgraph_agente = {}
@@ -55,7 +55,7 @@ def create_agente():
     except Exception as e:
         print(f"Error en la inserción de agente: {e}")
 # Repetir funciones para inserciones de demás entidades
-def create_empresa():
+def crear_empresa():
 
     mongo_empresa = {}
 
@@ -82,7 +82,7 @@ def create_empresa():
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
-def create_cliente():
+def crear_cliente():
     mongo_cliente = {}
 
     estadosCuenta = dictionaries.estadoCuenta
@@ -112,7 +112,7 @@ def create_cliente():
     except Exception as e:
         print(f"Error en la inserción de cliente: {e}")
 
-def create_ticket():
+def crear_ticket():
     mongo_ticket = {}
 
     prioridadesTicket = dictionaries.prioridad
