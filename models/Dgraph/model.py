@@ -171,7 +171,7 @@ def create_data(client):
                     'uid': f"_:{row['idTicket']}",
                     'idTicket': row['idTicket'],
                     'tipoProblema': int(row['tipoProblema']),
-                    'descripción': row['descripción']
+                    'descripcion': row['descripcion']
                 }
                 tickets.append(ticket)
 
