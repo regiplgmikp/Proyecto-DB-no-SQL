@@ -24,17 +24,17 @@ class Ticket(BaseModel):
     # Validar que entidades relacionadas a UUIDs existan
     @field_validator('idCliente')
     def validar_idCliente(idCliente):
-        return Validaciones.validar_idClienteExistente(idCliente)
+        return Validaciones.validar_idClienteExistente(idCliente)['idCliente']
 
     @field_validator('idAgente')
     def validar_idAgente(idAgente):
         if idAgente:
-            return Validaciones.validar_idAgenteExistente(idAgente)
+            return Validaciones.validar_idAgenteExistente(idAgente)['idAgente']
         return None
 
     @field_validator('idEmpresa')
     def validar_idEmpresa(idEmpresa):
-        return Validaciones.validar_idEmpresaExistente(idEmpresa)
+        return Validaciones.validar_idEmpresaExistente(idEmpresa)['idEmpresa']
 
     @model_validator(mode='after')
     def validar_fechas(self):

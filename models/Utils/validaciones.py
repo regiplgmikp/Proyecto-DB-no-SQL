@@ -84,7 +84,7 @@ class Validaciones:
             empresa = MongoModel.obtener_empresa_por_id(idEmpresa)
             if not empresa:
                 raise ValueError(f"La empresa con ID {idEmpresa} no existe.")
-            return idEmpresa
+            return empresa
         except ValueError as e:
             raise ValueError(f"El ID ingresado no es un UUID válido. Error:{e}")
 
@@ -100,7 +100,7 @@ class Validaciones:
             agente = MongoModel.obtener_agente_por_id(idAgente)
             if not agente:
                 raise ValueError(f"El agente con ID {idAgente} no existe.")
-            return idAgente
+            return agente
         except ValueError as e:
             raise ValueError(f"El ID ingresado no es un UUID válido. Error:{e}")
 
@@ -116,6 +116,6 @@ class Validaciones:
             cliente = MongoModel.obtener_cliente_por_id(idCliente)
             if not cliente:
                 raise ValueError(f"El cliente con ID {idCliente} no existe.")
-            return idCliente
+            return cliente
         except ValueError as e:
             raise ValueError(f"El ID ingresado no es un UUID válido. Error:{e}")

@@ -239,8 +239,8 @@ def populate_all(csv_path):
     """
     result = {}
     try:
-        result['agentes'] = (populate_agentes(csv_path + 'agentes.csv'))
         result['empresas'] = (populate_empresas(csv_path + 'empresas.csv'))
+        result['agentes'] = (populate_agentes(csv_path + 'agentes.csv'))
         result['clientes'] = (populate_clientes(csv_path + 'clientes.csv'))
         result['tickets'] = (populate_tickets(csv_path + 'tickets.csv'))
 
