@@ -1,7 +1,8 @@
 # import models.conection as conection
 import models.Mongo.populate as populate
 from models.Mongo.MongoModel import MongoModel
-from models.Utils.validaciones import Validaciones, solicitar_input
+from models.Mongo.consultas import obtenerEntidades
+from models.Utils.validaciones import Validaciones
 from models.Utils.crear_entidades import (
     crear_agente,
     crear_empresa,
@@ -151,9 +152,10 @@ def main():
             printMenu(1)
             try:
                 option = int(input("Seleccione una opción: "))
-                # Registro de Agente
+                # Regresa al menu principal
                 if option == 0:
                     continue
+                # Registro de Agente
                 elif option == 1:
                     crear_agente()
                 # Registro de Cliente
@@ -169,16 +171,13 @@ def main():
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue
-            
-            # Regresa al menu principal
-            if option == 0:
-                continue
-        
+                    
         # Actualizaciones
         elif option == 2:
             printMenu(2)
             try:
                 option = int(input("Seleccione una opción: "))
+                # Regresa al menu principal    
                 if option == 0:
                     continue
                 # Actualización de agente
@@ -193,12 +192,7 @@ def main():
 
             except ValueError:
                 print("Por favor, ingrese un número válido.")
-                continue
-
-            # Regresa al menu principal    
-            if option == 0:
-                continue
-                
+                continue                
                 
         # Consultas de agentes
         elif option == 3:
@@ -209,18 +203,9 @@ def main():
                     # "Regresar a menú principal",
                     continue
                 elif option == 1: 
-                    # "Obtener id de agente en base a su nombre", # Mongo
-                    nombreAgente = solicitar_input("Ingrese el nombre del agente del que desea obtener información (vacío para volver): ", Validaciones.validar_nombre, True)
-                    if nombreAgente:
-                        agentes = MongoModel.obtener_agente_por_nombre(nombreAgente)
-                        if agentes:
-                            print("Agente(s) encontrado(s) con ese nombre: ")
-                            for agente in agentes:
-                                print(agente)
-                        else:
-                            print(f"Agente con nombre {nombreAgente} no encontrado")
-                    else:
-                        print("Volviendo a menú principal\n")
+                    # "Obtener información de agente en base a su nombre", # Mongo
+                    print(obtenerEntidades("Ingrese el nombre del agente del que desea obtener información (Enter para volver): ", MongoModel.obtener_agente_por_nombre, Validaciones.validar_nombre))
+                
                 elif option == 2: 
                     # "Obtener información de agente en base a su ID", # Mongo
                     idAgente = input("Ingrese el ID del agente del que desea obtener información: ")
@@ -236,25 +221,20 @@ def main():
                 elif option == 5: 
                     # "Historial de estado en empresa de agente" # Casssandra
                     pass
-            except Exception as e:
-                print(f"Error: {e}")
-                continue
-            # Regresa al menu principal
-            if option == 0:
-                continue
-            
+            except ValueError:
+                print("Por favor, ingrese un número válido.")
+                continue          
             
         # Consultas de clientes
         elif option == 4:
             printMenu(4)
             try:
                 option = int(input("Seleccione una opción: "))
+                # Regresa al menu principal
+                if option == 0:
+                    continue
             except ValueError:
                 print("Por favor, ingrese un número válido.")
-                continue
-            
-            # Regresa al menu principal
-            if option == 0:
                 continue
                 
         # Consultas de tickets
@@ -262,12 +242,11 @@ def main():
             printMenu(5)
             try:
                 option = int(input("Seleccione una opción: "))
+                # Regresa al menu principal
+                if option == 0:
+                    continue
             except ValueError:
                 print("Por favor, ingrese un número válido.")
-                continue
-
-            # Regresa al menu principal
-            if option == 0:
                 continue
                 
         # Consultas de empresas
@@ -275,13 +254,12 @@ def main():
             printMenu(6)
             try:
                 option = int(input("Seleccione una opción: "))
+                # Regresa al menu principal
+                if option == 0:
+                    continue
             except ValueError:
                 print("Por favor, ingrese un número válido.")
-                continue
-            
-            # Regresa al menu principal
-            if option == 0:
-                continue
+                continue            
                 
         # Eliminar bases de datos
         elif option == 7:
