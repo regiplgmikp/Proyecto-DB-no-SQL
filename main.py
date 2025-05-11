@@ -1,5 +1,7 @@
 # import models.conection as conection
 import models.Mongo.populate as populate
+from models.Mongo.MongoModel import MongoModel
+from models.Utils.validaciones import Validaciones, solicitar_input
 from models.Utils.crear_entidades import (
     crear_agente,
     crear_empresa,
@@ -47,11 +49,11 @@ def printMenu(option=0):
     # Consultas de agentes
     mm_option3 = {
         0: "Regresar a menú principal",
-        1: "Mostrar agentes por empresa",
-        2: "Mostrar agente por ticke",
-        3: "Obtener id de agente en base a su nombre",
-        4: "Obtener información de agente en base a su ID",
-        5: "Historial de estado en empresa de agente"
+        1: "Obtener id de agente en base a su nombre", # Mongo
+        2: "Obtener información de agente en base a su ID", # Mongo
+        3: "Mostrar agentes por empresa", # Dgraph
+        4: "Mostrar agente por ticket", # Draph
+        5: "Historial de estado en empresa de agente" # Casssandra
     }
 
     # Consultas de clientes
@@ -204,10 +206,35 @@ def main():
             printMenu(3)
             try:
                 option = int(input("Seleccione una opción: "))
-            except ValueError:
-                print("Por favor, ingrese un número válido.")
+                if option == 0: 
+                    # "Regresar a menú principal",
+                    continue
+                elif option == 1: 
+                    # "Obtener id de agente en base a su nombre", # Mongo
+                    nombreAgente = solicitar_input("Ingrese el nombre del agente del que desea obtener información (vacío para volver): ", Validaciones.validar_nombre, True)
+                    if nombreAgente:
+                        agente = MongoModel.obtener_agente_por_nombre(nombreAgente)
+                        print(f"Agente encontrado: \n{agente}" if agente else f"Agente con nombre {nombreAgente} no encontrado")
+                    else:
+                        print("Volviendo a menú principal\n")
+                elif option == 2: 
+                    # "Obtener información de agente en base a su ID", # Mongo
+                    idAgente = input("Ingrese el ID del agente del que desea obtener información: ")
+                    agente = MongoModel.obtener_agente_por_id(idAgente)
+                    print(f"Agente encontrado: \n{agente}" if agente else f"Agente con ID {idAgente} no encontrado")
+
+                elif option == 3: 
+                    # "Mostrar agentes por empresa", # Dgraph
+                    pass
+                elif option == 4: 
+                    # "Mostrar agente por ticket", # Draph
+                    pass
+                elif option == 5: 
+                    # "Historial de estado en empresa de agente" # Casssandra
+                    pass
+            except Exception as e:
+                print(f"Error: {e}")
                 continue
-            
             # Regresa al menu principal
             if option == 0:
                 continue
