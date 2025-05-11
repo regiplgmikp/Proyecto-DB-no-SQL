@@ -270,7 +270,10 @@ def main():
                     continue
                 # "Obtener información de ticket en base a su ID", # Mongo
                 elif option == 1:
-                    pass
+                    id = input("Ingrese el ID del ticket del que desea obtener información: ")
+                    entidad = MongoModel.obtener_ticket_por_id(id)
+                    print(f"Ticket encontrado: \n{entidad}\n" if entidad else f"Ticket con ID {id} no encontrado")
+
                 # "Mostrar Tickets con estado “Cerrado” por Agente", # Mongo
                 elif option == 2:
                     pass
