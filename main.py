@@ -70,32 +70,32 @@ def printMenu(option=0):
 
     # Consultas de tickets
     mm_option5 = {
-        1: "Regresar a menú principal", 
-        2:	"Obtener información de ticket en base a su ID", # Mongo
-        3: "Mostrar Tickets con estado “Cerrado” por Agente", # Mongo
-        4: "Mostrar Tickets con estado “Pendiente” por Agente", # Mongo
-        5: "Mostrar Tickets con estado “Cerrado” por Empresa", # Mongo
-        6:	"Mostrar Tickets con estado “Pendiente” por Empresa", # Mongo
-        7:	"Mostrar Tickets con estado “Abierto” por Empresa", # Mongo
-        8: "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
-        9: "Mostrar Tickets con estado “Pendiente” por Cliente.", # Mongo
-        10: "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
-        11:	"Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
-        12:	"Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
-        13:	"Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
-        14:	"Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
-        15:	"Filtrar tickets de empresa por prioridad", # Mongo
-        16: "Mostrar tickets por empresa", # Dgraph
-        17: "Mostrar tickets por cliente", # Dgraph
-        18: "Mostrar tickets de una empresa por tipo de problema ", # Dgraph
-        19: "Mostrar tickets de un agente de una empresa por tipo de problema ", # Dgraph
-        20: "Búsqueda de Ticket por empresa por medio de palabras clave", # Dgraph
-        21: "Búsqueda de Ticket por Agente y Empresa por medio de palabras clave", # Dgraph
-        22:	"Historial de comentarios de ticket en base al id del ticket", # Cassandra
-        23:	"Historial de cambios en la prioridad de un ticket", # Cassandra
-        24:	"Historial de asignación de agentes a un ticket", # Cassandra
-        25:	"Historial de estados del ticket", # Cassandra
-        26:	"Historial de tickets creados en empresa" # Cassandra
+        0:  "Regresar a menú principal", 
+        1:  "Obtener información de ticket en base a su ID", # Mongo
+        2:  "Mostrar Tickets con estado “Cerrado” por Agente", # Mongo
+        3:  "Mostrar Tickets con estado “Pendiente” por Agente", # Mongo
+        4:  "Mostrar Tickets con estado “Cerrado” por Empresa", # Mongo
+        5:  "Mostrar Tickets con estado “Pendiente” por Empresa", # Mongo
+        6:  "Mostrar Tickets con estado “Abierto” por Empresa", # Mongo
+        7:  "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
+        8:  "Mostrar Tickets con estado “Pendiente” por Cliente.", # Mongo
+        9: "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
+        10:	"Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
+        11:	"Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
+        12:	"Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
+        13:	"Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
+        14:	"Filtrar tickets de empresa por prioridad", # Mongo
+        15: "Mostrar tickets por empresa", # Dgraph
+        16: "Mostrar tickets por cliente", # Dgraph
+        17: "Mostrar tickets de una empresa por tipo de problema ", # Dgraph
+        18: "Mostrar tickets de un agente de una empresa por tipo de problema ", # Dgraph
+        19: "Búsqueda de Ticket por empresa por medio de palabras clave", # Dgraph
+        20: "Búsqueda de Ticket por Agente y Empresa por medio de palabras clave", # Dgraph
+        21:	"Historial de comentarios de ticket en base al id del ticket", # Cassandra
+        22:	"Historial de cambios en la prioridad de un ticket", # Cassandra
+        23:	"Historial de asignación de agentes a un ticket", # Cassandra
+        24:	"Historial de estados del ticket", # Cassandra
+        25:	"Historial de tickets creados en empresa" # Cassandra
     }
 
     # Consultas de empresas
@@ -268,6 +268,82 @@ def main():
                 # Regresa al menu principal
                 if option == 0:
                     continue
+                # "Obtener información de ticket en base a su ID", # Mongo
+                elif option == 1:
+                    pass
+                # "Mostrar Tickets con estado “Cerrado” por Agente", # Mongo
+                elif option == 2:
+                    pass
+                # "Mostrar Tickets con estado “Pendiente” por Agente", # Mongo
+                elif option == 3:
+                    pass
+                # "Mostrar Tickets con estado “Cerrado” por Empresa", # Mongo
+                elif option == 4:
+                    pass
+                # "Mostrar Tickets con estado “Pendiente” por Empresa", # Mongo
+                elif option == 5:
+                    pass
+                # "Mostrar Tickets con estado “Abierto” por Empresa", # Mongo
+                elif option == 6:
+                    pass
+                # "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
+                elif option == 7:
+                    pass
+                # "Mostrar Tickets con estado “Pendiente” por Cliente.", # Mongo
+                elif option == 8:
+                    pass
+                # "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
+                elif option == 9:
+                    pass
+                # "Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
+                elif option == 10:
+                    pass
+                # "Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
+                elif option == 11:
+                    pass
+                # "Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
+                elif option == 12:
+                    pass
+                # "Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
+                elif option == 13:
+                    pass
+                # "Filtrar tickets de empresa por prioridad", # Mongo
+                elif option == 14:
+                    pass
+                # "Mostrar tickets por empresa", # Dgraph
+                elif option == 15:
+                    pass
+                # "Mostrar tickets por cliente", # Dgraph
+                elif option == 16:
+                    pass
+                # "Mostrar tickets de una empresa por tipo de problema ", # Dgraph
+                elif option == 17:
+                    pass
+                # "Mostrar tickets de un agente de una empresa por tipo de problema ", # Dgraph
+                elif option == 18:
+                    pass
+                # "Búsqueda de Ticket por empresa por medio de palabras clave", # Dgraph
+                elif option == 19:
+                    pass
+                # "Búsqueda de Ticket por Agente y Empresa por medio de palabras clave", # Dgraph
+                elif option == 20:
+                    pass
+                # "Historial de comentarios de ticket en base al id del ticket", # Cassandra
+                elif option == 21:
+                    pass
+                # "Historial de cambios en la prioridad de un ticket", # Cassandra
+                elif option == 22:
+                    pass
+                # "Historial de asignación de agentes a un ticket", # Cassandra
+                elif option == 23:
+                    pass
+                # "Historial de estados del ticket", # Cassandra
+                elif option == 24:
+                    pass
+                # "Historial de tickets creados en empresa" # Cassandra
+                elif option == 25:
+                    pass
+            
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue
@@ -280,6 +356,16 @@ def main():
                 # Regresa al menu principal
                 if option == 0:
                     continue
+                # "Obtener información de empresa en base a su nombre", # Mongo
+                elif option == 1:
+                    pass
+                # "Obtener información de empresa en base a su id", # Mongo
+                elif option == 2:
+                    pass
+                # "Mostrar ubicación de la empresa por medio de su id" # Dgraph
+                elif option == 3:
+                    pass
+
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue            
