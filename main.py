@@ -15,6 +15,16 @@ from models.Utils.actualizar_entidades import (
     actualizar_ticket
 )
 
+#Importaciones Dgraph
+import os
+import pydgraph
+import models.Dgraph.model as dgraph
+
+#Cliente Dgraph
+def get_dgraph_client():
+    client_stub = pydgraph.DgraphClientStub('localhost:9080')  # Ajusta la URL según tu configuración
+    return pydgraph.DgraphClient(client_stub)
+
 
 def printMenu(option=0):
     # Menú principal
@@ -61,11 +71,11 @@ def printMenu(option=0):
     mm_option4 = {
         0: "Regresar a menú principal",
         1: "Obtener información de cliente en base a su ID", #Mongo
-        3: "Obtener información de cliente en base a su nombre", # Mongo
-        4: "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
-        5: "Mostrar clientes por empresa", # Dgraph
-        6: "Mostrar cliente por ticket", # Dgraph
-        7: "Historial de estado de cuenta de cliente" # Cassandra
+        2: "Obtener información de cliente en base a su nombre", # Mongo
+        3: "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
+        4: "Mostrar clientes por empresa", # Dgraph
+        5: "Mostrar cliente por ticket", # Dgraph
+        6: "Historial de estado de cuenta de cliente" # Cassandra
     }
 
     # Consultas de tickets
@@ -129,6 +139,7 @@ def printMenu(option=0):
             print(key, '--', mm_option6[key])
     
 def main():
+    client = get_dgraph_client()
     # Mientras el usuario no quiera salir, se imprime el menu
     while (True):
         printMenu(0)
@@ -146,6 +157,10 @@ def main():
                 print(populate.populate_all("data/mongo/")['resumen'])
             except FileNotFoundError as e:
                 print(e)
+
+            # Dgraph (esquema y poblado de datos)
+            dgraph.set_schema(client)
+            dgraph.create_data(client)
 
         # Registro de datos
         elif option == 1:
@@ -214,10 +229,14 @@ def main():
 
                 elif option == 3: 
                     # "Mostrar agentes por empresa", # Dgraph
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    result = dgraph.Agentes_por_empresa(client, id_empresa)
+
                 elif option == 4: 
-                    # "Mostrar agente por ticket", # Draph
-                    pass
+                     # "Mostrar agente por ticket", # Draph
+                    id_ticket = input("Ingrese ID del ticket: ")
+                    result = dgraph.Agentes_por_ticket(client, id_ticket)
+
                 elif option == 5: 
                     # "Historial de estado en empresa de agente" # Casssandra
                     pass
@@ -236,6 +255,7 @@ def main():
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue
+            
                 
         # Consultas de tickets
         elif option == 5:
