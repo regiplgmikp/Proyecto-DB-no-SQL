@@ -7,7 +7,7 @@ import pydgraph
 import csv
 import sys
 import io
-from Formatos import print_formatted
+from .Formatos import print_formatted
 sys.stdout = io.TextIOWrapper(sys.stdout.detach(), encoding='utf-8')
 
 # 2- Definición de esquema

@@ -2,7 +2,7 @@
 import json
 from typing import Dict, Any
 import webbrowser
-from Utils.dictionaries import tipoProblema
+from models.Utils.dictionaries import tipoProblema
 
 class Formatos:
     @staticmethod
