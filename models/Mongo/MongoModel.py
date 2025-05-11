@@ -29,7 +29,7 @@ class MongoModel:
 
     @classmethod
     def obtener_agente_por_id(cls, idAgente: UUID):
-        return cls._obtener_documento_por_id('agentes', idAgente, 'idAgente')
+        return cls._obtener_documento_por_campo('agentes', idAgente, 'idAgente')
     
     @classmethod
     def actualizar_agente(cls, idAgente: UUID, cambios: dict):
@@ -58,7 +58,7 @@ class MongoModel:
 
     @classmethod
     def obtener_empresa_por_id(cls, idEmpresa: UUID):
-        return cls._obtener_documento_por_id('empresas', idEmpresa, 'idEmpresa')
+        return cls._obtener_documento_por_campo('empresas', idEmpresa, 'idEmpresa')
 
     @classmethod
     def insertar_cliente(cls, cliente):
@@ -66,7 +66,7 @@ class MongoModel:
 
     @classmethod
     def obtener_cliente_por_id(cls, idCliente: UUID):
-        return cls._obtener_documento_por_id('clientes', idCliente, 'idCliente')
+        return cls._obtener_documento_por_campo('clientes', idCliente, 'idCliente')
     
     @classmethod
     def actualizar_cliente(cls, idCliente: UUID, cambios: dict):
@@ -95,7 +95,7 @@ class MongoModel:
 
     @classmethod
     def obtener_ticket_por_id(cls, idTicket: UUID):
-        return cls._obtener_documento_por_id('tickets', idTicket, 'idTicket')
+        return cls._obtener_documento_por_campo('tickets', idTicket, 'idTicket')
 
     @classmethod
     def actualizar_ticket(cls, idTicket: UUID, cambios: dict):
@@ -138,9 +138,18 @@ class MongoModel:
 
 
     @classmethod
-    def _obtener_documento_por_id(cls, collection_name: str, id_value: UUID, id_field: str):
+    def _obtener_documento_por_campo(cls, collection_name: str, field_value, field_name: str):
+        """ Recibe un nombre de colleción a buscar, el nombre del campo en base al que se va a buscar y el valor que se quiere buscar
+            Retorna los documentos encontrados con esas caracteristicas o None si no encuentra ninguno en la base de datos
+        """
         collection = cls.db[collection_name]
-        documento = collection.find_one({id_field: Binary.from_uuid(id_value)})
+
+        # Si el valor es un UUID, convertirlo a Binary para la consulta
+        if isinstance(field_value, UUID):
+            field_value = Binary.from_uuid(field_value)
+
+        # Se buscan documentos con campos recibidos
+        documento = collection.find_one({field_name: field_value})
 
         if not documento:
             return None
