@@ -331,8 +331,8 @@ def Agentes_por_ticket(client, id_ticket):
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "agente_ticket")
 
-# 7. Tickets de agente de una empresa por tipo de problema.
-def Tickets_por_agente_empresa_tipo(client, id_empresa,tipo_problema):
+# 7. Tickets de empresa por tipo de problema.
+def Tickets_por_empresa_tipo(client, id_empresa,tipo_problema):
     query = """
     query ticketsPorAgenteEmpresaTipo($idEmpresa: string, $tipoProblema: int) {
       empresa(func: eq(idEmpresa, $idEmpresa)) {
@@ -347,10 +347,29 @@ def Tickets_por_agente_empresa_tipo(client, id_empresa,tipo_problema):
     """
     variables = {'$idEmpresa':id_empresa,'$tipoProblema': tipo_problema}
     res = client.txn(read_only=True).query(query, variables=variables)
-    print_formatted(res, "tickets_agente_empresa_tipo")
+    print_formatted(res, "tickets_empresa_tipo")
+
+# 8. Tickets por agente por tipo de problema.
+
+def Tickets_por_agente_tipo(client, id_agente,tipo_problema):
+    query = """
+    query ticketsPorAgenteTipo($idAgente: string, $tipoProblema: int) {
+      agente(func: eq(idAgente, $idAgente)) {
+        nombreAgente
+        SOLUCIONA @filter(eq(tipoProblema, $tipoProblema)) {
+          idTicket
+          tipoProblema
+          descripcion
+        }
+      }
+    }
+    """
+    variables = {'$idAgente': id_agente,'$tipoProblema': tipo_problema}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "tickets_agente_tipo")
 
 
-# 8. Ticket por empresa por medio de palabras clave.
+# 9. Ticket por empresa por medio de palabras clave.
 def Ticket_por_empresa_palabras(client, empresa_id, palabras_clave):
     query = """
     query ticketsPorEmpresaPalabras($empresa_id: string, $palabras_clave: string) {
@@ -368,7 +387,7 @@ def Ticket_por_empresa_palabras(client, empresa_id, palabras_clave):
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "tickets_empresa_palabras")
 
-# 9. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
+# 10. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
 def Ticket_por_agente_empresa_palabras(client, empresa_id, agente_id, palabras_clave):
     query = """
     query buscarTicketsAgenteEmpresa($idEmpresa: string, $idAgente: string, $palabras_clave: string) {
@@ -389,7 +408,7 @@ def Ticket_por_agente_empresa_palabras(client, empresa_id, agente_id, palabras_c
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "tickets_agente_empresa_palabras")
 
-# 10. Dirección de la empresa por medio de su ID.
+# 11. Dirección de la empresa por medio de su ID.
 
 def Direccion_empresa_por_id(client, idEmpresa):
     query = """
