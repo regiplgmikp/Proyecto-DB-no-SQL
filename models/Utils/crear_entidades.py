@@ -5,8 +5,7 @@ from datetime import datetime
 # import models.Cassandra.model as CassandraModel
 
 import models.Utils.dictionaries as dictionaries
-from models.Utils.validaciones import Validaciones
-from models.Utils.validaciones import solicitar_input
+from models.Utils.validaciones import (Validaciones, solicitar_input)
 
 def create_agente():
     mongo_agente = {}

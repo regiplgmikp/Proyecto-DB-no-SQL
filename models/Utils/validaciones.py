@@ -107,7 +107,7 @@ class Validaciones:
 
     @staticmethod
     def validar_idAgenteExistente(idAgente):
-        """Convierte el ID a UUID y valida que la empresa exista."""
+        """Convierte el ID a UUID y valida que el agente exista."""
         from models.Mongo.MongoModel import MongoModel
 
         try:
@@ -123,7 +123,7 @@ class Validaciones:
 
     @staticmethod
     def validar_idClienteExistente(idCliente):
-        """Convierte el ID a UUID y valida que la empresa exista."""
+        """Convierte el ID a UUID y valida que el cliente exista."""
         from models.Mongo.MongoModel import MongoModel
 
         try:
@@ -136,3 +136,29 @@ class Validaciones:
             return cliente
         except ValueError as e:
             raise ValueError(f"El ID ingresado no es un UUID válido. Error:{e}")
+
+    @staticmethod
+    def validar_idTicketExistente(idTicket):
+        """Convierte el ID a UUID y valida que el ticket exista."""
+        from models.Mongo.MongoModel import MongoModel
+
+        try:
+            if not isinstance(idTicket, UUID):
+                idTicket = UUID(idTicket)
+
+            cliente = MongoModel.obtener_ticket_por_id(idTicket)
+            if not cliente:
+                raise ValueError(f"El ticket con ID {idTicket} no existe.")
+            return cliente
+        except ValueError as e:
+            raise ValueError(f"El ID ingresado no es un UUID válido. Error:{e}")
+
+    @staticmethod
+    def validar_camposActualizacion(cambios: dict, campos_permitidos: list):
+        # Filtrar solo los campos permitidos para actualizar
+        cambios_filtrados = {k: v for k, v in cambios.items() if k in campos_permitidos}
+
+        if not cambios_filtrados:
+            raise ValueError("No se proporcionaron campos válidos para actualizar.")
+    
+        return cambios_filtrados
