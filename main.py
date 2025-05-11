@@ -173,6 +173,21 @@ def main():
             # Regresa al menu principal
             if option == 0:
                 continue
+            elif option == 1:
+                print("=== Mostrar agentes por empresa ===")
+                pass
+            elif option == 2:
+                print("=== Mostrar agente por ticket ===")
+                pass
+            elif option == 3:
+                print("=== Obtener id de agente en base a su nombre ===")
+                pass
+            elif option == 4:
+                print("=== Obtener información de agente en base a su ID ===")
+                pass
+            elif option == 5:
+                print("=== Historial de estado en empresa de agente ===")
+                pass
             
             
         # Consultas de clientes
@@ -187,6 +202,25 @@ def main():
             # Regresa al menu principal
             if option == 0:
                 continue
+            elif option == 1:
+                print("=== Mostrar clientes por empresa ===")
+                pass
+            elif option == 2:
+                print("=== Mostrar cliente por ticket ===")
+                pass
+            elif option == 3:
+                print("=== Obtener id de cliente en base a su nombre ===")
+                pass
+            elif option == 4:
+                print("=== Obtener información de cliente en base a su ID ===")
+                pass
+            elif option == 5:
+                print("=== Mostrar clientes con tickets abiertos desde x fecha hasta la actualidad ===")
+                pass
+            elif option == 6:
+                print("=== Historial de estado de cuenta de cliente ===")
+                pass
+
                 
         # Consultas de tickets
         elif option == 5:
@@ -200,6 +234,7 @@ def main():
             # Regresa al menu principal
             if option == 0:
                 continue
+        
                 
         # Consultas de empresas
         elif option == 6:
@@ -213,7 +248,16 @@ def main():
             # Regresa al menu principal
             if option == 0:
                 continue
-                
+            elif option == 1:
+                print("=== Mostrar ubicación de la empresa por medio de su id ===")
+                pass
+            elif option == 2:
+                print("=== Obtener id de empresa en base a su nombre ===")
+                pass
+            elif option == 3:
+                print("=== Obtener informacion de empresa en base a su id ===")
+                pass
+
         # Eliminar bases de datos
         elif option == 7:
             print("Datos eliminados correctamente.")
