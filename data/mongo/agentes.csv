@@ -1,4 +1,4 @@
-idAgente,nombre,correo,telefono,estadoEmpresa,idEmpresa,fechaIngreso
+idAgente,nombre,correo,telefono,estadoEnEmpresa,idEmpresa,fechaIngreso
 548fcfc5-90cb-4a9a-a3a5-18129d8eab95,Juan López,juan.lopez@empresa.com,5551234567,1,7fd525ac-af03-4273-ac28-894fe935cd87,2022-03-15T09:00:00
 da439fd3-7eee-4fce-9d04-39c0dbdd504d,María García,maria.garcia@empresa.com,5552345678,1,7fd525ac-af03-4273-ac28-894fe935cd87,2021-11-22T08:30:00
 27fe9eca-a43b-4f83-b4fc-ad736a653aa6,Carlos Hernández,carlos.hernandez@empresa.com,5553456789,2,7fd525ac-af03-4273-ac28-894fe935cd87,2023-01-10T10:15:00

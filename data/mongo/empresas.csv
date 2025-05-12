@@ -1,4 +1,4 @@
-idEmpresa,nombre,dirección,teléfono,correo
+idEmpresa,nombre,direccion,telefono,correo
 7fd525ac-af03-4273-ac28-894fe935cd87,Tecnología Avanzada MX,"Av. Insurgentes Sur 1589, Col. San José Insurgentes, CDMX",5551002000,tecnologia.avanzada@empresa.com
 de1dc603-1a62-4378-a11d-3d1def3309e3,Soluciones Financieras,"Paseo de la Reforma 325, Juárez, Cuauhtémoc, CDMX",5552003000,soluciones.financieras@empresa.com
 1021d1af-9107-4ed6-b137-c7faa6abf3cd,Logística Nacional,"Calzada de Tlalpan 2500, Col. Arenal, CDMX",5553004000,logistica.nacional@empresa.com
