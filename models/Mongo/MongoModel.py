@@ -205,3 +205,9 @@ class MongoModel:
             documento.pop('_id', None)
 
         return documentos
+
+    @classmethod
+    def buscar_documentos_complejo(cls, collection_name: str, pipeline: list):
+        collection = cls.db[collection_name]
+
+        return list(collection.aggregate(pipeline))
