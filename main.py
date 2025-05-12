@@ -126,6 +126,7 @@ def main():
         
         # Poblar de datos
         if option == 0:
+            
             # Hacer el poblado de datos en la base de datos
             print("Los datos han sido cargados correctamente.")
 
