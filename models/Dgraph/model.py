@@ -434,3 +434,100 @@ def drop_all(client):
         print("Se ha eliminado todo el esquema y los datos de Dgraph.")
     except Exception as e:
         print(f"Error al eliminar todo: {e}")
+
+# ==================================== INSERTACIONES ===========================================
+
+# 13. Insertar agente
+
+def insertar_agente(client, dgraph_agente):
+   mutation = {
+        'uid': f"_:{dgraph_agente['idAgente']}",
+        'idAgente': dgraph_agente['idAgente'],
+        'nombreAgente': dgraph_agente['nombre'],
+        'dgraph.type': 'Agente',
+        'TRABAJA': {
+            'uid': f"_:{dgraph_agente['idEmpresa']}",
+            'idEmpresa': dgraph_agente['idEmpresa'],
+            'dgraph.type': 'Empresa'
+        }
+    }
+    txn = client.txn()
+    try:
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        print(f"✅ Empresa {dgraph_empresa['idEmpresa']} insertada")
+        return response
+    finally:
+        txn.discard()
+
+# 14. insertar empresa 
+def insertar_empresa(client, dgraph_empresa):
+   mutation = {
+        'uid': f"_:{dgraph_empresa['idEmpresa']}",
+        'idEmpresa': dgraph_empresa['idEmpresa'],
+        'nombreEmpresa': dgraph_empresa['nombreEmpresa'],
+        'ubicacion': dgraph_empresa['ubicacion'],
+        'dgraph.type': 'Empresa'
+    }
+    txn = client.txn()
+    try:
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        print(f"✅ Empresa {dgraph_empresa['idEmpresa']} insertada")
+        return response
+    finally:
+        txn.discard()
+
+# 15. Insertar cliente
+
+def insertar_cliente(client, dgraph_cliente):
+  mutation = {
+        'uid': f"_:{dgraph_cliente['idCliente']}",
+        'idCliente': dgraph_cliente['idCliente'],
+        'nombreCliente': dgraph_cliente['nombreCliente'],
+        'dgraph.type': 'Cliente',
+        'AFILIADO_A': {
+            'uid': f"_:{dgraph_cliente['idEmpresa']}",
+            'idEmpresa': dgraph_cliente['idEmpresa'],
+            'dgraph.type': 'Empresa'
+        }
+    }
+    txn = client.txn()
+    try:
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        print(f"✅ Cliente {dgraph_cliente['idCliente']} insertado")
+        return response
+    finally:
+        txn.discard()
+
+# 16. Insertar ticket
+
+def insertar_ticket(client, dgraph_ticket):
+  mutation = {
+        'uid': f"_:{dgraph_ticket['idTicket']}",
+        'idTicket': dgraph_ticket['idTicket'],
+        'tipoProblema': dgraph_ticket['tipoProblema'],
+        'descripcion': dgraph_ticket['descripcion'],
+        'dgraph.type': 'Ticket',
+        'ABRE': {
+            'uid': f"_:{dgraph_ticket['idCliente']}",
+            'idCliente': dgraph_ticket['idCliente'],
+            'dgraph.type': 'Cliente'
+        },
+        'PERTENECE': {
+            'uid': f"_:{dgraph_ticket['idEmpresa']}",
+            'idEmpresa': dgraph_ticket['idEmpresa'],
+            'dgraph.type': 'Empresa'
+        }
+    }
+    if dgraph_ticket.get('idAgente'):
+        mutation['SOLUCIONA'] = {
+            'uid': f"_:{dgraph_ticket['idAgente']}",
+            'idAgente': dgraph_ticket['idAgente'],
+            'dgraph.type': 'Agente'
+        }
+    txn = client.txn()
+    try:
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        print(f"✅ Ticket {dgraph_ticket['idTicket']} insertado")
+        return response
+    finally:
+        txn.discard()
