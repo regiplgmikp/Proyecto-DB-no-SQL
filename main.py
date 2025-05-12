@@ -1,8 +1,11 @@
 # import models.conection as conection
 import models.Mongo.populate as populate
 from models.Mongo.MongoModel import MongoModel
-from models.Mongo.consultas import obtenerEntidades
 from models.Utils.validaciones import Validaciones
+from models.Mongo.consultas import (
+    obtenerEntidades,
+    clientesConTicketsPorFecha
+    )
 from models.Utils.crear_entidades import (
     crear_agente,
     crear_empresa,
@@ -254,7 +257,7 @@ def main():
                     continue
                 # "Obtener información de cliente en base a su nombre", # Mongo
                 elif option == 1: 
-                    print(obtenerEntidades("Ingrese el nombre del cliente del que desea obtener información (Enter para volver): ", MongoModel.obtener_cliente_por_nombre, Validaciones.validar_nombre))
+                    print(obtenerEntidades("Ingrese el nombre del cliente del que desea obtener información (Enter para volver): ", MongoModel.obtener_clientes_por_nombre, Validaciones.validar_nombre))
 
                 # "Obtener información de cliente en base a su ID", #Mongo
                 elif option == 2: 
@@ -264,6 +267,7 @@ def main():
 
                 # "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
                 elif option == 3: 
+                    print(clientesConTicketsPorFecha())
                     pass
                 # "Mostrar clientes por empresa", # Dgraph
                 elif option == 4: 

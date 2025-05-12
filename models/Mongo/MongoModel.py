@@ -94,7 +94,7 @@ class MongoModel:
             return Cliente.crear_desde_dict(cliente[0])
     
     @classmethod
-    def obtener_cliente_por_nombre(cls, nombreCliente: str):
+    def obtener_clientes_por_nombre(cls, nombreCliente: str):
         clientes = cls.buscar_documentos('clientes', {'nombre': nombreCliente})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
@@ -181,7 +181,7 @@ class MongoModel:
 
 
     @classmethod
-    def buscar_documentos(cls, collection_name: str, query: dict):
+    def buscar_documentos(cls, collection_name: str, query: dict, projection: dict = None):
         """ Recibe un nombre de colleción a buscar, el nombre del campo en base al que se va a buscar y el valor que se quiere buscar
             Retorna los documentos encontrados con esas caracteristicas o lista vacía si no encuentra ninguno en la base de datos
         """
@@ -193,7 +193,7 @@ class MongoModel:
                 query[key] = Binary.from_uuid(value)
 
         # Se buscan documentos con campos recibidos
-        documentos = list(collection.find(query))
+        documentos = list(collection.find(query, projection))
 
         # Convertir todos los campos que sean Binary a UUID
         for documento in documentos:
