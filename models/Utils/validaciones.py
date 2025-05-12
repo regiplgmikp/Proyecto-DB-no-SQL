@@ -4,7 +4,9 @@ from datetime import datetime
 from models.Utils.regularExpresions import (
     nombre_regex,
     correo_regex,
-    telefono_regex
+    telefono_regex,
+    #para dgraph
+    ubicacion_regex
 )
 from models.Utils.dictionaries import (
     estadoEnEmpresa as estadoEnEmpresaDict,
@@ -168,23 +170,13 @@ class Validaciones:
     @staticmethod
     def validar_ubicacion(latitud, longitud):
         try:
-            # Convertir latitud y longitud a float
-            latitud = float(latitud)
-            longitud = float(longitud)
-
-            # Validar latitud
-            if latitud < -90 or latitud > 90:
-                raise ValueError(f"La latitud debe estar entre -90 y 90 grados. Valor ingresado: {latitud}")
-
-            # Validar longitud
-            if longitud < -180 or longitud > 180:
-                raise ValueError(f"La longitud debe estar entre -180 y 180 grados. Valor ingresado: {longitud}")
-
-            return latitud, longitud
-
+            if re.match(ubicacion_regex, ubicacion):
+                latitud, longitud = ubicacion.split(',')
+                latitud = float(latitud.strip())
+                longitud = float(longitud.strip())
+                return latitud, longitud
         except ValueError as e:
-            raise ValueError(f"Error en la validación de la ubicación, por favor ingrese el dato correctamente: {e}")
-
+            raise ValueError(f"Ubicación inválida: {ubicacion}. Debe seguir el formato 'latitud,longitud' con rangos válidos.")  
 
     #Tipo de problema
     @staticmethod
