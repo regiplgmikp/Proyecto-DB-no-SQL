@@ -164,3 +164,35 @@ class Validaciones:
             raise ValueError("No se proporcionaron campos válidos para actualizar.")
     
         return cambios_filtrados
+
+    @staticmethod
+    def validar_ubicacion(latitud, longitud):
+        try:
+            # Convertir latitud y longitud a float
+            latitud = float(latitud)
+            longitud = float(longitud)
+
+            # Validar latitud
+            if latitud < -90 or latitud > 90:
+                raise ValueError(f"La latitud debe estar entre -90 y 90 grados. Valor ingresado: {latitud}")
+
+            # Validar longitud
+            if longitud < -180 or longitud > 180:
+                raise ValueError(f"La longitud debe estar entre -180 y 180 grados. Valor ingresado: {longitud}")
+
+            return latitud, longitud
+
+        except ValueError as e:
+            raise ValueError(f"Error en la validación de la ubicación, por favor ingrese el dato correctamente: {e}")
+
+
+    #Tipo de problema
+    @staticmethod
+    def validar_tipoProblema(tipo: str):
+        try:
+            tipo_int = int(tipo)
+            if tipo_int not in tipoProblemaDict:
+                raise ValueError(f"Tipo debe estar entre {list(tipoProblemaDict.keys())}")
+            return tipo_int
+        except ValueError:
+            raise ValueError("Debe ingresar un número válido")
