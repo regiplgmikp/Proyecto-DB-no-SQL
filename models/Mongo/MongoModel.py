@@ -17,11 +17,36 @@ class MongoModel:
         if collection not in db.list_collection_names():
             db.create_collection(collection)
 
-    # Creación de índices
+    # Creación de índices 
+    # Para manejo correcto de indices unicos
     db.agentes.create_index('idAgente', unique=True)
     db.empresas.create_index('idEmpresa', unique=True)
     db.clientes.create_index('idCliente', unique=True)
     db.tickets.create_index('idTicket', unique=True)
+
+    # para consultas:
+    # Para Obtener información de agente en base a su nombre o id:
+    db.agentes.create_index([('nombre', 1)])
+    db.empresas.create_index([('nombre', 1)])
+    db.clientes.create_index([('nombre', 1)])
+    # Para Mostrar Tickets con estado especifico por entidad
+    db.empresas.create_index([('idEmpresa', 1), ('estado', 1)])
+    db.agentes.create_index([('idAgente', 1), ('estado', 1)])
+    db.clientes.create_index([('idCliente', 1), ('estado', 1)])
+    # Para Filtrar tickets de empresa por prioridad
+    db.tickets.create_index([('idEmpresa', 1), ('prioridad', 1)])
+    # Para Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha
+    db.tickets.create_index([('idEmpresa', 1), ('fechaCreacion', 1)])
+    # Para Mostrar tickets cerrados en un periodo de tiempo por agente
+    db.tickets.create_index([('idAgente', 1), ('fechaCierre', 1)])
+
+    # Para pipelines:
+    # Para Mostrar información de clientes y IDs de tickets de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad
+    db.tickets.create_index([('idEmpresa', 1), ('estado', 1), ('fechaCreacion', -1)])
+    # Para Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo
+    db.tickets.create_index([('idEmpresa', 1), ('estado', 1), ('fechaCierre', -1)])
+    # Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo
+    db.tickets.create_index([('idEmpresa', 1), ('idAgente', 1),('estado', 1), ('fechaCierre', -1)])
 
     @classmethod
     def insertar_agente(cls, agente):
