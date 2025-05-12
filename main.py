@@ -4,8 +4,11 @@ from models.Mongo.MongoModel import MongoModel
 from models.Utils.validaciones import Validaciones
 from models.Mongo.consultas import (
     obtenerEntidades,
-    clientesConTicketsPorFecha,
-    ticketsEstadoPorEntidad
+    clientesConTicketsAbiertosPorFecha,
+    ticketsEstadoPorEntidad,
+    ticketsEmpresaAntiguedad,
+    ticketsCerradosPorPeriodoAgente,
+    cantidadTicketsCerradosPorAgente
     )
 from models.Utils.crear_entidades import (
     crear_agente,
@@ -76,7 +79,7 @@ def printMenu(option=0):
         0: "Regresar a menú principal",
         1: "Obtener información de cliente en base a su nombre", # Mongo
         2: "Obtener información de cliente en base a su ID", #Mongo
-        3: "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
+        3: "Mostrar información de clientes y IDs de tickets de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
         4: "Mostrar clientes por empresa", # Dgraph
         5: "Mostrar cliente por ticket", # Dgraph
         6: "Historial de estado de cuenta de cliente" # Cassandra
@@ -94,7 +97,7 @@ def printMenu(option=0):
         7:  "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
         8:  "Mostrar Tickets con estado “En proceso” por Cliente.", # Mongo
         9: "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
-        10:	"Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
+        10:	"Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha", # Mongo
         11:	"Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
         12:	"Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
         13:	"Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
@@ -266,9 +269,9 @@ def main():
                     entidad = MongoModel.obtener_cliente_por_id(id)
                     print(f"Cliente encontrado: \n{entidad}\n" if entidad else f"Cliente con ID {id} no encontrado")
 
-                # "Mostrar IDs de clientes de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
+                # "Mostrar información de clientes y IDs de tickets de una empresa con tickets abiertos a partir de “x” fecha hasta la actualidad", # Mongo
                 elif option == 3: 
-                    print(clientesConTicketsPorFecha())
+                    print(clientesConTicketsAbiertosPorFecha())
                     pass
                 # "Mostrar clientes por empresa", # Dgraph
                 elif option == 4: 
@@ -322,14 +325,15 @@ def main():
                 # "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
                 elif option == 9:
                     print(ticketsEstadoPorEntidad('Cliente', 1))
-                # "Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
+                # "Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha", # Mongo
                 elif option == 10:
-                    pass
+                    print(ticketsEmpresaAntiguedad())
                 # "Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
                 elif option == 11:
-                    pass
+                    print(ticketsCerradosPorPeriodoAgente())
                 # "Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
                 elif option == 12:
+                    print(cantidadTicketsCerradosPorAgente())
                     pass
                 # "Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
                 elif option == 13:
