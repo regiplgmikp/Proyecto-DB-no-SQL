@@ -267,9 +267,12 @@ def main():
                     pass
                 # "Mostrar clientes por empresa", # Dgraph
                 elif option == 4: 
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    result = dgraph.Clientes_por_empresa(client, id_empresa)
                 # "Mostrar cliente por ticket", # Dgraph
                 elif option == 5: 
+                    id_ticket = input("Ingrese ID del Ticket: ")
+                    result = dgraph.Cliente_por_ticket(client, id_ticket)
                     pass
                 # "Historial de estado de cuenta de cliente" # Cassandra
                 elif option == 6: 
@@ -334,22 +337,33 @@ def main():
                     pass
                 # "Mostrar tickets por empresa", # Dgraph
                 elif option == 15:
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    result = dgraph.Tickets_por_empresa(client, id_empresa)
                 # "Mostrar tickets por cliente", # Dgraph
                 elif option == 16:
-                    pass
+                    nombre_cliente = input("Ingrese el nombre del cliente: ")
+                    result = dgraph.Tickets_por_cliente(client, nombre_cliente)
                 # "Mostrar tickets de una empresa por tipo de problema ", # Dgraph
                 elif option == 17:
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    tipo_problema = input("Ingrese tipo de problema (en formato numérico): ")
+                    result = dgraph.Tickets_por_empresa_tipo(client, id_empresa, tipo_problema)
                 # "Mostrar tickets de un agente de una empresa por tipo de problema ", # Dgraph
                 elif option == 18:
-                    pass
+                    id_agente = input("Ingrese ID del Agente: ")
+                    tipo_problema = input("Ingrese tipo de problema (en formato numérico): ")
+                    result = dgraph.Tickets_por_agente_tipo(client, id_agente, tipo_problema)
                 # "Búsqueda de Ticket por empresa por medio de palabras clave", # Dgraph
                 elif option == 19:
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    tipo_problema = input("Ingrese palabras clave: ")
+                    result = dgraph.Ticket_por_empresa_palabras(client, id_empresa, palabras_clave)
                 # "Búsqueda de Ticket por Agente y Empresa por medio de palabras clave", # Dgraph
                 elif option == 20:
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    id_agente = input("Ingrese ID del agente: ")
+                    palabras_clave = input("Ingrese palabras clave: ")
+                    result = dgraph.Ticket_por_agente_empresa_palabras(client, id_empresa, id_agente, palabras_clave)
                 # "Historial de comentarios de ticket en base al id del ticket", # Cassandra
                 elif option == 21:
                     pass
@@ -386,7 +400,8 @@ def main():
                     pass
                 # "Mostrar ubicación de la empresa por medio de su id" # Dgraph
                 elif option == 3:
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    result = dgraph.Direccion_empresa_por_id(client, id_empresa)
 
             except ValueError:
                 print("Por favor, ingrese un número válido.")
@@ -394,6 +409,7 @@ def main():
                 
         # Eliminar bases de datos
         elif option == 7:
+            dgraph.drop_all(client)
             print("Datos eliminados correctamente.")
             
         # Salir
