@@ -96,12 +96,12 @@ def printMenu(option=0):
         6:  "Mostrar Tickets con estado “Abierto” por Empresa", # Mongo
         7:  "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
         8:  "Mostrar Tickets con estado “En proceso” por Cliente.", # Mongo
-        9: "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
-        10:	"Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha", # Mongo
-        11:	"Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
-        12:	"Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
-        13:	"Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
-        14:	"Filtrar tickets de empresa por prioridad", # Mongo
+        9:  "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
+        10:	"Filtrar tickets de empresa por prioridad", # Mongo
+        11:	"Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha", # Mongo
+        12:	"Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
+        13:	"Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
+        14:	"Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
         15: "Mostrar tickets por empresa", # Dgraph
         16: "Mostrar tickets por cliente", # Dgraph
         17: "Mostrar tickets de una empresa por tipo de problema ", # Dgraph
@@ -325,20 +325,20 @@ def main():
                 # "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
                 elif option == 9:
                     print(ticketsEstadoPorEntidad('Cliente', 1))
-                # "Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha", # Mongo
+                # "Filtrar tickets de empresa por prioridad", # Mongo
                 elif option == 10:
+                    pass
+                # "Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha", # Mongo
+                elif option == 11:
                     print(ticketsEmpresaAntiguedad())
                 # "Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
-                elif option == 11:
+                elif option == 12:
                     print(ticketsCerradosPorPeriodoAgente())
                 # "Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
-                elif option == 12:
+                elif option == 13:
                     print(cantidadTicketsCerradosPorAgente())
                     pass
                 # "Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
-                elif option == 13:
-                    pass
-                # "Filtrar tickets de empresa por prioridad", # Mongo
                 elif option == 14:
                     pass
                 # "Mostrar tickets por empresa", # Dgraph
