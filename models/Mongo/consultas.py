@@ -3,6 +3,7 @@ from models.Utils.validaciones import solicitar_input, Validaciones
 from bson import Binary
 from models.Mongo.MongoModel import MongoModel
 from models.Utils.dictionaries import estado as estadoTicketDict
+from models.Utils.dictionaries import prioridad as prioridadDict
 from models.Mongo.Ticket import Ticket
 from models.Mongo.Cliente import Cliente
 from models.Mongo.Agente import Agente
@@ -114,6 +115,30 @@ def ticketsEstadoPorEntidad(indicadorEntidad: str, estado: int):
         for ticket in result:
             ticket = Ticket.crear_desde_dict(ticket)
             resultStr += f"{ticket}:" + "\n\n"
+
+    else:
+        resultStr = f"No se encontraron tickets"
+
+    return resultStr
+
+# "Filtrar tickets de empresa por prioridad", # Mongo
+def ticketsEmpresaPrioridad():
+    empresa = solicitar_input("Ingresa el idEmpresa de la empresa que quieres buscar sus tickets: ", Validaciones.validar_idEmpresaExistente)
+    idEmpresa = empresa.idEmpresa
+    prioridad = solicitar_input("Ingrese la prioridad a filtar: ", Validaciones.validar_prioridadTicket)
+
+    query = {
+        "idEmpresa": Binary.from_uuid(idEmpresa),
+        "prioridad": prioridad
+    }
+
+    resultStr = ""
+    result = MongoModel.buscar_documentos('tickets', query)
+    if result:
+        resultStr += f"{str(len(result))} tickets de {idEmpresa} encontrados con prioridad '{prioridadDict[prioridad]}':\n" 
+        for ticket in result:
+            ticket = Ticket.crear_desde_dict(ticket)
+            resultStr += f"{ticket}" + "\n"
 
     else:
         resultStr = f"No se encontraron tickets"

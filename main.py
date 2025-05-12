@@ -8,7 +8,8 @@ from models.Mongo.consultas import (
     ticketsEstadoPorEntidad,
     ticketsEmpresaAntiguedad,
     ticketsCerradosPorPeriodoAgente,
-    cantidadTicketsCerradosPorAgente
+    cantidadTicketsCerradosPorAgente,
+    ticketsEmpresaPrioridad
     )
 from models.Utils.crear_entidades import (
     crear_agente,
@@ -327,7 +328,7 @@ def main():
                     print(ticketsEstadoPorEntidad('Cliente', 1))
                 # "Filtrar tickets de empresa por prioridad", # Mongo
                 elif option == 10:
-                    pass
+                    print(ticketsEmpresaPrioridad())
                 # "Mostrar tickets de una empresa con una antigüedad mayor a “x” fecha", # Mongo
                 elif option == 11:
                     print(ticketsEmpresaAntiguedad())
