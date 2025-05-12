@@ -81,13 +81,15 @@ class Validaciones:
             raise ValueError(f'Estado inválido. estados válidos: {estados_validos}')
         return prioridadTicket
     
-    @staticmethod
     def validar_fecha(fecha):
-        """Convierte la fecha a datetime y valida el formato."""
-        try:
-            return datetime.strptime(fecha, "%Y-%m-%d %H:%M:%S")
-        except ValueError:
-            raise ValueError("Formato de fecha inválido. Use YYYY-MM-DD HH:MM:SS.")
+        """Convierte la fecha a datetime y valida el formato, aceptando fechas con o sin hora."""
+        formatos = ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%d/%m/%Y %H:%M:%S"]
+        for formato in formatos:
+            try:
+                return datetime.strptime(fecha, formato)
+            except ValueError:
+                continue
+        raise ValueError("Formato de fecha inválido. Use YYYY-MM-DD, YYYY-MM-DD HH:MM:SS, DD/MM/YYYY ó DD/MM/YYYY HH:MM:SS")
 
     @staticmethod
     def validar_idEmpresaExistente(idEmpresa):
