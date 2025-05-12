@@ -12,7 +12,8 @@ from models.Utils.dictionaries import (
     estadoEnEmpresa as estadoEnEmpresaDict,
     estadoCuenta as estadoCuentaDict,
     estado as estadoTicketDict,
-    prioridad as prioridadTicketDict
+    prioridad as prioridadTicketDict,
+    tipoProblema
 )
 
 def solicitar_input(mensaje, validacion_func=None, canBeNone=False):
@@ -183,8 +184,8 @@ class Validaciones:
     def validar_tipoProblema(tipo: str):
         try:
             tipo_int = int(tipo)
-            if tipo_int not in tipoProblemaDict:
-                raise ValueError(f"Tipo debe estar entre {list(tipoProblemaDict.keys())}")
+            if tipo_int not in tipoProblema:
+                raise ValueError(f"Tipo debe estar entre {list(tipoProblema.keys())}")
             return tipo_int
         except ValueError:
             raise ValueError("Debe ingresar un número válido")
