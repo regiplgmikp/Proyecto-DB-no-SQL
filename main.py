@@ -6,10 +6,11 @@ from models.Mongo.consultas import (
     obtenerEntidades,
     clientesConTicketsAbiertosPorFecha,
     ticketsEstadoPorEntidad,
+    ticketsEmpresaPrioridad,
     ticketsEmpresaAntiguedad,
     ticketsCerradosPorPeriodoAgente,
-    cantidadTicketsCerradosPorAgente,
-    ticketsEmpresaPrioridad
+    cantidadTicketsCerradosPorAgentes,
+    cantidadTicketsCerradosPorAgente
     )
 from models.Utils.crear_entidades import (
     crear_agente,
@@ -337,11 +338,10 @@ def main():
                     print(ticketsCerradosPorPeriodoAgente())
                 # "Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
                 elif option == 13:
-                    print(cantidadTicketsCerradosPorAgente())
-                    pass
+                    print(cantidadTicketsCerradosPorAgentes())
                 # "Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo", # Mongo
                 elif option == 14:
-                    pass
+                    print(cantidadTicketsCerradosPorAgente())
                 # "Mostrar tickets por empresa", # Dgraph
                 elif option == 15:
                     pass

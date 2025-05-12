@@ -201,38 +201,95 @@ def ticketsCerradosPorPeriodoAgente():
     return resultStr
 
 # "Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo", # Mongo
-def cantidadTicketsCerradosPorAgente():
-    empresa = solicitar_input("Ingrese el id de la empresa de la que quiere obtener los clientes: ", Validaciones.validar_idEmpresaExistente)
+def cantidadTicketsCerradosPorAgentes():
+    empresa = solicitar_input("Ingrese el id de la empresa de la que quiere obtener la información: ", Validaciones.validar_idEmpresaExistente)
     idEmpresa = empresa.idEmpresa
     fechaInicio = solicitar_input("Ingrese la fecha de inicio del periodo: ", Validaciones.validar_fecha)
     fechaFin = solicitar_input("Ingrese la fecha de finalización del periodo: ", Validaciones.validar_fecha)
 
     pipeline = [
-    {
-        '$match': {
-            'idEmpresa': Binary.from_uuid(idEmpresa), 
-            'estado': 3, 
-            'fechaCierre': {
-                '$gte': fechaInicio, 
-                '$lte': fechaFin
+        {
+            '$match': {
+                'idEmpresa': Binary.from_uuid(idEmpresa), 
+                'estado': 3, 
+                'fechaCierre': {
+                    '$gte': fechaInicio, 
+                    '$lte': fechaFin
+                }
+            }
+        }, {
+            '$group': {
+                '_id': '$idAgente', 
+                'ticketsCerrados': {
+                    '$sum': 1
+                }
+            }
+        }, {
+            '$lookup': {
+                'from': 'agentes', 
+                'localField': '_id', 
+                'foreignField': 'idAgente', 
+                'as': 'agente'
             }
         }
-    }, {
-        '$group': {
-            '_id': '$idAgente', 
-            'ticketsCerrados': {
-                '$sum': 1
+    ]
+
+    resultStr = ""
+    resultados = MongoModel.buscar_documentos_complejo('tickets', pipeline)
+    if resultados:
+        resultStr += f"{len(resultados)} agentes con tickets cerrados encontrados:\n\n"
+        
+        # Definir encabezados con formato
+        encabezado = f"{'Nombre de agente'.ljust(25)} {'Cantidad de tickets cerrados'}\n"
+        resultStr += encabezado
+        resultStr += "-" * len(encabezado) + "\n"  # Línea separadora
+        
+        for resultado in resultados:
+            nombreAgente = resultado['agente'][0]['nombre']
+            cantidadTickets = resultado['ticketsCerrados']
+            resultStr += f"{nombreAgente.ljust(25)} {str(cantidadTickets)}\n"
+
+    else:
+        resultStr = f"No se encontraron tickets"
+
+    return resultStr
+
+# Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo
+def cantidadTicketsCerradosPorAgente():
+    empresa = solicitar_input("Ingrese el id de la empresa de la que quiere obtener la información: ", Validaciones.validar_idEmpresaExistente)
+    idEmpresa = empresa.idEmpresa
+    agente = solicitar_input("Ingrese el id del agente del que quiere su información: ", Validaciones.validar_idAgenteExistente)
+    idAgente = agente.idAgente
+    fechaInicio = solicitar_input("Ingrese la fecha de inicio del periodo: ", Validaciones.validar_fecha)
+    fechaFin = solicitar_input("Ingrese la fecha de finalización del periodo: ", Validaciones.validar_fecha)
+
+    pipeline = [
+        {
+            '$match': {
+                'idEmpresa': Binary.from_uuid(idEmpresa), 
+                'idAgente': Binary.from_uuid(idAgente),
+                'estado': 3, 
+                'fechaCierre': {
+                    '$gte': fechaInicio, 
+                    '$lte': fechaFin
+                }
+            }
+        }, {
+            '$group': {
+                '_id': '$idAgente', 
+                'ticketsCerrados': {
+                    '$sum': 1
+                }
+            }
+        }, {
+            '$lookup': {
+                'from': 'agentes', 
+                'localField': '_id', 
+                'foreignField': 'idAgente', 
+                'as': 'agente'
             }
         }
-    }, {
-        '$lookup': {
-            'from': 'agentes', 
-            'localField': '_id', 
-            'foreignField': 'idAgente', 
-            'as': 'agente'
-        }
-    }
-]
+    ]
 
     resultStr = ""
     resultados = MongoModel.buscar_documentos_complejo('tickets', pipeline)
