@@ -4,7 +4,8 @@ from models.Mongo.MongoModel import MongoModel
 from models.Utils.validaciones import Validaciones
 from models.Mongo.consultas import (
     obtenerEntidades,
-    clientesConTicketsPorFecha
+    clientesConTicketsPorFecha,
+    ticketsEstadoPorEntidad
     )
 from models.Utils.crear_entidades import (
     crear_agente,
@@ -86,12 +87,12 @@ def printMenu(option=0):
         0:  "Regresar a menú principal", 
         1:  "Obtener información de ticket en base a su ID", # Mongo
         2:  "Mostrar Tickets con estado “Cerrado” por Agente", # Mongo
-        3:  "Mostrar Tickets con estado “Pendiente” por Agente", # Mongo
+        3:  "Mostrar Tickets con estado “En proceso” por Agente", # Mongo
         4:  "Mostrar Tickets con estado “Cerrado” por Empresa", # Mongo
-        5:  "Mostrar Tickets con estado “Pendiente” por Empresa", # Mongo
+        5:  "Mostrar Tickets con estado “En proceso” por Empresa", # Mongo
         6:  "Mostrar Tickets con estado “Abierto” por Empresa", # Mongo
         7:  "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
-        8:  "Mostrar Tickets con estado “Pendiente” por Cliente.", # Mongo
+        8:  "Mostrar Tickets con estado “En proceso” por Cliente.", # Mongo
         9: "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
         10:	"Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
         11:	"Mostrar tickets cerrados en un periodo de tiempo por agente", # Mongo
@@ -299,28 +300,28 @@ def main():
 
                 # "Mostrar Tickets con estado “Cerrado” por Agente", # Mongo
                 elif option == 2:
-                    pass
-                # "Mostrar Tickets con estado “Pendiente” por Agente", # Mongo
+                    print(ticketsEstadoPorEntidad('Agente', 3))
+                # "Mostrar Tickets con estado “En proceso” por Agente", # Mongo
                 elif option == 3:
-                    pass
+                    print(ticketsEstadoPorEntidad('Agente', 2))
                 # "Mostrar Tickets con estado “Cerrado” por Empresa", # Mongo
                 elif option == 4:
-                    pass
-                # "Mostrar Tickets con estado “Pendiente” por Empresa", # Mongo
+                    print(ticketsEstadoPorEntidad('Empresa', 3))
+                # "Mostrar Tickets con estado “En proceso” por Empresa", # Mongo
                 elif option == 5:
-                    pass
+                    print(ticketsEstadoPorEntidad('Empresa', 2))
                 # "Mostrar Tickets con estado “Abierto” por Empresa", # Mongo
                 elif option == 6:
-                    pass
+                    print(ticketsEstadoPorEntidad('Empresa', 1))
                 # "Mostrar Tickets con estado “Cerrado” por Cliente.", # Mongo            
                 elif option == 7:
-                    pass
-                # "Mostrar Tickets con estado “Pendiente” por Cliente.", # Mongo
+                    print(ticketsEstadoPorEntidad('Cliente', 3))
+                # "Mostrar Tickets con estado “En proceso” por Cliente.", # Mongo
                 elif option == 8:
-                    pass
+                    print(ticketsEstadoPorEntidad('Cliente', 2))
                 # "Mostrar Tickets con estado “Abierto” por Cliente.", # Mongo
                 elif option == 9:
-                    pass
+                    print(ticketsEstadoPorEntidad('Cliente', 1))
                 # "Mostrar tickets con una antigüedad mayor a “x” fecha", # Mongo
                 elif option == 10:
                     pass
