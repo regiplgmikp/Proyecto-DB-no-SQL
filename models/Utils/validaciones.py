@@ -83,7 +83,7 @@ class Validaciones:
     
     def validar_fecha(fecha):
         """Convierte la fecha a datetime y valida el formato, aceptando fechas con o sin hora."""
-        formatos = ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%d/%m/%Y %H:%M:%S"]
+        formatos = ["%Y-%m-%d %H:%M:%S", "%Y-%m-%d", "%d/%m/%Y %H:%M:%S", "%d/%m/%Y"]
         for formato in formatos:
             try:
                 return datetime.strptime(fecha, formato)
