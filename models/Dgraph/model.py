@@ -453,41 +453,70 @@ def insertar_empresa(client, empresa_data):
         # Crear la mutación
         mutation = {
             'uid': f"_:{empresa_data['idEmpresa']}",
-            'idEmpresa': empresa_data['idEmpresa'],
+            'idEmpresa': str(empresa_data['idEmpresa']),
             'nombre': empresa_data['nombreEmpresa'],
             'ubicacion': empresa_data.get('ubicacion', {})
         }
         
         response = txn.mutate(set_obj=mutation, commit_now=True)
         empresa_uid = response.uids.get(empresa_data['idEmpresa'])
-        print(f"Empresa insertada en Dgraph con UID: {empresa_uid}")
+        print(f"Empresa insertada con UID: {empresa_uid}")
         return empresa_uid
     finally:
         txn.discard()
 
 # 14. Insertar Agente
+
 def insertar_agente(client, agente_data):
     """Inserta un nuevo agente en Dgraph"""
     txn = client.txn()
     try:
         mutation = {
             'uid': f"_:{agente_data['idAgente']}",
-            'idAgente': agente_data['idAgente'],
-            'nombreAgente': agente_data['nombre']
+            'idAgente': str(agente_data['idAgente']),
+            'nombre': agente_data['nombreAgente']
         }
-        
+
         response = txn.mutate(set_obj=mutation, commit_now=True)
-        agente_uid = response.uids.get(agente_data['idAgente'])
-        
+        agente_uid = response.uids.get(str(agente_data['idAgente']))
+
         # crear la relación
         if 'idEmpresa' in agente_data and agente_data['idEmpresa']:
             relacion = {
                 'uid': agente_uid,
-                'TRABAJA': {'uid': agente_data['idEmpresa']}
+                'TRABAJA': {'uid': str(agente_data['idEmpresa'])}
+            }
+            txn.mutate(set_obj=relacion, commit_now=True)
+
+        print(f"Agente insertado con UID: {agente_uid}")
+        return agente_uid
+    finally:
+        txn.discard()
+
+# 15. Insertar Cliente
+
+def insertar_cliente(client, cliente_data):
+    """Inserta un nuevo cliente en Dgraph"""
+    txn = client.txn()
+    try:
+        mutation = {
+            'uid': f"_:{cliente_data['idCliente']}",
+            'idCliente': str(cliente_data['idCliente']),
+            'nombreCliente': cliente_data['nombre']
+        }
+        
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        cliente_uid = response.uids.get(cliente_data['idCliente'])
+        
+        # crear la relación con empresa
+        if 'idEmpresa' in cliente_data and cliente_data['idEmpresa']:
+            relacion = {
+                'uid': cliente_uid,
+                'AFILIADO_A': {'uid':str (cliente_data['idEmpresa'])}
             }
             txn.mutate(set_obj=relacion, commit_now=True)
         
-        print(f"Agente insertado con UID: {agente_uid}")
-        return agente_uid
+        print(f"Cliente insertado con UID: {cliente_uid}")
+        return cliente_uid
     finally:
         txn.discard()
