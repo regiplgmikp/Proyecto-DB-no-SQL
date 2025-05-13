@@ -568,43 +568,67 @@ def insertar_cliente(client, cliente_data):
 
 
 # 16. Insertar Ticket
+# 16. Insertar Ticket
 def insertar_ticket(client, ticket_data):
     """Inserta un nuevo ticket en Dgraph"""
-    txn = client.txn()
-    try:
-        # Convertir todos los IDs a string por seguridad
-        id_ticket_str = str(ticket_data['idTicket'])
-        id_cliente_str = str(ticket_data['idCliente']) if 'idCliente' in ticket_data and ticket_data['idCliente'] else None
-        id_agente_str = str(ticket_data['idAgente']) if 'idAgente' in ticket_data and ticket_data['idAgente'] else None
-        id_empresa_str = str(ticket_data['idEmpresa']) if 'idEmpresa' in ticket_data and ticket_data['idEmpresa'] else None
 
+    id_ticket_str = str(ticket_data['idTicket'])
+    id_cliente_str = str(ticket_data['idCliente']) if 'idCliente' in ticket_data and ticket_data['idCliente'] else None
+    id_agente_str = str(ticket_data['idAgente']) if 'idAgente' in ticket_data and ticket_data['idAgente'] else None
+    id_empresa_str = str(ticket_data['idEmpresa']) if 'idEmpresa' in ticket_data and ticket_data['idEmpresa'] else None
+
+    uid_temp = f"ticket_{id_ticket_str.replace('-', '')}"
+
+    # 1. Insertar ticket
+    txn1 = client.txn()
+    try:
         mutation = {
-            'uid': f"_:{id_ticket_str}",
+            'uid': f"_:{uid_temp}",
             'idTicket': id_ticket_str,
             'tipoProblema': ticket_data['tipo_problema'],
             'descripcion': ticket_data.get('descripcion', '')
         }
 
-        response = txn.mutate(set_obj=mutation, commit_now=True)
-        ticket_uid = response.uids.get(id_ticket_str)
-
-        # Crear relaciones
-        relaciones = {}
-
-        if id_cliente_str:
-            relaciones['ABRE'] = {'uid': id_cliente_str}
-        
-        if id_agente_str:
-            relaciones['SOLUCIONA'] = {'uid': id_agente_str}
-        
-        if id_empresa_str:
-            relaciones['PERTENECE'] = {'uid': id_empresa_str}
-        
-        if relaciones:
-            relacion_mutation = {'uid': ticket_uid, **relaciones}
-            txn.mutate(set_obj=relacion_mutation, commit_now=True)
-
-        print(f"Ticket insertado con UID: {ticket_uid}")
-        return ticket_uid
+        response = txn1.mutate(set_obj=mutation, commit_now=True)
+        ticket_uid = response.uids.get(uid_temp)
     finally:
-        txn.discard()
+        txn1.discard()
+
+    # 2. Relacionar con cliente, agente y empresa
+    relaciones = {}
+    if id_cliente_str:
+        # Buscar UID real del cliente
+        query = f"""{{ q(func: eq(idCliente, "{id_cliente_str}")) {{ uid }} }}"""
+        resp = client.txn(read_only=True).query(query)
+        data = json.loads(resp.json)
+        uid_cliente = data.get("q", [{}])[0].get("uid")
+        if uid_cliente:
+            relaciones['ABRE'] = {'uid': uid_cliente}
+
+    if id_agente_str:
+        query = f"""{{ q(func: eq(idAgente, "{id_agente_str}")) {{ uid }} }}"""
+        resp = client.txn(read_only=True).query(query)
+        data = json.loads(resp.json)
+        uid_agente = data.get("q", [{}])[0].get("uid")
+        if uid_agente:
+            relaciones['SOLUCIONA'] = {'uid': uid_agente}
+
+    if id_empresa_str:
+        query = f"""{{ q(func: eq(idEmpresa, "{id_empresa_str}")) {{ uid }} }}"""
+        resp = client.txn(read_only=True).query(query)
+        data = json.loads(resp.json)
+        uid_empresa = data.get("q", [{}])[0].get("uid")
+        if uid_empresa:
+            relaciones['PERTENECE'] = {'uid': uid_empresa}
+
+    # Aplicar relaciones si existen
+    if relaciones:
+        txn2 = client.txn()
+        try:
+            relacion_mutation = {'uid': ticket_uid, **relaciones}
+            txn2.mutate(set_obj=relacion_mutation, commit_now=True)
+        finally:
+            txn2.discard()
+
+    print(f"Ticket insertado con UID: {ticket_uid}")
+    return ticket_uid
