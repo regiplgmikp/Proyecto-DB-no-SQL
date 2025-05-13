@@ -469,29 +469,52 @@ def insertar_empresa(client, empresa_data):
 
 def insertar_agente(client, agente_data):
     """Inserta un nuevo agente en Dgraph"""
-    txn = client.txn()
+
+    uid_temp = f"agente_{str(agente_data['idAgente']).replace('-', '')}"
+
+    # 1. Obtener el UID real de la empresa
+    query = f"""
+    {{
+        empresa(func: eq(idEmpresa, "{agente_data['idEmpresa']}")) {{
+            uid
+        }}
+    }}
+    """
+    response = client.txn(read_only=True).query(query)
+    data = json.loads(response.json)
+    empresa_uid = data.get("empresa", [{}])[0].get("uid")
+
+    if not empresa_uid:
+        raise Exception("No se encontró la empresa en Dgraph con ese idEmpresa.")
+
+    # 2. Insertar el agente
+    txn1 = client.txn()
     try:
         mutation = {
-            'uid': f"_:{agente_data['idAgente']}",
+            'uid': f"_:{uid_temp}",
             'idAgente': str(agente_data['idAgente']),
-            'nombre': agente_data['nombreAgente']
+            'nombre': agente_data['nombre']
         }
 
-        response = txn.mutate(set_obj=mutation, commit_now=True)
-        agente_uid = response.uids.get(str(agente_data['idAgente']))
-
-        # crear la relación
-        if 'idEmpresa' in agente_data and agente_data['idEmpresa']:
-            relacion = {
-                'uid': agente_uid,
-                'TRABAJA': {'uid': str(agente_data['idEmpresa'])}
-            }
-            txn.mutate(set_obj=relacion, commit_now=True)
-
-        print(f"Agente insertado con UID: {agente_uid}")
-        return agente_uid
+        response = txn1.mutate(set_obj=mutation, commit_now=True)
+        agente_uid = response.uids.get(uid_temp)
     finally:
-        txn.discard()
+        txn1.discard()
+
+    # 3. Crear la relación
+    txn2 = client.txn()
+    try:
+        relacion = {
+            'uid': agente_uid,
+            'TRABAJA': {'uid': empresa_uid}
+        }
+        txn2.mutate(set_obj=relacion, commit_now=True)
+    finally:
+        txn2.discard()
+
+    print(f"Agente insertado con UID: {agente_uid}")
+    return agente_uid
+
 
 # 15. Insertar Cliente
 
