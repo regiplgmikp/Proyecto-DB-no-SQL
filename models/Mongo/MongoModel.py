@@ -63,7 +63,7 @@ class MongoModel:
 
     @classmethod
     def obtener_agente_por_nombre(cls, nombreAgente: str):
-        agentes = cls.buscar_documentos('agentes', {"$text": {"$search": {nombreAgente}}})
+        agentes = cls.buscar_documentos('agentes', {"$text": {"$search": nombreAgente}})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
         if agentes:
@@ -109,7 +109,7 @@ class MongoModel:
 
     @classmethod
     def obtener_empresa_por_nombre(cls, nombreEmpresa: str):
-        empresas = cls.buscar_documentos('agentes', {"$text": {"$search": {nombreEmpresa}}})
+        empresas = cls.buscar_documentos('agentes', {"$text": {"$search": nombreEmpresa}})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
         if empresas:
@@ -133,7 +133,7 @@ class MongoModel:
     
     @classmethod
     def obtener_clientes_por_nombre(cls, nombreCliente: str):
-        clientes = cls.buscar_documentos('clientes', {"$text": {"$search": {nombreCliente}}})
+        clientes = cls.buscar_documentos('clientes', {"$text": {"$search": nombreCliente}})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
         if clientes:
