@@ -126,7 +126,7 @@ def crear_cliente(client):
     except Exception as e:
         print(f"Error en la inserción de cliente: {e}")
 
-def crear_ticket():
+def crear_ticket(client):
     mongo_ticket = {}
     dgraph_ticket = {}
 
@@ -149,7 +149,7 @@ def crear_ticket():
 
     # Dgraph
     tipo_problema = solicitar_input(f"Tipo de problema \n\tOpciones: {tiposProblema}): ", Validaciones.validar_tipoProblema)
-
+    descripcion = solicitar_input(f"Ingrese la descripción")
 
     # Asignar valores a cada diccionario
     # Mongo
@@ -162,11 +162,19 @@ def crear_ticket():
     mongo_ticket['estado'] = estadoTicket
     mongo_ticket['prioridad'] = prioridad
 
+    #Dgrapg
+    dgraph_ticket['idTicket'] = idTicket
+    dgraph_ticket['idCliente'] = idCliente
+    dgraph_ticket['idAgente'] = idAgente
+    dgraph_ticket['idEmpresa'] = idEmpresa
+    dgraph_ticket['tipo_problema'] = tipo_problema
+    dgraph_ticket['descripcion'] = descripcion
 
     try: 
         # Insertar empresa a bases de datos
         ticket = MongoModel.insertar_ticket(mongo_ticket)
         print(f"Ticket: \n{ticket}\nIngresado con éxito")
+        DgraphModel.insertar_ticket(client, dgraph_ticket)
         # TODO Checar cliente
 
     except Exception as e:
