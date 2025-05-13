@@ -520,29 +520,52 @@ def insertar_agente(client, agente_data):
 
 def insertar_cliente(client, cliente_data):
     """Inserta un nuevo cliente en Dgraph"""
-    txn = client.txn()
+
+    uid_temp = f"cliente_{str(cliente_data['idCliente']).replace('-', '')}"
+
+    # 1. Obtener el UID real de la empresa
+    query = f"""
+    {{
+        empresa(func: eq(idEmpresa, "{cliente_data['idEmpresa']}")) {{
+            uid
+        }}
+    }}
+    """
+    response = client.txn(read_only=True).query(query)
+    data = json.loads(response.json)
+    empresa_uid = data.get("empresa", [{}])[0].get("uid")
+
+    if not empresa_uid:
+        raise Exception("No se encontró la empresa con ese idEmpresa en Dgraph.")
+
+    # 2. Insertar el cliente
+    txn1 = client.txn()
     try:
         mutation = {
-            'uid': f"_:{cliente_data['idCliente']}",
+            'uid': f"_:{uid_temp}",
             'idCliente': str(cliente_data['idCliente']),
             'nombreCliente': cliente_data['nombre']
         }
-        
-        response = txn.mutate(set_obj=mutation, commit_now=True)
-        cliente_uid = response.uids.get(cliente_data['idCliente'])
-        
-        # crear la relación con empresa
-        if 'idEmpresa' in cliente_data and cliente_data['idEmpresa']:
-            relacion = {
-                'uid': cliente_uid,
-                'AFILIADO_A': {'uid':str (cliente_data['idEmpresa'])}
-            }
-            txn.mutate(set_obj=relacion, commit_now=True)
-        
-        print(f"Cliente insertado con UID: {cliente_uid}")
-        return cliente_uid
+
+        response = txn1.mutate(set_obj=mutation, commit_now=True)
+        cliente_uid = response.uids.get(uid_temp)
     finally:
-        txn.discard()
+        txn1.discard()
+
+    # 3. Crear la relación AFILIADO_A
+    txn2 = client.txn()
+    try:
+        relacion = {
+            'uid': cliente_uid,
+            'AFILIADO_A': {'uid': empresa_uid}
+        }
+        txn2.mutate(set_obj=relacion, commit_now=True)
+    finally:
+        txn2.discard()
+
+    print(f"Cliente insertado con UID: {cliente_uid}")
+    return cliente_uid
+
 
 # 16. Insertar Ticket
 def insertar_ticket(client, ticket_data):
