@@ -33,6 +33,7 @@ import models.Dgraph.model as dgraph
 import logging
 from cassandra.cluster import Cluster
 import models.Cassandra.model as CassModel
+import models.Cassandra.historial as CassHistorial
 
 #Cliente Dgraph
 def get_dgraph_client():
@@ -281,7 +282,9 @@ def main():
 
                 elif option == 5: 
                     # "Historial de estado en empresa de agente" # Casssandra
-                    pass
+                    id_agente = input("Ingrese ID del agente: ")
+                    CassHistorial.historial_agente(session, id_agente)
+
             except ValueError:
                 print("Por favor, ingrese un número válido.")
                 continue          
@@ -319,7 +322,8 @@ def main():
                     pass
                 # "Historial de estado de cuenta de cliente" # Cassandra
                 elif option == 6: 
-                    pass
+                    id_cliente = input("Ingresa ID del cliente: ")
+                    CassHistorial.historial_client(session, id_cliente)
 
             except ValueError:
                 print("Por favor, ingrese un número válido.")
@@ -409,19 +413,24 @@ def main():
                     result = dgraph.Ticket_por_agente_empresa_palabras(client, id_empresa, id_agente, palabras_clave)
                 # "Historial de comentarios de ticket en base al id del ticket", # Cassandra
                 elif option == 21:
-                    pass
+                    id_ticket = input("Ingrese ID del ticket: ")
+                    CassHistorial.historial_comments(session, id_ticket)
                 # "Historial de cambios en la prioridad de un ticket", # Cassandra
                 elif option == 22:
-                    pass
+                    id_ticket = input("Ingrese ID del ticket: ")
+                    CassHistorial.historial_prio(session, id_ticket)
                 # "Historial de asignación de agentes a un ticket", # Cassandra
                 elif option == 23:
-                    pass
+                    id_ticket = input("Ingrese ID del ticket: ")
+                    CassHistorial.historial_age(session, id_ticket)
                 # "Historial de estados del ticket", # Cassandra
                 elif option == 24:
-                    pass
+                    id_ticket = input("Ingrese ID del ticket: ")
+                    CassHistorial.historial_est(session, id_ticket)
                 # "Historial de tickets creados en empresa" # Cassandra
                 elif option == 25:
-                    pass
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    CassHistorial.historial_empresa(session, id_empresa)
             
             except ValueError:
                 print("Por favor, ingrese un número válido.")
@@ -457,6 +466,7 @@ def main():
                 if option in ['y', 'Y']:
                     print(MongoModel.eliminar_db())
                     dgraph.drop_all(client)
+                    CassModel.delete_schema(session)
                     print("Datos eliminados correctamente.")
                 if option in ['n', 'N']:
                     print("Volviendo a menú sin eliminar nada\n")
