@@ -260,7 +260,7 @@ def main():
                     continue
                 elif option == 1: 
                     # "Obtener información de agente en base a su nombre", # Mongo
-                    print(obtenerEntidades("Ingrese el nombre del agente del que desea obtener información (Enter para volver): ", MongoModel.obtener_agente_por_nombre, Validaciones.validar_nombre))
+                    print(obtenerEntidades("Ingrese el nombre del agente del que desea obtener información (Enter para volver): ", MongoModel.obtener_agente_por_nombre))
                 
                 elif option == 2: 
                     # "Obtener información de agente en base a su ID", # Mongo
@@ -295,7 +295,7 @@ def main():
                     continue
                 # "Obtener información de cliente en base a su nombre", # Mongo
                 elif option == 1: 
-                    print(obtenerEntidades("Ingrese el nombre del cliente del que desea obtener información (Enter para volver): ", MongoModel.obtener_clientes_por_nombre, Validaciones.validar_nombre))
+                    print(obtenerEntidades("Ingrese el nombre del cliente del que desea obtener información (Enter para volver): ", MongoModel.obtener_clientes_por_nombre))
 
                 # "Obtener información de cliente en base a su ID", #Mongo
                 elif option == 2: 

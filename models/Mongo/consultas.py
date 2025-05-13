@@ -10,9 +10,9 @@ from models.Mongo.Agente import Agente
 from uuid import UUID
 
 #Obtener información de agente en base a su nombre", # Mongo
-def obtenerEntidades(input_message, get_function, val_function = None):
+def obtenerEntidades(input_message, get_function):
     result = ""
-    campoObtenido = solicitar_input(input_message, val_function, canBeNone=True)
+    campoObtenido = solicitar_input(input_message, canBeNone=True)
     if campoObtenido:
         entidades = get_function(campoObtenido)
         if entidades:
