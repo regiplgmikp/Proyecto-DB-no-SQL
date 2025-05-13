@@ -31,7 +31,7 @@ import models.Dgraph.model as dgraph
 
 # Importaciones Cassandra
 import logging
-from cassandra.cluster import Cluster
+from cassandra.cluster import Cluster # type: ignore
 import models.Cassandra.model as CassModel
 
 #Cliente Dgraph
