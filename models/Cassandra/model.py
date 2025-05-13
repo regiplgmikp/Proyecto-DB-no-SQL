@@ -66,7 +66,7 @@ CREATE_TICKET_BY_PRIORITY_TABLE = """
         idTicket UUID,
         fecha TIMEUUID,
         prioridad INT,
-        PRIMARY KEY((idTicket, fecha)) 
+        PRIMARY KEY((idTicket), fecha) 
     )
 """
 
@@ -126,7 +126,7 @@ def create_schema(session):
                 (id_empresa, fecha_uuid, id_ticket)
             )
 
-        print("✅ Datos insertados correctamente en la tabla EMPRESA.")
+        print("✅ Datos insertados en tabla EMPRESA.")
 
     # Insertar los datos del csv ticket_com
     with open('../../data/cassandra/tickets_com.csv', newline='') as csvfile:
@@ -272,3 +272,82 @@ def create_schema(session):
             )
         
         print("✅ Datos insertados en tabla CLIENTE")
+
+# Creacion de un nuevo agente
+def insertar_agente(session, new_age):
+    try:
+        # Parametros del nuevo agente
+        id_agente = new_age['idAgente']
+        fecha = new_age['fecha']
+        estado = int(new_age['estadoenEmpresa'])
+
+        # Convertir la fecha de datetime a UUID
+        fecha_uuid = uuid_from_time(fecha)
+
+        # Agregar datos a la tabla agente
+        session.execute(
+            """
+            INSERT INTO agente (idAgente, fecha, estadoEnEmpresa)
+            VALUES (%s, %s, %s)
+            """,
+            (id_agente, fecha_uuid, estado)
+        )
+
+        print(f"Agente {id_agente} agregado!")
+    
+    except Exception as error:
+        print(f"Error al insertar agente: {error}")
+
+# Creacion de una nueva empresa
+def insertar_empresa(session, new_emp):
+    try:
+        # Parametros de la nueva empresa
+        id_empresa = new_emp['idEmpresa']
+        fecha = new_emp['fecha']
+        id_ticket = new_emp['idTicket']
+
+        # Convertir fecha de datetime a UUID
+        fecha_uuid = uuid_from_time(fecha)
+
+        # Agregar la empresa a la tabla
+        session.execute(
+            """
+            INSERT INTO empresa (idEmpresa, fecha, idTicket)
+            VALUES (%s, %s, %s)
+            """,
+            (id_empresa, fecha_uuid, id_ticket)
+        )
+
+        print(f"Empresa {id_empresa} agregada!")
+
+    except Exception as error:
+        print(f"Error al insertar empresa: {error}")
+
+# Creacion de un nuevo cliente
+def insertar_cliente(session, new_cli):
+    try:
+        # Parametros del nuevo cliente
+        id_cliente = new_cli['idCliente']
+        fecha = new_cli['fecha']
+        estado_cuenta = new_cli['estado']
+
+        # Convertir fecha de datetime a UUID
+        fecha_uuid = uuid_from_time(fecha)
+
+        # Agregar cliente a la tabla
+        session.execute(
+            """
+            INSERT INTO cliente (idCliente, fecha, estado)
+            VALUES (%s, %s, %s)
+            """,
+            (id_cliente, fecha_uuid, estado_cuenta)
+        )
+
+        print(f"Cliente {id_cliente} agregado!")
+
+    except Exception as error:
+        print(f"Error al insertar cliente: {error}")
+
+def delete_schema(session):
+    session.execute("DROP KEYSPACE IF EXISTS cassandra_final")
+    print("💥 Keyspace cassandra_final eliminado por completo.")
