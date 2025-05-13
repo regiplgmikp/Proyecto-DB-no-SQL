@@ -82,7 +82,7 @@ class MongoModel:
             idAgente_bin = Binary.from_uuid(idAgente)
             
             cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["estadoEnEmpresa", "telefono"])
-
+            print("Cambios: ", cambios_filtrados)
             # Actualizar en MongoDB
             resultado = collection.update_one({"idAgente": idAgente_bin}, {"$set": cambios_filtrados})
 
@@ -140,6 +140,7 @@ class MongoModel:
             idCliente_bin = Binary.from_uuid(idCliente)
             
             cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["telefono", "correo", "estadoCuenta"])
+            print("Cambios: ", cambios_filtrados)
 
             # Actualizar en MongoDB
             resultado = collection.update_one({"idCliente": idCliente_bin}, {"$set": cambios_filtrados})
@@ -173,8 +174,8 @@ class MongoModel:
             # Convertir UUID a Binary
             idTicket_bin = Binary.from_uuid(idTicket)
 
-            # cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad"])
             cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad", "comentarios"])
+            print("Cambios: ", cambios_filtrados)
 
             # Actualizar en MongoDB
             resultado = collection.update_one({"idTicket": idTicket_bin}, {"$set": cambios_filtrados})
