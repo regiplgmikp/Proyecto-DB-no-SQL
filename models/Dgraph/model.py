@@ -438,9 +438,8 @@ def drop_all(client):
 # ==================================== INSERTACIONES ===========================================
 
 # 13. Insertar agente
-# TODO Revisar identación de todos los métodos insertar
 def insertar_agente(client, dgraph_agente):
-   mutation = {
+    mutation = {
         'uid': f"_:{dgraph_agente['idAgente']}",
         'idAgente': dgraph_agente['idAgente'],
         'nombreAgente': dgraph_agente['nombre'],
@@ -462,7 +461,7 @@ def insertar_agente(client, dgraph_agente):
 
 # 14. insertar empresa 
 def insertar_empresa(client, dgraph_empresa):
-   mutation = {
+    mutation = {
         'uid': f"_:{dgraph_empresa['idEmpresa']}",
         'idEmpresa': dgraph_empresa['idEmpresa'],
         'nombreEmpresa': dgraph_empresa['nombreEmpresa'],
@@ -480,7 +479,7 @@ def insertar_empresa(client, dgraph_empresa):
 # 15. Insertar cliente
 
 def insertar_cliente(client, dgraph_cliente):
-  mutation = {
+    mutation = {
         'uid': f"_:{dgraph_cliente['idCliente']}",
         'idCliente': dgraph_cliente['idCliente'],
         'nombreCliente': dgraph_cliente['nombreCliente'],
@@ -502,7 +501,7 @@ def insertar_cliente(client, dgraph_cliente):
 # 16. Insertar ticket
 
 def insertar_ticket(client, dgraph_ticket):
-  mutation = {
+    mutation = {
         'uid': f"_:{dgraph_ticket['idTicket']}",
         'idTicket': dgraph_ticket['idTicket'],
         'tipoProblema': dgraph_ticket['tipoProblema'],
