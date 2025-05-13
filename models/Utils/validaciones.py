@@ -169,16 +169,19 @@ class Validaciones:
         return cambios_filtrados
 
     @staticmethod
-    def validar_ubicacion(latitud, longitud):
+    def validar_ubicacion(ubicacion):
         try:
-            #TODO Checar ubicacion
             if re.match(ubicacion_regex, ubicacion):
-                latitud, longitud = ubicacion.split(',')
-                latitud = float(latitud.strip())
-                longitud = float(longitud.strip())
+                latitud_str, longitud_str = ubicacion.split(',')
+                latitud = float(latitud_str.strip())
+                longitud = float(longitud_str.strip())
                 return latitud, longitud
-        except ValueError as e:
-            raise ValueError(f"Ubicación inválida: {ubicacion}. Debe seguir el formato 'latitud,longitud' con rangos válidos.")  
+            else:
+                raise ValueError
+        except ValueError:
+            raise ValueError(
+                f"Ubicación inválida: {ubicacion}. Debe seguir el formato 'latitud,longitud' con rangos válidos."
+            ) 
 
     #Tipo de problema
     @staticmethod
