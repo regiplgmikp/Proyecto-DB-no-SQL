@@ -15,6 +15,15 @@ class Empresa(BaseModel):
     telefono: str
     direccion: str
 
+    def __str__(self):
+        result = f"""
+    IdEmpresa: {self.idEmpresa}
+    Nombre: {self.nombre}
+    Correo: {self.correo}
+    Teléfono: {self.telefono}
+    Dirección: {self.direccion}"""
+        return result
+    
     @field_validator('correo')
     def validar_formato_correo(correo):
         return Validaciones.validar_formato_correo(correo)
