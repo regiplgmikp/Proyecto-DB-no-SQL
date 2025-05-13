@@ -20,7 +20,7 @@ def crear_agente(client):
     correo = solicitar_input("Ingrese el correo del agente: ", Validaciones.validar_formato_correo)
     telefono = solicitar_input("Ingrese el teléfono del agente: ", Validaciones.validar_telefono)
     estadoEnEmpresa = solicitar_input(f"Ingrese el numero del estado en empresa del agente \n\tEstados posibles: {estadosEnEmpresa}): ", Validaciones.validar_estadoEnEmpresa) 
-    idEmpresa = solicitar_input("Ingrese el id de la empresa del agente: ", Validaciones.validar_idEmpresaExistente)['idEmpresa']
+    idEmpresa = solicitar_input("Ingrese el id de la empresa del agente: ", Validaciones.validar_idEmpresaExistente).idEmpresa
     fechaIngreso = solicitar_input("Ingrese la fecha de ingreso (YYYY-MM-DD HH:MM:SS): ", Validaciones.validar_fecha)  # Convertir a datetime
     # Agreguen los datos que necesiten obtener de sus entidades -----------------------------------------------------------
 
@@ -101,7 +101,7 @@ def crear_cliente(client):
     correo = solicitar_input("Ingrese el correo del cliente: ", Validaciones.validar_formato_correo)
     telefono = solicitar_input("Ingrese el teléfono del cliente: ", Validaciones.validar_telefono)
     estadoCuenta = solicitar_input(f"Inserte el estado de la cuenta del cliente \n\tEstados posibles: {estadosCuenta}): ", Validaciones.validar_estadoCuenta)
-    idEmpresa = solicitar_input("Inserte el id de la empresa de la que es cliente: ", Validaciones.validar_idEmpresaExistente)['idEmpresa']
+    idEmpresa = solicitar_input("Inserte el id de la empresa de la que es cliente: ", Validaciones.validar_idEmpresaExistente).idEmpresa
 
     # Asignar valores a cada diccionario
     # Mongo
@@ -135,11 +135,11 @@ def crear_ticket(client):
 
     # Obtener los datos del Cliente
     idTicket = uuid.uuid4()
-    idCliente = solicitar_input("Inserte el id del cliente que crea el ticket: ", Validaciones.validar_idClienteExistente)['idCliente']
+    idCliente = solicitar_input("Inserte el id del cliente que crea el ticket: ", Validaciones.validar_idClienteExistente).idCliente
     idAgente = solicitar_input("Inserte el id del agente que se le asignará el ticket (dejar en blanco para no asignar agente): ", Validaciones.validar_idAgenteExistente, True)
     if idAgente:
-        idAgente = idAgente['idAgente']
-    idEmpresa = solicitar_input("Inserte el id de la empresa de la que es cliente: ", Validaciones.validar_idEmpresaExistente)['idEmpresa']
+        idAgente = idAgente.idAgente
+    idEmpresa = solicitar_input("Inserte el id de la empresa de la que es cliente: ", Validaciones.validar_idEmpresaExistente).idEmpresa
     fechaCreacion = solicitar_input("Inserte la fecha en la que se crea el ticket (enter para establecer para hoy): ", Validaciones.validar_fecha, True)
     if not fechaCreacion:
         fechaCreacion = datetime.today()
