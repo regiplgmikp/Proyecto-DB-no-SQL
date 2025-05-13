@@ -438,3 +438,29 @@ def drop_all(client):
 # ==================================== INSERTACIONES ===========================================
 
 # 13. Insertar empresa
+
+def insertar_empresa(client, empresa_data):
+    """Inserta una nueva empresa en Dgraph"""
+    txn = client.txn()
+    try:
+        # coordenadas estén en el formato correcto
+        if 'ubicacion' in empresa_data:
+            empresa_data['ubicacion'] = {
+                'type': 'Point',
+                'coordinates': empresa_data['ubicacion']['coordinates']
+            }
+        
+        # Crear la mutación
+        mutation = {
+            'uid': f"_:{empresa_data['idEmpresa']}",
+            'idEmpresa': empresa_data['idEmpresa'],
+            'nombreEmpresa': empresa_data['nombreEmpresa'],
+            'ubicacion': empresa_data.get('ubicacion', {})
+        }
+        
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        empresa_uid = response.uids.get(empresa_data['idEmpresa'])
+        print(f"Empresa insertada en Dgraph con UID: {empresa_uid}")
+        return empresa_uid
+    finally:
+        txn.discard()

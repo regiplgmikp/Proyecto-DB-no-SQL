@@ -1,7 +1,7 @@
 import uuid
 from models.Mongo.MongoModel import MongoModel
 from datetime import datetime
-#import models.Dgraph.model as DgraphModel
+import models.Dgraph.model as DgraphModel
 # import models.Cassandra.model as CassandraModel
 
 import models.Utils.dictionaries as dictionaries
@@ -10,7 +10,7 @@ from models.Utils.validaciones import (Validaciones, solicitar_input)
 def crear_agente():
     mongo_agente = {}
     cassandra_agente = {}
-    dgraph_agente = {}
+    dgraph_agente = {j}
 
     estadosEnEmpresa = dictionaries.estadoEnEmpresa
 
@@ -49,14 +49,14 @@ def crear_agente():
     except Exception as e:
         print(f"Error en la inserción de agente: {e}")
 # Repetir funciones para inserciones de demás entidades
-def crear_empresa():
+def crear_empresa(client):
 
     mongo_empresa = {}
     dgraph_empresa = {}
 
     # Obtener los datos de la empresa
     idEmpresa = uuid.uuid4()
-    nombre = solicitar_input("Ingrese el nombre del empresa: ", Validaciones.validar_nombre)
+    nombre = solicitar_input("Ingrese el nombre del empresa: ")
     correo = solicitar_input("Ingrese el correo del empresa: ", Validaciones.validar_formato_correo)
     telefono = solicitar_input("Ingrese el teléfono del empresa: ", Validaciones.validar_telefono)
     direccion = solicitar_input("Inserte la dirección de la empresa: ", Validaciones.validar_ubicacion)
@@ -71,13 +71,14 @@ def crear_empresa():
 
         # Dgraph
     dgraph_empresa['idEmpresa'] = idEmpresa
-    dgraph_empresa['nombre'] = nombre
+    dgraph_empresa['nombreEmpresa'] = nombre
     dgraph_empresa['direccion'] = direccion
 
     try: 
         # Insertar empresa a bases de datos
         empresa = MongoModel.insertar_empresa(mongo_empresa)
         print(f"Empresa: \n{empresa}\nIngresada con éxito")
+        DgraphModel.insertar_empresa(client, dgraph_empresa)
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
