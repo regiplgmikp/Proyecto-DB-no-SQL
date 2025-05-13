@@ -1,9 +1,11 @@
 import models.Utils.dictionaries as dictionaries
 import uuid
+from bson import Binary
 from models.Utils.validaciones import (Validaciones, solicitar_input)
 from models.Mongo.MongoModel import MongoModel
 from models.Mongo.Agente import Agente as MongoAgente
 from models.Mongo.Cliente import Cliente as MongoCliente
+from models.Mongo.Ticket import Ticket as MongoTicket
 
 def actualizar_agente():
     cambios_agente_dict = {}
@@ -29,7 +31,7 @@ def actualizar_agente():
 
     # actualizar agentes 
         # actualizar en MongoDB
-        nuevo_mongo_agente = MongoModel.actualizar_agente(mongo_agente['idAgente'], cambios_agente_dict)
+        nuevo_mongo_agente = MongoModel.actualizar_agente(mongo_agente.idAgente, cambios_agente_dict)
         return f"Agente: \n{mongo_agente}\n\nActualizado con éxito a:\n{nuevo_mongo_agente}"
 
         # Insertar en Cassandra
@@ -63,7 +65,7 @@ def actualizar_cliente():
     # Actualizar cliente 
     try:
         # Actualizar en MongoDB
-        nuevo_mongo_cliente = MongoModel.actualizar_cliente(mongo_cliente['idCliente'], cambios_cliente_dict)
+        nuevo_mongo_cliente = MongoModel.actualizar_cliente(mongo_cliente.idCliente, cambios_cliente_dict)
         return f"Cliente: \n{mongo_cliente}\n\nActualizado con éxito a:\n{nuevo_mongo_cliente}"
 
         # Insertar en Cassandra
@@ -78,14 +80,14 @@ def actualizar_ticket():
     prioridadesTicket = dictionaries.prioridad
 
     # Obtener el cliente
-    mongo_cliente: MongoCliente = solicitar_input("Ingrese el ID del ticket a modificar: ", Validaciones.validar_idTicketExistente)
-
+    mongo_ticket: MongoTicket = solicitar_input("Ingrese el ID del ticket a modificar: ", Validaciones.validar_idTicketExistente)
     fechaCierre = solicitar_input("Inserte la fecha en la que cierra el ticket (enter para no establecer/no editar): ", Validaciones.validar_fecha, True)
     estadoTicket = solicitar_input(f"Ingrese el número del nuevo estado del ticket (dejar en blanco para no editarlo) \n\tEstados posibles: {estadosTicket}): ", Validaciones.validar_estadoTicket, True) 
     idAgente = solicitar_input("Inserte el id del nuevo agente que se le asignará el ticket (dejar en blanco para no editar): ", Validaciones.validar_idAgenteExistente, True)
     if idAgente:
-        idAgente = idAgente['idAgente']
+        idAgente = idAgente.idAgente
     prioridad = solicitar_input(f"Inserte la nueva prioridad del ticket (Dar enter para no editar) \n\tPrioridades posibles: {prioridadesTicket}): ", Validaciones.validar_prioridadTicket, True)
+    comentario = input(f"Ingrese el nuevo comentario para el ticket (dejar en blanco para no agregar): ")
 
     # Agregar valores modificados a diccionario de cambios si fueron modificados
     # Agreguen los datos que necesiten obtener de sus entidades -----------------------------------------------------------
@@ -94,16 +96,18 @@ def actualizar_ticket():
     if estadoTicket:
         cambios_ticket_dict['estadoTicket'] = estadoTicket
     if idAgente:
-        cambios_ticket_dict['idAgente'] = idAgente
+        cambios_ticket_dict['idAgente'] = Binary.from_uuid(idAgente)
     if prioridad:
         cambios_ticket_dict['prioridad'] = prioridad
+    if comentario:
+        cambios_ticket_dict['comentarios'] = mongo_ticket.comentarios + [comentario]
 
 
     # Actualizar diccionario
     try:
         # Actualizar en MongoDB
-        nuevo_mongo_ticket = MongoModel.actualizar_ticket(mongo_cliente['idTicket'], cambios_ticket_dict)
-        return f"Cliente: \n{mongo_cliente}\n\nActualizado con éxito a:\n{nuevo_mongo_ticket}"
+        nuevo_mongo_ticket = MongoModel.actualizar_ticket(mongo_ticket.idTicket, cambios_ticket_dict)
+        return f"Ticket: \n{mongo_ticket}\n\nActualizado con éxito a:\n{nuevo_mongo_ticket}"
 
         # Insertar en Cassandra
 

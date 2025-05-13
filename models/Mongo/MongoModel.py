@@ -162,7 +162,6 @@ class MongoModel:
             idTicket = UUID(idTicket)
         ticket = cls.buscar_documentos('tickets', {'idTicket': idTicket})
         if ticket:
-            print(ticket)
             return Ticket.crear_desde_dict(ticket[0])
 
     @classmethod
@@ -175,7 +174,7 @@ class MongoModel:
             idTicket_bin = Binary.from_uuid(idTicket)
 
             # cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad"])
-            cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad"])
+            cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad", "comentarios"])
 
             # Actualizar en MongoDB
             resultado = collection.update_one({"idTicket": idTicket_bin}, {"$set": cambios_filtrados})
