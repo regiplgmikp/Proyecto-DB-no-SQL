@@ -404,10 +404,14 @@ def main():
                     continue
                 # "Obtener información de empresa en base a su nombre", # Mongo
                 elif option == 1:
-                    pass
+                    print(obtenerEntidades("Ingrese el nombre de la empresa de la que desea obtener información (Enter para volver): ", MongoModel.obtener_empresa_por_nombre))
+
                 # "Obtener información de empresa en base a su id", # Mongo
                 elif option == 2:
-                    pass
+                    id = input("Ingrese el ID de la empresa de la que desea obtener información: ")
+                    entidad = MongoModel.obtener_empresa_por_id(id)
+                    print(f"Empresa encontrado: \n{entidad}\n" if entidad else f"Empresa con ID {id} no encontrada")
+
                 # "Mostrar ubicación de la empresa por medio de su id" # Dgraph
                 elif option == 3:
                     id_empresa = input("Ingrese ID de la empresa: ")

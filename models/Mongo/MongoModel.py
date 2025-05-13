@@ -7,6 +7,7 @@ from .Ticket import Ticket
 from bson import Binary
 from uuid import UUID
 from models.Utils.validaciones import Validaciones
+import pymongo
 
 class MongoModel:
     db = conection.connect_mongodb()
@@ -26,9 +27,9 @@ class MongoModel:
 
     # para consultas:
     # Para Obtener información de agente en base a su nombre o id:
-    db.agentes.create_index([('nombre', 1)])
-    db.empresas.create_index([('nombre', 1)])
-    db.clientes.create_index([('nombre', 1)])
+    db.agentes.create_index([("nombre", pymongo.TEXT)], default_language="none")
+    db.empresas.create_index([("nombre", pymongo.TEXT)], default_language="none")
+    db.clientes.create_index([("nombre", pymongo.TEXT)], default_language="none")
     # Para Mostrar Tickets con estado especifico por entidad
     db.empresas.create_index([('idEmpresa', 1), ('estado', 1)])
     db.agentes.create_index([('idAgente', 1), ('estado', 1)])
@@ -62,7 +63,7 @@ class MongoModel:
 
     @classmethod
     def obtener_agente_por_nombre(cls, nombreAgente: str):
-        agentes = cls.buscar_documentos('agentes', {'nombre': nombreAgente})
+        agentes = cls.buscar_documentos('agentes', {"$text": {"$search": {nombreAgente}}})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
         if agentes:
@@ -107,6 +108,18 @@ class MongoModel:
             return Empresa.crear_desde_dict(empresa[0])
 
     @classmethod
+    def obtener_empresa_por_nombre(cls, nombreEmpresa: str):
+        empresas = cls.buscar_documentos('agentes', {"$text": {"$search": {nombreEmpresa}}})
+
+        # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
+        if empresas:
+            result = []
+            for empresa in empresas:
+                result.append(Agente.crear_desde_dict(empresa))
+
+            return result
+
+    @classmethod
     def insertar_cliente(cls, cliente):
         return cls._insertar_documento('clientes', cliente, Cliente)
 
@@ -120,7 +133,7 @@ class MongoModel:
     
     @classmethod
     def obtener_clientes_por_nombre(cls, nombreCliente: str):
-        clientes = cls.buscar_documentos('clientes', {'nombre': nombreCliente})
+        clientes = cls.buscar_documentos('clientes', {"$text": {"$search": {nombreCliente}}})
 
         # Si se encuentra uno o más agentees, se converten en instancia de Agente y se agregan a lista
         if clientes:
