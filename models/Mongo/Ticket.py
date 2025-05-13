@@ -21,20 +21,33 @@ class Ticket(BaseModel):
     estado: int
     prioridad: int
 
+    def __str__(self):
+        result =  f"""
+    idTicket: {self.idTicket}
+    idCliente: {self.idCliente}
+    idAgente: {self.idAgente}
+    idEmpresa: {self.idEmpresa}
+    fechaCreacion: {self.fechaCreacion}
+    fechaCierre: {self.fechaCierre}
+    comentarios: {self.comentarios}
+    estado: {self.estado}
+    prioridad: {self.prioridad}"""
+        return result
+
     # Validar que entidades relacionadas a UUIDs existan
     @field_validator('idCliente')
     def validar_idCliente(idCliente):
-        return Validaciones.validar_idClienteExistente(idCliente)['idCliente']
+        return Validaciones.validar_idClienteExistente(idCliente).idCliente
 
     @field_validator('idAgente')
     def validar_idAgente(idAgente):
         if idAgente:
-            return Validaciones.validar_idAgenteExistente(idAgente)['idAgente']
+            return Validaciones.validar_idAgenteExistente(idAgente).idAgente
         return None
 
     @field_validator('idEmpresa')
     def validar_idEmpresa(idEmpresa):
-        return Validaciones.validar_idEmpresaExistente(idEmpresa)['idEmpresa']
+        return Validaciones.validar_idEmpresaExistente(idEmpresa).idEmpresa
 
     @model_validator(mode='after')
     def validar_fechas(self):

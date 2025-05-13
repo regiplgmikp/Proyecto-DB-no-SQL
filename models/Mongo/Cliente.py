@@ -16,6 +16,16 @@ class Cliente(BaseModel):
     estadoCuenta: int
     idEmpresa: UUID
 
+    def __str__(self):
+        result = f"""
+    IdCliente: {self.idCliente}
+    Nombre: {self.nombre}
+    Correo: {self.correo}
+    Teléfono: {self.telefono}
+    Estado de cuenta: {self.estadoCuenta}
+    IdEmpresa: {self.idEmpresa}"""
+        return result
+
     @field_validator('nombre')
     def validar_nombre_completo(nombre):
         return Validaciones.validar_nombre(nombre)
@@ -34,7 +44,7 @@ class Cliente(BaseModel):
 
     @field_validator('idEmpresa')
     def validar_idEmpresa(idEmpresa):
-        return Validaciones.validar_idEmpresaExistente(idEmpresa)['idEmpresa']
+        return Validaciones.validar_idEmpresaExistente(idEmpresa).idEmpresa
 
     @classmethod
     def crear_desde_dict(cls, data: dict):

@@ -192,7 +192,7 @@ class Formatos:
 
 # 7. Tickets de agente de una empresa por tipo de problema.
     @staticmethod
-    def tickets_agente_empresa_tipo(data: Dict[str, Any]) -> str:
+    def tickets_empresa_tipo(data: Dict[str, Any]) -> str:
         """Formatea tickets filtrados por empresa mostrando código y descripción del problema"""
         output = []
         
@@ -240,45 +240,53 @@ class Formatos:
         
         return '\n'.join(output)
 
-# 8. Ticket por empresa por medio de palabras clave.
+# 8. Tickets de agente por tipo de problema.
     @staticmethod
-    def tickets_empresa_palabras(data: Dict[str, Any]) -> str:
-        """Formatea tickets encontrados por palabras clave mostrando código y descripción del problema"""
+    def tickets_agente_tipo(data: Dict[str, Any]) -> str:
+        """Formatea tickets filtrados por agente mostrando código y descripción del problema"""
         output = []
         
-        if 'empresa' in data and len(data['empresa']) > 0:
-            empresa = data['empresa'][0]
-            tickets = empresa.get('~PERTENECE', [])
+        if 'agente' in data and len(data['agente']) > 0:
+            agente = data['agente'][0]
+            tickets = agente.get('SOLUCIONA', [])
             
-            output.append(Formatos._encabezado("TICKETS POR PALABRAS CLAVE"))
-            output.append(f"🏢 Empresa: {empresa.get('nombreEmpresa', 'N/A')}")
+            output.append(Formatos._encabezado("TICKETS POR TIPO DE PROBLEMA"))
+            output.append(f"👤 agente: {agente.get('nombreAgente', 'N/A')}")
+            
+            # Obtener y formatear el tipo de problema principal
+            tipo_problema_cod = tickets[0].get('tipoProblema') if tickets else None
+            if tipo_problema_cod is not None:
+                problema_desc = tipoProblema.get(tipo_problema_cod, f"Desconocido ({tipo_problema_cod})")
+                output.append(f"🔧 Tipo de Problema: {tipo_problema_cod} - {problema_desc}")
+            else:
+                output.append("🔧 Tipo de Problema: N/A")
+            
             output.append(Formatos._divisor())
             
             if tickets:
                 output.append("🎫 Tickets encontrados:")
                 for ticket in tickets:
-                    # Obtener código y descripción del tipo de problema
-                    codigo_problema = ticket.get('tipoProblema')
-                    if codigo_problema is not None:
-                        descripcion = tipoProblema.get(codigo_problema, f"Desconocido ({codigo_problema})")
-                        problema_str = f"{codigo_problema} - {descripcion}"
+                    # Formatear tipo de problema para cada ticket
+                    ticket_problema_cod = ticket.get('tipoProblema')
+                    if ticket_problema_cod is not None:
+                        ticket_problema_desc = tipoProblema.get(ticket_problema_cod, f"Desconocido ({ticket_problema_cod})")
+                        problema_str = f"{ticket_problema_cod} - {ticket_problema_desc}"
                     else:
                         problema_str = "N/A"
                     
                     output.extend([
                         f"\n  • ID: {ticket.get('idTicket', 'N/A')}",
                         f"  📝 Descripción: {ticket.get('descripcion', 'N/A')}",
-                        f"  🔧 Tipo Problema: {problema_str}",
-                        f"  🚦 Prioridad: {ticket.get('prioridad', 'N/A')}",
+                        f"  🔧 Tipo: {problema_str}",
                         Formatos._divisor(60)
                     ])
-                output.append(f"🔍 Total tickets encontrados: {len(tickets)}")
+                output.append(f"🔍 Total tickets: {len(tickets)}")
             else:
-                output.append("ℹ️ No se encontraron tickets con las palabras clave especificadas")
+                output.append("ℹ️ No se encontraron tickets para este tipo de problema")
             
             output.append("=" * 90)
         else:
-            output.append("❌ No se encontró la empresa especificada")
+            output.append("❌ No se encontró la empresa o no hay datos")
         
         return '\n'.join(output)
 

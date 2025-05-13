@@ -331,8 +331,8 @@ def Agentes_por_ticket(client, id_ticket):
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "agente_ticket")
 
-# 7. Tickets de agente de una empresa por tipo de problema.
-def Tickets_por_agente_empresa_tipo(client, id_empresa,tipo_problema):
+# 7. Tickets de empresa por tipo de problema.
+def Tickets_por_empresa_tipo(client, id_empresa,tipo_problema):
     query = """
     query ticketsPorAgenteEmpresaTipo($idEmpresa: string, $tipoProblema: int) {
       empresa(func: eq(idEmpresa, $idEmpresa)) {
@@ -347,10 +347,29 @@ def Tickets_por_agente_empresa_tipo(client, id_empresa,tipo_problema):
     """
     variables = {'$idEmpresa':id_empresa,'$tipoProblema': tipo_problema}
     res = client.txn(read_only=True).query(query, variables=variables)
-    print_formatted(res, "tickets_agente_empresa_tipo")
+    print_formatted(res, "tickets_empresa_tipo")
+
+# 8. Tickets por agente por tipo de problema.
+
+def Tickets_por_agente_tipo(client, id_agente,tipo_problema):
+    query = """
+    query ticketsPorAgenteTipo($idAgente: string, $tipoProblema: int) {
+      agente(func: eq(idAgente, $idAgente)) {
+        nombreAgente
+        SOLUCIONA @filter(eq(tipoProblema, $tipoProblema)) {
+          idTicket
+          tipoProblema
+          descripcion
+        }
+      }
+    }
+    """
+    variables = {'$idAgente': id_agente,'$tipoProblema': tipo_problema}
+    res = client.txn(read_only=True).query(query, variables=variables)
+    print_formatted(res, "tickets_agente_tipo")
 
 
-# 8. Ticket por empresa por medio de palabras clave.
+# 9. Ticket por empresa por medio de palabras clave.
 def Ticket_por_empresa_palabras(client, empresa_id, palabras_clave):
     query = """
     query ticketsPorEmpresaPalabras($empresa_id: string, $palabras_clave: string) {
@@ -368,7 +387,7 @@ def Ticket_por_empresa_palabras(client, empresa_id, palabras_clave):
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "tickets_empresa_palabras")
 
-# 9. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
+# 10. Búsqueda de Ticket por Agente y Empresa por medio de palabras clave.
 def Ticket_por_agente_empresa_palabras(client, empresa_id, agente_id, palabras_clave):
     query = """
     query buscarTicketsAgenteEmpresa($idEmpresa: string, $idAgente: string, $palabras_clave: string) {
@@ -389,7 +408,7 @@ def Ticket_por_agente_empresa_palabras(client, empresa_id, agente_id, palabras_c
     res = client.txn(read_only=True).query(query, variables=variables)
     print_formatted(res, "tickets_agente_empresa_palabras")
 
-# 10. Dirección de la empresa por medio de su ID.
+# 11. Dirección de la empresa por medio de su ID.
 
 def Direccion_empresa_por_id(client, idEmpresa):
     query = """
@@ -415,3 +434,131 @@ def drop_all(client):
         print("Se ha eliminado todo el esquema y los datos de Dgraph.")
     except Exception as e:
         print(f"Error al eliminar todo: {e}")
+
+# ==================================== INSERTACIONES ===========================================
+
+# 13. Insertar empresa
+
+def insertar_empresa(client, empresa_data):
+    """Inserta una nueva empresa en Dgraph"""
+    txn = client.txn()
+    try:
+        # coordenadas estén en el formato correcto
+        if 'ubicacion' in empresa_data:
+            empresa_data['ubicacion'] = {
+                'type': 'Point',
+                'coordinates': empresa_data['ubicacion']['coordinates']
+            }
+        
+        # Crear la mutación
+        mutation = {
+            'uid': f"_:{empresa_data['idEmpresa']}",
+            'idEmpresa': str(empresa_data['idEmpresa']),
+            'nombre': empresa_data['nombreEmpresa'],
+            'ubicacion': empresa_data.get('ubicacion', {})
+        }
+        
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        empresa_uid = response.uids.get(empresa_data['idEmpresa'])
+        print(f"Empresa insertada con UID: {empresa_uid}")
+        return empresa_uid
+    finally:
+        txn.discard()
+
+# 14. Insertar Agente
+
+def insertar_agente(client, agente_data):
+    """Inserta un nuevo agente en Dgraph"""
+    txn = client.txn()
+    try:
+        mutation = {
+            'uid': f"_:{agente_data['idAgente']}",
+            'idAgente': str(agente_data['idAgente']),
+            'nombre': agente_data['nombreAgente']
+        }
+
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        agente_uid = response.uids.get(str(agente_data['idAgente']))
+
+        # crear la relación
+        if 'idEmpresa' in agente_data and agente_data['idEmpresa']:
+            relacion = {
+                'uid': agente_uid,
+                'TRABAJA': {'uid': str(agente_data['idEmpresa'])}
+            }
+            txn.mutate(set_obj=relacion, commit_now=True)
+
+        print(f"Agente insertado con UID: {agente_uid}")
+        return agente_uid
+    finally:
+        txn.discard()
+
+# 15. Insertar Cliente
+
+def insertar_cliente(client, cliente_data):
+    """Inserta un nuevo cliente en Dgraph"""
+    txn = client.txn()
+    try:
+        mutation = {
+            'uid': f"_:{cliente_data['idCliente']}",
+            'idCliente': str(cliente_data['idCliente']),
+            'nombreCliente': cliente_data['nombre']
+        }
+        
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        cliente_uid = response.uids.get(cliente_data['idCliente'])
+        
+        # crear la relación con empresa
+        if 'idEmpresa' in cliente_data and cliente_data['idEmpresa']:
+            relacion = {
+                'uid': cliente_uid,
+                'AFILIADO_A': {'uid':str (cliente_data['idEmpresa'])}
+            }
+            txn.mutate(set_obj=relacion, commit_now=True)
+        
+        print(f"Cliente insertado con UID: {cliente_uid}")
+        return cliente_uid
+    finally:
+        txn.discard()
+
+# 16. Insertar Ticket
+def insertar_ticket(client, ticket_data):
+    """Inserta un nuevo ticket en Dgraph"""
+    txn = client.txn()
+    try:
+        # Convertir todos los IDs a string por seguridad
+        id_ticket_str = str(ticket_data['idTicket'])
+        id_cliente_str = str(ticket_data['idCliente']) if 'idCliente' in ticket_data and ticket_data['idCliente'] else None
+        id_agente_str = str(ticket_data['idAgente']) if 'idAgente' in ticket_data and ticket_data['idAgente'] else None
+        id_empresa_str = str(ticket_data['idEmpresa']) if 'idEmpresa' in ticket_data and ticket_data['idEmpresa'] else None
+
+        mutation = {
+            'uid': f"_:{id_ticket_str}",
+            'idTicket': id_ticket_str,
+            'tipoProblema': ticket_data['tipo_problema'],
+            'descripcion': ticket_data.get('descripcion', '')
+        }
+
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        ticket_uid = response.uids.get(id_ticket_str)
+
+        # Crear relaciones
+        relaciones = {}
+
+        if id_cliente_str:
+            relaciones['ABRE'] = {'uid': id_cliente_str}
+        
+        if id_agente_str:
+            relaciones['SOLUCIONA'] = {'uid': id_agente_str}
+        
+        if id_empresa_str:
+            relaciones['PERTENECE'] = {'uid': id_empresa_str}
+        
+        if relaciones:
+            relacion_mutation = {'uid': ticket_uid, **relaciones}
+            txn.mutate(set_obj=relacion_mutation, commit_now=True)
+
+        print(f"Ticket insertado con UID: {ticket_uid}")
+        return ticket_uid
+    finally:
+        txn.discard()
