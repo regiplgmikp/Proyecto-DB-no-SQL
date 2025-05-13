@@ -46,7 +46,7 @@ class MongoModel:
     # Para Obtener la cantidad de tickets que ha cerrado cada agente de una empresa en un periodo de tiempo
     db.tickets.create_index([('idEmpresa', 1), ('estado', 1), ('fechaCierre', -1)])
     # Obtener la cantidad de tickets que ha cerrado un agente de una empresa en un periodo de tiempo
-    db.tickets.create_index([('idEmpresa', 1), ('idAgente', 1),('estado', 1), ('fechaCierre', -1)])
+    db.tickets.create_index([('idEmpresa', 1), ('idAgente', 1), ('estado', 1), ('fechaCierre', -1)])
 
     @classmethod
     def insertar_agente(cls, agente):
@@ -82,7 +82,7 @@ class MongoModel:
             idAgente_bin = Binary.from_uuid(idAgente)
             
             cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["estadoEnEmpresa", "telefono"])
-
+            print("Cambios: ", cambios_filtrados)
             # Actualizar en MongoDB
             resultado = collection.update_one({"idAgente": idAgente_bin}, {"$set": cambios_filtrados})
 
@@ -140,6 +140,7 @@ class MongoModel:
             idCliente_bin = Binary.from_uuid(idCliente)
             
             cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["telefono", "correo", "estadoCuenta"])
+            print("Cambios: ", cambios_filtrados)
 
             # Actualizar en MongoDB
             resultado = collection.update_one({"idCliente": idCliente_bin}, {"$set": cambios_filtrados})
@@ -162,7 +163,6 @@ class MongoModel:
             idTicket = UUID(idTicket)
         ticket = cls.buscar_documentos('tickets', {'idTicket': idTicket})
         if ticket:
-            print(ticket)
             return Ticket.crear_desde_dict(ticket[0])
 
     @classmethod
@@ -174,8 +174,8 @@ class MongoModel:
             # Convertir UUID a Binary
             idTicket_bin = Binary.from_uuid(idTicket)
 
-            # cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad"])
-            cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad"])
+            cambios_filtrados = Validaciones.validar_camposActualizacion(cambios, ["fechaCierre", "estadoTicket", "idAgente", "prioridad", "comentarios"])
+            print("Cambios: ", cambios_filtrados)
 
             # Actualizar en MongoDB
             resultado = collection.update_one({"idTicket": idTicket_bin}, {"$set": cambios_filtrados})
@@ -236,3 +236,12 @@ class MongoModel:
         collection = cls.db[collection_name]
 
         return list(collection.aggregate(pipeline))
+    
+    @classmethod
+    def eliminar_db(cls):
+        """Elimina toda la base de datos en MongoDB."""
+        try:
+            cls.db.client.drop_database(cls.db.name)
+            return f"La base de datos '{cls.db.name}' de Mongo ha sido eliminada correctamente."
+        except Exception as e:
+            return f"Error al eliminar la base de datos: {e}"

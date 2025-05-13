@@ -4,13 +4,16 @@ from datetime import datetime
 from models.Utils.regularExpresions import (
     nombre_regex,
     correo_regex,
-    telefono_regex
+    telefono_regex,
+    #para dgraph
+    ubicacion_regex
 )
 from models.Utils.dictionaries import (
     estadoEnEmpresa as estadoEnEmpresaDict,
     estadoCuenta as estadoCuentaDict,
     estado as estadoTicketDict,
-    prioridad as prioridadTicketDict
+    prioridad as prioridadTicketDict,
+    tipoProblema
 )
 
 def solicitar_input(mensaje, validacion_func=None, canBeNone=False):
@@ -164,3 +167,29 @@ class Validaciones:
             raise ValueError("No se proporcionaron campos válidos para actualizar.")
     
         return cambios_filtrados
+
+    @staticmethod
+    def validar_ubicacion(ubicacion):
+        try:
+            if re.match(ubicacion_regex, ubicacion):
+                latitud_str, longitud_str = ubicacion.split(',')
+                latitud = float(latitud_str.strip())
+                longitud = float(longitud_str.strip())
+                return latitud, longitud
+            else:
+                raise ValueError
+        except ValueError:
+            raise ValueError(
+                f"Ubicación inválida: {ubicacion}. Debe seguir el formato 'latitud,longitud' con rangos válidos."
+            ) 
+
+    #Tipo de problema
+    @staticmethod
+    def validar_tipoProblema(tipo: str):
+        try:
+            tipo_int = int(tipo)
+            if tipo_int not in tipoProblema:
+                raise ValueError(f"Tipo debe estar entre {list(tipoProblema.keys())}")
+            return tipo_int
+        except ValueError:
+            raise ValueError("Debe ingresar un número válido")

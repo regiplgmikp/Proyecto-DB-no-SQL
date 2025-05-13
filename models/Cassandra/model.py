@@ -106,7 +106,7 @@ def create_schema(session):
     print("✅ Tablas creadas")
 
     # Insertar los datos del csv empresas
-    with open('../../data/cassandra/empresas.csv', newline='') as csvfile:
+    with open('data/cassandra/empresas.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
@@ -129,7 +129,7 @@ def create_schema(session):
         print("✅ Datos insertados en tabla EMPRESA.")
 
     # Insertar los datos del csv ticket_com
-    with open('../../data/cassandra/tickets_com.csv', newline='') as csvfile:
+    with open('data/cassandra/tickets_com.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
@@ -153,7 +153,7 @@ def create_schema(session):
         print("✅ Datos insertados en tabla TICKET_COM")
 
     # Insertar los datos del csv ticket_age
-    with open('../../data/cassandra/tickets_age.csv', newline='') as csvfile:
+    with open('data/cassandra/tickets_age.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
@@ -182,7 +182,7 @@ def create_schema(session):
         print("✅ Datos insertados en tabla TICKET_AGE")
 
     # Insertar los datos del csv ticket_est
-    with open('../../data/cassandra/tickets_est.csv', newline='') as csvfile:
+    with open('data/cassandra/tickets_est.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
@@ -205,7 +205,7 @@ def create_schema(session):
         print("✅ Datos insertados en tabla TICKET_EST")
 
     # Insertar los datos del csv ticket_prio
-    with open('../../data/cassandra/tickets_prio.csv', newline='') as csvfile:
+    with open('data/cassandra/tickets_prio.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
@@ -228,7 +228,7 @@ def create_schema(session):
         print("✅ Datos insertados en tabla TICKET_PRIO")
 
     # Insertar los datos del csv agente
-    with open('../../data/cassandra/agentes.csv', newline='') as csvfile:
+    with open('data/cassandra/agentes.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:
@@ -251,7 +251,7 @@ def create_schema(session):
         print("✅ Datos insertados en tabla AGENTE")
 
     # Insertar los datos del csv cliente
-    with open('../../data/cassandra/clientes.csv', newline='') as csvfile:
+    with open('data/cassandra/clientes.csv', newline='') as csvfile:
         reader = csv.DictReader(csvfile)
 
         for row in reader:

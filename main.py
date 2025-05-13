@@ -24,16 +24,34 @@ from models.Utils.actualizar_entidades import (
     actualizar_ticket
 )
 
-#Importaciones Dgraph
+# Importaciones Dgraph
 import os
 import pydgraph
 import models.Dgraph.model as dgraph
+
+# Importaciones Cassandra
+import logging
+from cassandra.cluster import Cluster
+import models.Cassandra.model as CassModel
 
 #Cliente Dgraph
 def get_dgraph_client():
     client_stub = pydgraph.DgraphClientStub('localhost:9080')  # Ajusta la URL según tu configuración
     return pydgraph.DgraphClient(client_stub)
 
+def cass_session():
+    log = logging.getLogger()
+    log.setLevel(logging.INFO)
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s"))
+    log.addHandler(handler)
+
+    log.info("Conectando al Cluster...")
+    cluster = Cluster()
+    session = cluster.connect()
+
+    return session
 
 def printMenu(option=0):
     # Menú principal
@@ -149,6 +167,17 @@ def printMenu(option=0):
     
 def main():
     client = get_dgraph_client()
+
+    # Para cargar correctamente los datos de Cassandra
+    session = cass_session()
+
+    CLUSTER_IPS = os.getenv('CASSANDRA_CLUSTER_IPS', '')
+    KEYSPACE = os.getenv('CASSANDRA_KEYSPACE', 'cassandra_final')
+    REPLICATION_FACTOR = os.getenv('CASSANDRA_REPLICATION_FACTOR', '1')
+    
+    CassModel.create_keyspace(session, KEYSPACE, REPLICATION_FACTOR)
+    session.set_keyspace(KEYSPACE)
+
     # Mientras el usuario no quiera salir, se imprime el menu
     while (True):
         printMenu(0)
@@ -172,6 +201,9 @@ def main():
             dgraph.set_schema(client)
             dgraph.create_data(client)
 
+            # Cassandra
+            CassModel.create_schema(session)
+
         # Registro de datos
         elif option == 1:
             printMenu(1)
@@ -182,16 +214,16 @@ def main():
                     continue
                 # Registro de Agente
                 elif option == 1:
-                    crear_agente()
+                    crear_agente(client)
                 # Registro de Cliente
                 elif option == 1:
-                    crear_cliente()
+                    crear_cliente(client)
                 # Registro de Ticket
                 elif option == 1:
-                    crear_ticket()
+                    crear_ticket(client)
                 # Registro de Empresa
                 elif option == 1:
-                    crear_empresa()
+                    crear_empresa(client)
                     
             except ValueError:
                 print("Por favor, ingrese un número válido.")
@@ -420,9 +452,14 @@ def main():
                 
         # Eliminar bases de datos
         elif option == 7:
-            dgraph.drop_all(client)
-            print("Datos eliminados correctamente.")
-            
+            while (option not in ['y', 'Y', 'n', 'N']):
+                option = input("Seguro que quiere eliminar todo? y/n: ")
+                if option in ['y', 'Y']:
+                    print(MongoModel.eliminar_db())
+                    dgraph.drop_all(client)
+                    print("Datos eliminados correctamente.")
+                if option in ['n', 'N']:
+                    print("Volviendo a menú sin eliminar nada\n")
         # Salir
         elif option == 8:
             print("Saliendo...")

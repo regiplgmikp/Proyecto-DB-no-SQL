@@ -1,13 +1,13 @@
 import uuid
 from models.Mongo.MongoModel import MongoModel
 from datetime import datetime
-# import models.Dgraph.model as DgraphModel
+import models.Dgraph.model as DgraphModel
 # import models.Cassandra.model as CassandraModel
 
 import models.Utils.dictionaries as dictionaries
 from models.Utils.validaciones import (Validaciones, solicitar_input)
 
-def crear_agente():
+def crear_agente(client):
     mongo_agente = {}
     cassandra_agente = {}
     dgraph_agente = {}
@@ -34,9 +34,11 @@ def crear_agente():
     mongo_agente['idEmpresa'] = idEmpresa
     mongo_agente['fechaIngreso'] = fechaIngreso
 
+    #Dgraph 
+    dgraph_agente['idAgente'] = idAgente
+    dgraph_agente['nombre'] = nombre
+    dgraph_agente['idEmpresa'] = idEmpresa
     # Asignen sus valores a sus diccionarios ----------------------------------------------------------------------------
-    # Dgraph
-
     # Cassandra
 
 
@@ -45,26 +47,25 @@ def crear_agente():
         # Insertar en MongoDB
         agente = MongoModel.insertar_agente(mongo_agente)
         print(f"Agente: \n{agente}\nInsertado con éxito")
-
-    
-    # Insertar en Dgraph
-    # DgraphModel.insertar_atente(dgraph_agente)
+        DgraphModel.insertar_agente(client, dgraph_agente)
+        print(f"Agente: \n{idAgente}\nInsertado con éxito en Dgraph")
     # Insertar en Cassandra
     # CassandraModel.insertar_atente(cassandra_agente)
 
     except Exception as e:
         print(f"Error en la inserción de agente: {e}")
 # Repetir funciones para inserciones de demás entidades
-def crear_empresa():
+def crear_empresa(client):
 
     mongo_empresa = {}
+    dgraph_empresa = {}
 
     # Obtener los datos de la empresa
     idEmpresa = uuid.uuid4()
-    nombre = solicitar_input("Ingrese el nombre del empresa: ", Validaciones.validar_nombre)
+    nombre = solicitar_input("Ingrese el nombre del empresa: ")
     correo = solicitar_input("Ingrese el correo del empresa: ", Validaciones.validar_formato_correo)
     telefono = solicitar_input("Ingrese el teléfono del empresa: ", Validaciones.validar_telefono)
-    direccion = solicitar_input("Inserte la dirección de la empresa: ")
+    direccion = solicitar_input("Inserte la dirección de la empresa: ", Validaciones.validar_ubicacion)
 
     # Asignar valores a cada diccionario
     # Mongo
@@ -74,16 +75,23 @@ def crear_empresa():
     mongo_empresa['telefono'] = telefono
     mongo_empresa['direccion'] = direccion
 
+        # Dgraph
+    dgraph_empresa['idEmpresa'] = idEmpresa
+    dgraph_empresa['nombreEmpresa'] = nombre
+    dgraph_empresa['direccion'] = direccion
+
     try: 
         # Insertar empresa a bases de datos
         empresa = MongoModel.insertar_empresa(mongo_empresa)
         print(f"Empresa: \n{empresa}\nIngresada con éxito")
-
+        DgraphModel.insertar_empresa(client, dgraph_empresa)
+        print(f"Empresa: \n{nombre}\nIngresada con éxito en Dgraph")
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
-def crear_cliente():
+def crear_cliente(client):
     mongo_cliente = {}
+    dgraph_cliente ={}
 
     estadosCuenta = dictionaries.estadoCuenta
 
@@ -104,18 +112,26 @@ def crear_cliente():
     mongo_cliente['estadoCuenta'] = estadoCuenta
     mongo_cliente['idEmpresa'] = idEmpresa
 
+    # Dgraph
+    dgraph_cliente['idCliente'] = idCliente
+    dgraph_cliente['nombre'] = nombre
+    dgraph_cliente['idEmpresa'] = idEmpresa
+
     try: 
         # Insertar empresa a bases de datos
         cliente = MongoModel.insertar_cliente(mongo_cliente)
         print(f"Cliente: \n{cliente}\nIngresada con éxito")
-
+        DgraphModel.insertar_cliente(client, dgraph_cliente)
+        print(f"Cliente: \n{idCliente}\nIngresada con éxito")
     except Exception as e:
         print(f"Error en la inserción de cliente: {e}")
 
-def crear_ticket():
+def crear_ticket(client):
     mongo_ticket = {}
+    dgraph_ticket = {}
 
     prioridadesTicket = dictionaries.prioridad
+    tiposProblema = dictionaries.tipoProblema
 
     # Obtener los datos del Cliente
     idTicket = uuid.uuid4()
@@ -131,6 +147,9 @@ def crear_ticket():
     estadoTicket = 2 if idAgente else 1
     prioridad = solicitar_input(f"Inserte la prioridad del ticket \n\tPrioridades posibles: {prioridadesTicket}): ", Validaciones.validar_prioridadTicket)
 
+    # Dgraph
+    tipo_problema = solicitar_input(f"Tipo de problema \n\tOpciones: {tiposProblema}): ", Validaciones.validar_tipoProblema)
+    descripcion = solicitar_input(f"Ingrese la descripción")
 
     # Asignar valores a cada diccionario
     # Mongo
@@ -143,10 +162,20 @@ def crear_ticket():
     mongo_ticket['estado'] = estadoTicket
     mongo_ticket['prioridad'] = prioridad
 
+    #Dgrapg
+    dgraph_ticket['idTicket'] = idTicket
+    dgraph_ticket['idCliente'] = idCliente
+    dgraph_ticket['idAgente'] = idAgente
+    dgraph_ticket['idEmpresa'] = idEmpresa
+    dgraph_ticket['tipo_problema'] = tipo_problema
+    dgraph_ticket['descripcion'] = descripcion
+
     try: 
         # Insertar empresa a bases de datos
         ticket = MongoModel.insertar_ticket(mongo_ticket)
         print(f"Ticket: \n{ticket}\nIngresado con éxito")
+        DgraphModel.insertar_ticket(client, dgraph_ticket)
+        # TODO Checar cliente
 
     except Exception as e:
         print(f"Error en la inserción de ticket: {e}")
