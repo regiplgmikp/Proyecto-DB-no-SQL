@@ -217,13 +217,13 @@ def main():
                 elif option == 1:
                     crear_agente(client)
                 # Registro de Cliente
-                elif option == 1:
+                elif option == 2:
                     crear_cliente(client)
                 # Registro de Ticket
-                elif option == 1:
+                elif option == 3:
                     crear_ticket(client)
                 # Registro de Empresa
-                elif option == 1:
+                elif option == 4:
                     crear_empresa(client)
                     
             except ValueError:
