@@ -7,10 +7,10 @@ import models.Dgraph.model as DgraphModel
 import models.Utils.dictionaries as dictionaries
 from models.Utils.validaciones import (Validaciones, solicitar_input)
 
-def crear_agente():
+def crear_agente(client):
     mongo_agente = {}
     cassandra_agente = {}
-    dgraph_agente = {j}
+    dgraph_agente = {}
 
     estadosEnEmpresa = dictionaries.estadoEnEmpresa
 
@@ -34,6 +34,10 @@ def crear_agente():
     mongo_agente['idEmpresa'] = idEmpresa
     mongo_agente['fechaIngreso'] = fechaIngreso
 
+    #Dgraph 
+    dgraph_agente['idAgente'] = idAgente
+    dgraph_agente['nombre'] = nombre
+    dgraph_agente['idEmpresa'] = idEmpresa
     # Asignen sus valores a sus diccionarios ----------------------------------------------------------------------------
     # Cassandra
 
@@ -43,6 +47,8 @@ def crear_agente():
         # Insertar en MongoDB
         agente = MongoModel.insertar_agente(mongo_agente)
         print(f"Agente: \n{agente}\nInsertado con éxito")
+        DgraphModel.insertar_agente(client, dgraph_agente)
+        print(f"Agente: \n{idAgente}\nInsertado con éxito en Dgraph")
     # Insertar en Cassandra
     # CassandraModel.insertar_atente(cassandra_agente)
 
@@ -79,6 +85,7 @@ def crear_empresa(client):
         empresa = MongoModel.insertar_empresa(mongo_empresa)
         print(f"Empresa: \n{empresa}\nIngresada con éxito")
         DgraphModel.insertar_empresa(client, dgraph_empresa)
+        print(f"Empresa: \n{nombre}\nIngresada con éxito en Dgraph")
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 

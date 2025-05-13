@@ -454,7 +454,7 @@ def insertar_empresa(client, empresa_data):
         mutation = {
             'uid': f"_:{empresa_data['idEmpresa']}",
             'idEmpresa': empresa_data['idEmpresa'],
-            'nombreEmpresa': empresa_data['nombreEmpresa'],
+            'nombre': empresa_data['nombreEmpresa'],
             'ubicacion': empresa_data.get('ubicacion', {})
         }
         
@@ -462,5 +462,32 @@ def insertar_empresa(client, empresa_data):
         empresa_uid = response.uids.get(empresa_data['idEmpresa'])
         print(f"Empresa insertada en Dgraph con UID: {empresa_uid}")
         return empresa_uid
+    finally:
+        txn.discard()
+
+# 14. Insertar Agente
+def insertar_agente(client, agente_data):
+    """Inserta un nuevo agente en Dgraph"""
+    txn = client.txn()
+    try:
+        mutation = {
+            'uid': f"_:{agente_data['idAgente']}",
+            'idAgente': agente_data['idAgente'],
+            'nombreAgente': agente_data['nombre']
+        }
+        
+        response = txn.mutate(set_obj=mutation, commit_now=True)
+        agente_uid = response.uids.get(agente_data['idAgente'])
+        
+        # crear la relación
+        if 'idEmpresa' in agente_data and agente_data['idEmpresa']:
+            relacion = {
+                'uid': agente_uid,
+                'TRABAJA': {'uid': agente_data['idEmpresa']}
+            }
+            txn.mutate(set_obj=relacion, commit_now=True)
+        
+        print(f"Agente insertado con UID: {agente_uid}")
+        return agente_uid
     finally:
         txn.discard()
