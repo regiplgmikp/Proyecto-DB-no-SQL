@@ -1,5 +1,4 @@
 from pydantic import BaseModel, Field, field_validator, model_validator
-from typing import Optional
 from uuid import UUID, uuid4
 from datetime import datetime
 from models.Utils.validaciones import Validaciones
@@ -13,11 +12,11 @@ class TicketValidationError(Exception):
 class Ticket(BaseModel):
     idTicket: UUID = Field(default_factory=uuid4)
     idCliente: UUID
-    idAgente: Optional[UUID] = None
+    idAgente: UUID | None
     idEmpresa: UUID
     fechaCreacion: datetime
-    fechaCierre: Optional[datetime] = None
-    comentarios: list[str] = []
+    fechaCierre: datetime | None
+    comentarios: list[str] | None = []
     estado: int
     prioridad: int
 
