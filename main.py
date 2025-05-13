@@ -181,16 +181,16 @@ def main():
                     continue
                 # Registro de Agente
                 elif option == 1:
-                    crear_agente()
+                    crear_agente(client)
                 # Registro de Cliente
                 elif option == 1:
-                    crear_cliente()
+                    crear_cliente(client)
                 # Registro de Ticket
                 elif option == 1:
-                    crear_ticket()
+                    crear_ticket(client)
                 # Registro de Empresa
                 elif option == 1:
-                    crear_empresa()
+                    crear_empresa(client)
                     
             except ValueError:
                 print("Por favor, ingrese un número válido.")

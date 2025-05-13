@@ -89,7 +89,7 @@ def crear_empresa(client):
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
-def crear_cliente():
+def crear_cliente(client):
     mongo_cliente = {}
     dgraph_cliente ={}
 
@@ -112,11 +112,17 @@ def crear_cliente():
     mongo_cliente['estadoCuenta'] = estadoCuenta
     mongo_cliente['idEmpresa'] = idEmpresa
 
+    # Dgraph
+    dgraph_cliente['idCliente'] = idCliente
+    dgraph_cliente['nombre'] = nombre
+    dgraph_cliente['idEmpresa'] = idEmpresa
+
     try: 
         # Insertar empresa a bases de datos
         cliente = MongoModel.insertar_cliente(mongo_cliente)
         print(f"Cliente: \n{cliente}\nIngresada con éxito")
-
+        DgraphModel.insertar_cliente(client, dgraph_cliente)
+        print(f"Cliente: \n{idCliente}\nIngresada con éxito")
     except Exception as e:
         print(f"Error en la inserción de cliente: {e}")
 
