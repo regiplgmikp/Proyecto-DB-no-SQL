@@ -24,16 +24,34 @@ from models.Utils.actualizar_entidades import (
     actualizar_ticket
 )
 
-#Importaciones Dgraph
+# Importaciones Dgraph
 import os
 import pydgraph
 import models.Dgraph.model as dgraph
+
+# Importaciones Cassandra
+import logging
+from cassandra.cluster import Cluster
+import models.Cassandra.model as CassModel
 
 #Cliente Dgraph
 def get_dgraph_client():
     client_stub = pydgraph.DgraphClientStub('localhost:9080')  # Ajusta la URL según tu configuración
     return pydgraph.DgraphClient(client_stub)
 
+def cass_session():
+    log = logging.getLogger()
+    log.setLevel(logging.INFO)
+
+    handler = logging.StreamHandler()
+    handler.setFormatter(logging.Formatter("%(asctime)s [%(levelname)s] %(name)s: %(message)s"))
+    log.addHandler(handler)
+
+    log.info("Conectando al Cluster...")
+    cluster = Cluster()
+    session = cluster.connect()
+
+    return session
 
 def printMenu(option=0):
     # Menú principal
@@ -149,6 +167,17 @@ def printMenu(option=0):
     
 def main():
     client = get_dgraph_client()
+
+    # Para cargar correctamente los datos de Cassandra
+    session = cass_session()
+
+    CLUSTER_IPS = os.getenv('CASSANDRA_CLUSTER_IPS', '')
+    KEYSPACE = os.getenv('CASSANDRA_KEYSPACE', 'cassandra_final')
+    REPLICATION_FACTOR = os.getenv('CASSANDRA_REPLICATION_FACTOR', '1')
+    
+    CassModel.create_keyspace(session, KEYSPACE, REPLICATION_FACTOR)
+    session.set_keyspace(KEYSPACE)
+
     # Mientras el usuario no quiera salir, se imprime el menu
     while (True):
         printMenu(0)
@@ -170,6 +199,9 @@ def main():
             # Dgraph (esquema y poblado de datos)
             dgraph.set_schema(client)
             dgraph.create_data(client)
+
+            # Cassandra
+            CassModel.create_schema(session)
 
         # Registro de datos
         elif option == 1:
