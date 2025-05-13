@@ -171,6 +171,7 @@ class Validaciones:
     @staticmethod
     def validar_ubicacion(latitud, longitud):
         try:
+            #TODO Checar ubicacion
             if re.match(ubicacion_regex, ubicacion):
                 latitud, longitud = ubicacion.split(',')
                 latitud = float(latitud.strip())

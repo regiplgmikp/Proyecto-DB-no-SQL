@@ -438,7 +438,7 @@ def drop_all(client):
 # ==================================== INSERTACIONES ===========================================
 
 # 13. Insertar agente
-
+# TODO Revisar identación de todos los métodos insertar
 def insertar_agente(client, dgraph_agente):
    mutation = {
         'uid': f"_:{dgraph_agente['idAgente']}",
@@ -454,6 +454,7 @@ def insertar_agente(client, dgraph_agente):
     txn = client.txn()
     try:
         response = txn.mutate(set_obj=mutation, commit_now=True)
+        # TODO Revisar dgraph_empresa
         print(f"✅ Empresa {dgraph_empresa['idEmpresa']} insertada")
         return response
     finally:

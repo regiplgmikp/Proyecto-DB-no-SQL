@@ -120,6 +120,7 @@ def crear_cliente():
         # Insertar empresa a bases de datos
         cliente = MongoModel.insertar_cliente(mongo_cliente)
         print(f"Cliente: \n{cliente}\nIngresada con éxito")
+        #TODO Chechar de donde sale cliente
         DgraphModel.insertar_cliente(client, dgraph_cliente)
 
     except Exception as e:
@@ -167,12 +168,14 @@ def crear_ticket():
     dgraph_ticket['idAgente'] = idAgente
     dgraph_ticket['idEmpresa'] = idEmpresa
     dgraph_ticket['tipo_problema'] = tipo_problema
+    # TODO Checar descripcion
     dgraph_ticket['descripcion'] = descripcion
 
     try: 
         # Insertar empresa a bases de datos
         ticket = MongoModel.insertar_ticket(mongo_ticket)
         print(f"Ticket: \n{ticket}\nIngresado con éxito")
+        # TODO Checar cliente
         DgraphModel.insertar_ticket(client, dgraph_ticket)
 
     except Exception as e:
