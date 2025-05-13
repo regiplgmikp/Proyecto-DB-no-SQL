@@ -1,7 +1,7 @@
 import uuid
 from models.Mongo.MongoModel import MongoModel
 from datetime import datetime
-import models.Dgraph.model as DgraphModel
+#import models.Dgraph.model as DgraphModel
 # import models.Cassandra.model as CassandraModel
 
 import models.Utils.dictionaries as dictionaries
@@ -35,10 +35,6 @@ def crear_agente():
     mongo_agente['fechaIngreso'] = fechaIngreso
 
     # Asignen sus valores a sus diccionarios ----------------------------------------------------------------------------
-    # Dgraph
-    dgraph_agente['idAgente'] = idAgente
-    dgraph_agente['nombre'] = nombre
-    dgraph_agente['idEmpresa'] = idEmpresa
     # Cassandra
 
 
@@ -47,8 +43,6 @@ def crear_agente():
         # Insertar en MongoDB
         agente = MongoModel.insertar_agente(mongo_agente)
         print(f"Agente: \n{agente}\nInsertado con éxito")
-        # Insertar en Dgraph
-        DgraphModel.insertar_atente(dgraph_agente)
     # Insertar en Cassandra
     # CassandraModel.insertar_atente(cassandra_agente)
 
@@ -84,7 +78,6 @@ def crear_empresa():
         # Insertar empresa a bases de datos
         empresa = MongoModel.insertar_empresa(mongo_empresa)
         print(f"Empresa: \n{empresa}\nIngresada con éxito")
-        DgraphModel.insertar_empresa
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
@@ -111,17 +104,10 @@ def crear_cliente():
     mongo_cliente['estadoCuenta'] = estadoCuenta
     mongo_cliente['idEmpresa'] = idEmpresa
 
-    # Dgraph
-    dgraph_cliente['idCliente'] = idCliente
-    dgraph_cliente['nombre'] = nombre
-    dgraph_cliente['idEmpresa'] = idEmpresa
-
     try: 
         # Insertar empresa a bases de datos
         cliente = MongoModel.insertar_cliente(mongo_cliente)
         print(f"Cliente: \n{cliente}\nIngresada con éxito")
-        #TODO Chechar de donde sale cliente
-        DgraphModel.insertar_cliente(client, dgraph_cliente)
 
     except Exception as e:
         print(f"Error en la inserción de cliente: {e}")
@@ -162,21 +148,12 @@ def crear_ticket():
     mongo_ticket['estado'] = estadoTicket
     mongo_ticket['prioridad'] = prioridad
 
-    # Dgraph
-    dgraph_ticket['idTicket'] = idTicket
-    dgraph_ticket['idCliente'] = idCliente
-    dgraph_ticket['idAgente'] = idAgente
-    dgraph_ticket['idEmpresa'] = idEmpresa
-    dgraph_ticket['tipo_problema'] = tipo_problema
-    # TODO Checar descripcion
-    dgraph_ticket['descripcion'] = descripcion
 
     try: 
         # Insertar empresa a bases de datos
         ticket = MongoModel.insertar_ticket(mongo_ticket)
         print(f"Ticket: \n{ticket}\nIngresado con éxito")
         # TODO Checar cliente
-        DgraphModel.insertar_ticket(client, dgraph_ticket)
 
     except Exception as e:
         print(f"Error en la inserción de ticket: {e}")
