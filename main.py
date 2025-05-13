@@ -419,9 +419,14 @@ def main():
                 
         # Eliminar bases de datos
         elif option == 7:
-            dgraph.drop_all(client)
-            print("Datos eliminados correctamente.")
-            
+            while (option not in ['y', 'Y', 'n', 'N']):
+                option = input("Seguro que quiere eliminar todo? y/n: ")
+                if option in ['y', 'Y']:
+                    print(MongoModel.eliminar_db())
+                    dgraph.drop_all(client)
+                    print("Datos eliminados correctamente.")
+                if option in ['n', 'N']:
+                    print("Volviendo a menú sin eliminar nada\n")
         # Salir
         elif option == 8:
             print("Saliendo...")
