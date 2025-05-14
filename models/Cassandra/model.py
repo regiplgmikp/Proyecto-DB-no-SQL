@@ -464,18 +464,73 @@ def actualizar_cliente(session, new_clie):
         return None
 
 # Actualizacion de ticket (fecha de cierre, estado, agente asignado, prioridad)
-# def actualizar_ticket(session, new_ticket):
-    # try:
-    #     # Parametros a actualizar
+def actualizar_ticket(session, new_ticket):
+    try:
+        # Parametros a actualizar (todos opcionales)
+        id_ticket = new_ticket.get('idTicket')
+        fecha = new_ticket.get('fecha')
+        estado_ticket = new_ticket.get('estado')
+        id_agente = new_ticket.get('idAgente')
+        prioridad = new_ticket.get('prioridad')
+        comentario = new_ticket.get('comentario')
 
-    #     # ticket_age => con agente
-    #     # ticket_est => estado
-    #     # ticket_prio => prioridad
+        # Convertir la fecha de datetime a UUID
+        fecha_uuid = uuid_from_time(fecha)
+        
+        # ticket_com => con agente Y comentario
+        if(id_agente and comentario):
+            session.execute(
+                """
+                INSERT INTO ticket_com (idTicket, fecha, idAgente, comentario)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (id_ticket, fecha_uuid, id_agente, comentario)
+            )
 
-    # except Exception as error:
-    #     print(f"Error al actualizar ticket: {error}")
-    #     return None
+            print(f"Ticket {id_ticket} actualizado en la tabla ticket_com")
 
+        # ticket_age => con agente
+        if(id_agente):
+            session.execute(
+                """
+                INSERT INTO ticket_age (idTicket, fecha, idAgente)
+                VALUES (%s, %s, %s)
+                """,
+                (id_ticket, fecha_uuid, id_agente)
+            )
+
+            print(f"Ticket {id_ticket} actualizado en la tabla ticket_age")
+
+        # ticket_est => estado
+        if(estado_ticket):
+            session.execute(
+                """
+                INSERT INTO ticket_est (idTicket, fecha, estado)
+                VALUES (%s, %s, %s)
+                """,
+                (id_ticket, fecha_uuid, estado_ticket)
+            )
+
+            print(f"Ticket {id_ticket} actualizado en la tabla ticket_est")
+
+        # ticket_prio => prioridad
+        if(prioridad):
+            session.execute(
+                """
+                INSERT INTO ticket_prio (idTicket, fecha, prioridad)
+                VALUES (%s, %s, %s)
+                """,
+                (id_ticket, fecha_uuid, prioridad)
+            )
+                    
+            print(f"Ticket {id_ticket} actualizado en la tabla ticket_prio")
+
+        # Confirmacion final
+        return f"Ticket {id_ticket} actualizado"
+
+    except Exception as error:
+        print(f"Error al actualizar ticket: {error}")
+        return None
 
 def delete_schema(session):
     session.execute("DROP KEYSPACE IF EXISTS cassandra_final")

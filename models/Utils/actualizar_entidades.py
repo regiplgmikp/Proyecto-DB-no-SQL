@@ -9,6 +9,7 @@ from models.Mongo.Ticket import Ticket as MongoTicket
 
 # Importaciones de cassandra
 import models.Cassandra.model as CassModel
+from datetime import datetime
 
 def actualizar_agente(session):
     cambios_agente_dict = {}
@@ -81,13 +82,16 @@ def actualizar_cliente(session):
         print(f"Error en la actualización de cliente: {e}")
 
 def actualizar_ticket(session):
-    cambios_ticket_dict = {}
+    cambios_ticket_mongo = {}
+    cambios_ticket_cass = {}
 
     estadosTicket = dictionaries.estado
     prioridadesTicket = dictionaries.prioridad
 
     # Obtener el cliente
     mongo_ticket: MongoTicket = solicitar_input("Ingrese el ID del ticket a modificar: ", Validaciones.validar_idTicketExistente)
+    cambios_ticket_cass['idTicket'] = mongo_ticket.idTicket
+
     fechaCierre = solicitar_input("Inserte la fecha en la que cierra el ticket (enter para no establecer/no editar): ", Validaciones.validar_fecha, True)
     estadoTicket = solicitar_input(f"Ingrese el número del nuevo estado del ticket (dejar en blanco para no editarlo) \n\tEstados posibles: {estadosTicket}): ", Validaciones.validar_estadoTicket, True) 
     idAgente = solicitar_input("Inserte el id del nuevo agente que se le asignará el ticket (dejar en blanco para no editar): ", Validaciones.validar_idAgenteExistente, True)
@@ -97,26 +101,32 @@ def actualizar_ticket(session):
     comentario = input(f"Ingrese el nuevo comentario para el ticket (dejar en blanco para no agregar): ")
 
     # Agregar valores modificados a diccionario de cambios si fueron modificados
-    # Agreguen los datos que necesiten obtener de sus entidades -----------------------------------------------------------
     if fechaCierre:
-        cambios_ticket_dict['fechaCierre'] = fechaCierre
+        cambios_ticket_mongo['fechaCierre'] = fechaCierre
+        cambios_ticket_cass['fecha'] = fechaCierre
+    else:
+        cambios_ticket_cass['fecha'] = datetime.today()
     if estadoTicket:
-        cambios_ticket_dict['estadoTicket'] = estadoTicket
+        cambios_ticket_mongo['estadoTicket'] = estadoTicket
+        cambios_ticket_cass['estado'] = estadoTicket
     if idAgente:
-        cambios_ticket_dict['idAgente'] = Binary.from_uuid(idAgente)
+        cambios_ticket_mongo['idAgente'] = Binary.from_uuid(idAgente)
+        cambios_ticket_cass['idAgente'] = idAgente
     if prioridad:
-        cambios_ticket_dict['prioridad'] = prioridad
+        cambios_ticket_mongo['prioridad'] = prioridad
+        cambios_ticket_cass['prioridad'] = prioridad
     if comentario:
-        cambios_ticket_dict['comentarios'] = mongo_ticket.comentarios + [comentario]
-
+        cambios_ticket_mongo['comentarios'] = mongo_ticket.comentarios + [comentario]
+        cambios_ticket_cass['comentario'] = comentario
 
     # Actualizar diccionario
     try:
         # Actualizar en MongoDB
-        nuevo_mongo_ticket = MongoModel.actualizar_ticket(mongo_ticket.idTicket, cambios_ticket_dict)
-        return f"Ticket: \n{mongo_ticket}\n\nActualizado con éxito a:\n{nuevo_mongo_ticket}"
+        nuevo_mongo_ticket = MongoModel.actualizar_ticket(mongo_ticket.idTicket, cambios_ticket_mongo)
 
         # Insertar en Cassandra
+        nuevo_cass_ticket = CassModel.actualizar_ticket(session, cambios_ticket_cass)
+        return f"Ticket: \n{mongo_ticket}\n\nActualizado con éxito en Mongo a:\n{nuevo_mongo_ticket} \n\n {nuevo_cass_ticket} en Cassandra"
 
     except Exception as e:
         print(f"Error en la actualización de ticket: {e}")
