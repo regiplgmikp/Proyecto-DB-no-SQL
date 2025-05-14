@@ -53,7 +53,7 @@ def set_schema(client):
 
     idEmpresa: string @index(exact) @upsert .
     nombreEmpresa: string @index(term) .
-    ubicacion: geo @index(geo).
+    ubicacion: geo.
 
     idAgente: string @index(exact) @upsert .
     nombreAgente: string @index(term) .
@@ -443,27 +443,28 @@ def insertar_empresa(client, empresa_data):
     """Inserta una nueva empresa en Dgraph"""
     txn = client.txn()
     try:
-        #coordenadas en formato correcto
-        if 'ubicacion' in empresa_data:
+        # Convertir ubicación si es una tupla
+        if 'ubicacion' in empresa_data and isinstance(empresa_data['ubicacion'], tuple):
             empresa_data['ubicacion'] = {
                 'type': 'Point',
-                'coordinates' : empresa_data['ubicacion']['coordinates']
+                'coordinates': [empresa_data['ubicacion'][0], empresa_data['ubicacion'][1]]
             }
-
-        # mutación 
-        mutation ={
-            'uid' : f"_:{empresa_data['idEmpresa']}",
-            'idEmpresa' : empresa_data['idEmpresa'],
-            'nombreEmpresa' : empresa_data['nombreEmpresa'],
-            'ubicacion' : empresa_data.get('ubicacion',{})
+        
+        # Resto del código de inserción...
+        mutation = {
+            'uid': f"_:{empresa_data['idEmpresa']}",
+            'idEmpresa': str(empresa_data['idEmpresa']),
+            'nombreEmpresa': empresa_data['nombreEmpresa'],
+            'ubicacion': empresa_data.get('ubicacion')
         }
-
-        response = txn.mutate(set_obj = mutation, commit_now=True)
+        
+        response = txn.mutate(set_obj=mutation, commit_now=True)
         empresa_uid = response.uids.get(empresa_data['idEmpresa'])
         print(f"Empresa insertada con UID: {empresa_uid}")
         return empresa_uid
     finally:
         txn.discard()
+
 
 # 14. Insertar Agente
 
