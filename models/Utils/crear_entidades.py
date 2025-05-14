@@ -66,7 +66,7 @@ def crear_empresa(client):
     correo = solicitar_input("Ingrese el correo del empresa: ", Validaciones.validar_formato_correo)
     telefono = solicitar_input("Ingrese el teléfono del empresa: ", Validaciones.validar_telefono)
     direccion = solicitar_input("Inserte la dirección de la empresa: ")
-    ubicacion = solicitar_input("Inserte la ubicacion de la empresa (longitud, latitud) :",Validaciones.validar_ubicacion)
+    ubicacion = solicitar_input("Inserte la ubicacion de la empresa (longitud, latitud): ",Validaciones.validar_ubicacion)
 
     # Asignar valores a cada diccionario
     # Mongo
