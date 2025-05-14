@@ -86,7 +86,7 @@ def crear_empresa(client):
         empresa = MongoModel.insertar_empresa(mongo_empresa)
         print(f"Empresa: \n{empresa}\nIngresada con éxito")
         DgraphModel.insertar_empresa(client, dgraph_empresa)
-        print(f"Empresa: \n{nombre}\nIngresada con éxito en Dgraph")
+        print(f"Empresa: {nombre}\n Ingresada con éxito en Dgraph")
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
