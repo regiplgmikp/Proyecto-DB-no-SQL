@@ -172,15 +172,15 @@ class Validaciones:
     def validar_ubicacion(ubicacion):
         try:
             if re.match(ubicacion_regex, ubicacion):
-                latitud_str, longitud_str = ubicacion.split(',')
-                latitud = float(latitud_str.strip())
+                longitud_str, latitud_str = ubicacion.split(',')
                 longitud = float(longitud_str.strip())
-                return latitud, longitud
+                latitud = float(latitud_str.strip())
+                return longitud,latitud 
             else:
                 raise ValueError
         except ValueError:
             raise ValueError(
-                f"Ubicación inválida: {ubicacion}. Debe seguir el formato 'latitud,longitud' con rangos válidos."
+                f"Ubicación inválida: {ubicacion}. Debe seguir el formato 'longitud, latitud' con rangos válidos."
             ) 
 
     #Tipo de problema
