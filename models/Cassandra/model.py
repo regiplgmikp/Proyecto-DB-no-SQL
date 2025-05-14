@@ -411,6 +411,71 @@ def insertar_ticket(session, new_ticket):
     except Exception as error:
         print(f"Error al insertar ticket: {error}")
 
+# Actualizacion de agente (solo estado en empresa)
+def actualizar_agente(session, new_age):
+    try:
+        # Parametros a actualizar
+        id_agente = new_age['idAgente']
+        estado = int(new_age['estadoEnEmpresa'])
+
+        # La fecha es automaticamente la del dia de la actualizacion/registro
+        fecha = datetime.today()
+        # Convertir la fecha de datetime a UUID
+        fecha_uuid = uuid_from_time(fecha)
+        
+        session.execute(
+            """
+            INSERT INTO agente (idAgente, fecha, estadoEnEmpresa)
+            VALUES (%s, %s, %s)
+            """,
+            (id_agente, fecha_uuid, estado)
+        )
+
+        return f"Agente {id_agente} actualizado"
+
+    except Exception as error:
+        print(f"Error al actualizar agente: {error}")
+        return None
+
+# Actualizacion de cliente (solo estado de cuenta)
+def actualizar_cliente(session, new_clie):
+    try:
+        # Parametro a actualizar
+        id_cliente = new_clie['idCliente']
+        estado = new_clie['estado']
+
+        # La fecha es automaticamente la del dia de la actualizacion/registro
+        fecha = datetime.today()
+        # Convertir la fecha de datetime a UUID
+        fecha_uuid = uuid_from_time(fecha)
+        
+        session.execute(
+            """
+            INSERT INTO cliente (idCliente, fecha, estadoCuenta)
+            VALUES (%s, %s, %s)
+            """,
+            (id_cliente, fecha_uuid, estado)
+        )
+
+        return f"Cliente {id_cliente} actualizado"
+
+    except Exception as error:
+        print(f"Error al actualizar cliente: {error}")
+        return None
+
+# Actualizacion de ticket (fecha de cierre, estado, agente asignado, prioridad)
+# def actualizar_ticket(session, new_ticket):
+    # try:
+    #     # Parametros a actualizar
+
+    #     # ticket_age => con agente
+    #     # ticket_est => estado
+    #     # ticket_prio => prioridad
+
+    # except Exception as error:
+    #     print(f"Error al actualizar ticket: {error}")
+    #     return None
+
 
 def delete_schema(session):
     session.execute("DROP KEYSPACE IF EXISTS cassandra_final")

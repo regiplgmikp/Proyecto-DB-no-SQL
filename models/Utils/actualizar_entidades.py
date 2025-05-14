@@ -7,7 +7,10 @@ from models.Mongo.Agente import Agente as MongoAgente
 from models.Mongo.Cliente import Cliente as MongoCliente
 from models.Mongo.Ticket import Ticket as MongoTicket
 
-def actualizar_agente():
+# Importaciones de cassandra
+import models.Cassandra.model as CassModel
+
+def actualizar_agente(session):
     cambios_agente_dict = {}
 
     estadosEnEmpresa = dictionaries.estadoEnEmpresa
@@ -18,9 +21,10 @@ def actualizar_agente():
         if not mongo_agente:
             raise ValueError(f"Error: Debe introducir un id de agente")
 
+        cambios_agente_dict['idAgente'] = mongo_agente.idAgente
+
         telefono = solicitar_input("Ingrese el nuevo teléfono del agente (dejar en blanco para no editarlo): ", Validaciones.validar_telefono, True)
         estadoEnEmpresa = solicitar_input(f"Ingrese el número del nuevo estado en la empresa del agente (dejar en blanco para no editarlo) \n\tEstados posibles: {estadosEnEmpresa}): ", Validaciones.validar_estadoEnEmpresa, True) 
-        # Agreguen los datos que necesiten obtener de sus entidades -----------------------------------------------------------
 
         # Asignar valores a diccionario
         if telefono:
@@ -28,52 +32,55 @@ def actualizar_agente():
         if estadoEnEmpresa:
             cambios_agente_dict['estadoEnEmpresa'] = estadoEnEmpresa
 
-
-    # actualizar agentes 
-        # actualizar en MongoDB
+        # Actualizar agentes 
+        # Actualizar en MongoDB
         nuevo_mongo_agente = MongoModel.actualizar_agente(mongo_agente.idAgente, cambios_agente_dict)
-        return f"Agente: \n{mongo_agente}\n\nActualizado con éxito a:\n{nuevo_mongo_agente}"
-
+        
         # Insertar en Cassandra
-    
+        nuevo_cass_agente = CassModel.actualizar_agente(session, cambios_agente_dict)
 
+        return f"Agente: \n{mongo_agente}\n\nActualizado con éxito en Mongo a:\n{nuevo_mongo_agente} \n\n{nuevo_cass_agente} en Cassandra"
+    
     except Exception as e:
         print(f"Error en la actualización de agente: {e}")
 
-def actualizar_cliente():
-    cambios_cliente_dict = {}
+def actualizar_cliente(session):
+    cambios_cliente_mongo = {}
+    cambios_cliente_cass = {}
 
     estadosCuenta = dictionaries.estadoCuenta
 
     # Obtener el cliente
     mongo_cliente: MongoCliente = solicitar_input("Ingrese el ID del cliente a modificar: ", Validaciones.validar_idClienteExistente)
 
+    cambios_cliente_cass['idCliente'] = mongo_cliente.idCliente
+
     telefono = solicitar_input("Ingrese el nuevo teléfono del cliente (dejar en blanco para no editarlo): ", Validaciones.validar_telefono, True)
     correo = solicitar_input("Ingrese el nuevo correo del cliente (dejar en blanco para no editarlo): ", Validaciones.validar_formato_correo, True)
     estadoCuenta = solicitar_input(f"Ingrese el número del nuevo estado de cuenta del cliente (dejar en blanco para no editarlo) \n\tEstados posibles: {estadosCuenta}): ", Validaciones.validar_estadoCuenta, True) 
-    # Agreguen los datos que necesiten obtener de sus entidades -----------------------------------------------------------
 
     # Asignar valores diccionario
     if telefono:
-        cambios_cliente_dict['telefono'] = telefono
+        cambios_cliente_mongo['telefono'] = telefono
     if correo:
-        cambios_cliente_dict['correo'] = correo
+        cambios_cliente_mongo['correo'] = correo
     if estadoCuenta:
-        cambios_cliente_dict['estadoCuenta'] = estadoCuenta
-
+        cambios_cliente_mongo['estadoCuenta'] = estadoCuenta
+        cambios_cliente_cass['estado'] = estadoCuenta
 
     # Actualizar cliente 
     try:
         # Actualizar en MongoDB
-        nuevo_mongo_cliente = MongoModel.actualizar_cliente(mongo_cliente.idCliente, cambios_cliente_dict)
-        return f"Cliente: \n{mongo_cliente}\n\nActualizado con éxito a:\n{nuevo_mongo_cliente}"
+        nuevo_mongo_cliente = MongoModel.actualizar_cliente(mongo_cliente.idCliente, cambios_cliente_mongo)
 
         # Insertar en Cassandra
+        nuevo_cass_cliente = CassModel.actualizar_cliente(session, cambios_cliente_cass)
+        return f"Cliente: \n{mongo_cliente}\n\nActualizado con éxito en Mongo a:\n{nuevo_mongo_cliente} \n\n{nuevo_cass_cliente} en Cassandra"
 
     except Exception as e:
         print(f"Error en la actualización de cliente: {e}")
 
-def actualizar_ticket():
+def actualizar_ticket(session):
     cambios_ticket_dict = {}
 
     estadosTicket = dictionaries.estado
@@ -113,4 +120,3 @@ def actualizar_ticket():
 
     except Exception as e:
         print(f"Error en la actualización de ticket: {e}")
-

@@ -240,13 +240,13 @@ def main():
                     continue
                 # Actualización de agente
                 elif option == 1:
-                    print(actualizar_agente())
+                    print(actualizar_agente(session))
                 # Actualización de cliente
                 elif option == 2:
-                    print(actualizar_cliente())
+                    print(actualizar_cliente(session))
                 # Actualización de Ticket
                 elif option == 3:
-                    print(actualizar_ticket())
+                    print(actualizar_ticket(session))
 
             except ValueError:
                 print("Por favor, ingrese un número válido.")
