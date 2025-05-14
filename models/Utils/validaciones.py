@@ -175,7 +175,7 @@ class Validaciones:
                 longitud_str, latitud_str = ubicacion.split(',')
                 longitud = float(longitud_str.strip())
                 latitud = float(latitud_str.strip())
-                return longitud, latitud
+                return [longitud, latitud]
             else:
                 raise ValueError
         except ValueError:

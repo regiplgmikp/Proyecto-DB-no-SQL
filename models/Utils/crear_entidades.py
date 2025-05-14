@@ -7,7 +7,7 @@ import models.Cassandra.model as CassandraModel
 import models.Utils.dictionaries as dictionaries
 from models.Utils.validaciones import (Validaciones, solicitar_input)
 
-def crear_agente(client):
+def crear_agente(client, session):
     mongo_agente = {}
     cassandra_agente = {}
     dgraph_agente = {}
@@ -34,8 +34,8 @@ def crear_agente(client):
     mongo_agente['fechaIngreso'] = fechaIngreso
 
     #Dgraph 
-    dgraph_agente['idAgente'] = idAgente
-    dgraph_agente['nombre'] = nombre
+    dgraph_agente['idAgente'] = str(idAgente)
+    dgraph_agente['nombreAgente'] = nombre
     dgraph_agente['idEmpresa'] = idEmpresa
 
     # Cassandra
@@ -50,17 +50,17 @@ def crear_agente(client):
         print(f"Agente: \n{agente}\nInsertado con éxito en Mongo")
 
         # Insertar en Dgraph
-        # DgraphModel.insertar_agente(client, dgraph_agente)
-        # print(f"Agente: \n{idAgente}\nInsertado con éxito en Dgraph")
+        DgraphModel.insertar_agente(client, dgraph_agente)
+        print(f"Agente: \n{idAgente}\nInsertado con éxito en Dgraph")
 
         # Insertar en Cassandra
-        CassandraModel.insertar_agente(client, cassandra_agente)
+        CassandraModel.insertar_agente(session, cassandra_agente)
         print(f"Agente \n{idAgente}\nInsertado con éxito en Cassandra")
 
     except Exception as e:
         print(f"Error en la inserción de agente: {e}")
 
-def crear_empresa(client):
+def crear_empresa(client, session):
     mongo_empresa = {}
     dgraph_empresa = {}
     cassandra_empresa = {}
@@ -82,9 +82,9 @@ def crear_empresa(client):
     mongo_empresa['direccion'] = direccion
 
     # Dgraph
-    dgraph_empresa['idEmpresa'] = idEmpresa
+    dgraph_empresa['idEmpresa'] = str(idEmpresa)
     dgraph_empresa['nombreEmpresa'] = nombre
-    dgraph_empresa['direccion'] = direccion
+    dgraph_empresa['ubicacion'] = ubicacion
 
     # Cassandra
     cassandra_empresa['idEmpresa'] = idEmpresa
@@ -99,13 +99,13 @@ def crear_empresa(client):
         DgraphModel.insertar_empresa(client, dgraph_empresa)
         print(f"Empresa: \n{nombre}\nIngresada con éxito en Dgraph")
 
-        CassandraModel.insertar_empresa(client, cassandra_empresa)
+        CassandraModel.insertar_empresa(session, cassandra_empresa)
         print(f"Empresa: \n{nombre}\nIngresada con éxito en Cassandra")
 
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
-def crear_cliente(client):
+def crear_cliente(client, session):
     mongo_cliente = {}
     dgraph_cliente ={}
     cassandra_cliente = {}
@@ -131,8 +131,8 @@ def crear_cliente(client):
     mongo_cliente['idEmpresa'] = idEmpresa
 
     # Dgraph
-    dgraph_cliente['idCliente'] = idCliente
-    dgraph_cliente['nombre'] = nombre
+    dgraph_cliente['idCliente'] = str(idCliente)
+    dgraph_cliente['nombreCliente'] = nombre
     dgraph_cliente['idEmpresa'] = idEmpresa
 
     # Cassandra
@@ -148,13 +148,13 @@ def crear_cliente(client):
         DgraphModel.insertar_cliente(client, dgraph_cliente)
         print(f"Cliente: \n{idCliente}\nIngresada con éxito en Dgraph")
 
-        CassandraModel.insertar_cliente(client, cassandra_cliente)
+        CassandraModel.insertar_cliente(session, cassandra_cliente)
         print(f"Cliente: \n{idCliente}\nIngresada con éxito en Cassandra")
 
     except Exception as e:
         print(f"Error en la inserción de cliente: {e}")
 
-def crear_ticket(client):
+def crear_ticket(client, session):
     mongo_ticket = {}
     dgraph_ticket = {}
     cassandra_ticket = {}
@@ -213,9 +213,8 @@ def crear_ticket(client):
         print(f"Ticket: \n{ticket}\nIngresado con éxito a Mongo")
 
         DgraphModel.insertar_ticket(client, dgraph_ticket)
-        # TODO Checar cliente
 
-        CassandraModel.insertar_ticket(client, cassandra_ticket)
+        CassandraModel.insertar_ticket(session, cassandra_ticket)
         print(f"Ticket {idTicket} ingresado con éxito a Cassandra")
 
     except Exception as e:

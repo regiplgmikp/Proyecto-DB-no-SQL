@@ -453,8 +453,8 @@ def insertar_empresa(client, empresa_data):
         mutation = {
             'uid': f"_:{empresa_data['idEmpresa']}",
             'idEmpresa': str(empresa_data['idEmpresa']),
-            'nombre': empresa_data['nombreEmpresa'],
-            'ubicacion': empresa_data.get('ubicacion', {})
+            'nombreEmpresa': empresa_data['nombreEmpresa'],
+            'ubicacion': empresa_data['ubicacion'] 
         }
 
         print("Mutación enviada a Dgraph:")
@@ -499,7 +499,7 @@ def insertar_agente(client, agente_data):
         mutation = {
             'uid': f"_:{uid_temp}",
             'idAgente': str(agente_data['idAgente']),
-            'nombre': agente_data['nombre']
+            'nombreAgente': agente_data['nombreAgente']
         }
 
         response = txn1.mutate(set_obj=mutation, commit_now=True)
@@ -550,7 +550,7 @@ def insertar_cliente(client, cliente_data):
         mutation = {
             'uid': f"_:{uid_temp}",
             'idCliente': str(cliente_data['idCliente']),
-            'nombreCliente': cliente_data['nombre']
+            'nombreCliente': cliente_data['nombreCliente']
         }
 
         response = txn1.mutate(set_obj=mutation, commit_now=True)
