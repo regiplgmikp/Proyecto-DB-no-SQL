@@ -7,7 +7,7 @@ import models.Cassandra.model as CassandraModel
 import models.Utils.dictionaries as dictionaries
 from models.Utils.validaciones import (Validaciones, solicitar_input)
 
-def crear_agente(client):
+def crear_agente(client, session):
     mongo_agente = {}
     cassandra_agente = {}
     dgraph_agente = {}
@@ -54,7 +54,7 @@ def crear_agente(client):
         print(f"Agente: \n{idAgente}\nInsertado con éxito en Dgraph")
 
         # Insertar en Cassandra
-        CassandraModel.insertar_agente(client, cassandra_agente)
+        CassandraModel.insertar_agente(session, cassandra_agente)
         print(f"Agente \n{idAgente}\nInsertado con éxito en Cassandra")
 
     except Exception as e:
@@ -99,13 +99,13 @@ def crear_empresa(client, session):
         DgraphModel.insertar_empresa(client, dgraph_empresa)
         print(f"Empresa: \n{nombre}\nIngresada con éxito en Dgraph")
 
-        CassandraModel.insertar_empresa(client, cassandra_empresa)
+        CassandraModel.insertar_empresa(session, cassandra_empresa)
         print(f"Empresa: \n{nombre}\nIngresada con éxito en Cassandra")
 
     except Exception as e:
         print(f"Error en la inserción de empresa: {e}")
 
-def crear_cliente(client):
+def crear_cliente(client, session):
     mongo_cliente = {}
     dgraph_cliente ={}
     cassandra_cliente = {}
@@ -148,13 +148,13 @@ def crear_cliente(client):
         DgraphModel.insertar_cliente(client, dgraph_cliente)
         print(f"Cliente: \n{idCliente}\nIngresada con éxito en Dgraph")
 
-        CassandraModel.insertar_cliente(client, cassandra_cliente)
+        CassandraModel.insertar_cliente(session, cassandra_cliente)
         print(f"Cliente: \n{idCliente}\nIngresada con éxito en Cassandra")
 
     except Exception as e:
         print(f"Error en la inserción de cliente: {e}")
 
-def crear_ticket(client):
+def crear_ticket(client, session):
     mongo_ticket = {}
     dgraph_ticket = {}
     cassandra_ticket = {}
@@ -214,7 +214,7 @@ def crear_ticket(client):
 
         DgraphModel.insertar_ticket(client, dgraph_ticket)
 
-        CassandraModel.insertar_ticket(client, cassandra_ticket)
+        CassandraModel.insertar_ticket(session, cassandra_ticket)
         print(f"Ticket {idTicket} ingresado con éxito a Cassandra")
 
     except Exception as e:

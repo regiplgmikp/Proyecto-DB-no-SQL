@@ -215,13 +215,13 @@ def main():
                     continue
                 # Registro de Agente
                 elif option == 1:
-                    crear_agente(client)
+                    crear_agente(client, session)
                 # Registro de Cliente
                 elif option == 2:
-                    crear_cliente(client)
+                    crear_cliente(client, session)
                 # Registro de Ticket
                 elif option == 3:
-                    crear_ticket(client)
+                    crear_ticket(client, session)
                 # Registro de Empresa
                 elif option == 4:
                     crear_empresa(client, session)
