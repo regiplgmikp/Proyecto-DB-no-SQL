@@ -279,7 +279,7 @@ def insertar_agente(session, new_age):
         # Parametros del nuevo agente
         id_agente = new_age['idAgente']
         fecha = new_age['fecha']
-        estado = int(new_age['estadoenEmpresa'])
+        estado = int(new_age['estadoEnEmpresa'])
 
         # Convertir la fecha de datetime a UUID
         fecha_uuid = uuid_from_time(fecha)
@@ -347,6 +347,70 @@ def insertar_cliente(session, new_cli):
 
     except Exception as error:
         print(f"Error al insertar cliente: {error}")
+
+# Creacion de un nuevo ticket (con la informacion dividida en las diferentes tablas)
+def insertar_ticket(session, new_ticket):
+    try:
+        # Parametros del nuevo ticket
+        id_ticket = new_ticket['idTicket']
+        fecha = new_ticket['fecha']
+        id_agente = new_ticket['idAgente'] # Opcional
+        comentario = new_ticket['comentario'] # Opcional
+        estado = new_ticket['estado']
+        prioridad = new_ticket['prioridad']
+
+        # Convertir fecha de datetime a UUID
+        fecha_uuid = uuid_from_time(fecha)
+
+        # Agregar atributos a tabla ticket_com (solo si exite id_agente y comentario)
+        if(id_agente and comentario):
+            session.execute(
+                """
+                INSERT INTO ticket_com (idTicket, fecha, idAgente, comentario)
+                VALUES (%s, %s, %s, %s)
+                """,
+                (id_ticket, fecha_uuid, id_agente, comentario)
+            )
+
+            print(f"Ticket {id_ticket} agregado a tabla ticket_com")
+
+        # Agregar atributos a tabla ticket_age (solo si existe id_agente)
+        if(id_agente):
+            session.execute(
+                """
+                INSERT INTO ticket_age (idTicket, fecha, idAgente)
+                VALUES (%s, %s, %s)
+                """,
+                (id_ticket, fecha_uuid, id_agente)
+            )
+
+            print(f"Ticket {id_ticket} agregado a tabla ticket_age")
+
+        # Agregar atributos a tabla ticket_est
+        session.execute(
+            """
+            INSERT INTO ticket_est (idTicket, fecha, estado)
+            VALUES (%s, %s, %s)
+            """,
+            (id_ticket, fecha_uuid, estado)
+        )
+
+        print(f"Ticket {id_ticket} agregado a tabla ticket_est")
+
+        # Agregar atributos a tabla ticket_prio
+        session.execute(
+            """
+            INSERT INTO ticket_prio (idTicket, fecha, prioridad)
+            VALUES (%s, %s, %s)
+            """,
+            (id_ticket, fecha_uuid, prioridad)
+        )
+                    
+        print(f"Ticket {id_ticket} agregado a tabla ticket_prio")
+
+    except Exception as error:
+        print(f"Error al insertar ticket: {error}")
+
 
 def delete_schema(session):
     session.execute("DROP KEYSPACE IF EXISTS cassandra_final")
