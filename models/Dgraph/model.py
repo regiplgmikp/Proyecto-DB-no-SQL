@@ -568,6 +568,7 @@ def insertar_cliente(client, cliente_data):
 
 
 # 16. Insertar Ticket
+# 16. Insertar Ticket
 def insertar_ticket(client, ticket_data):
     """Inserta un nuevo ticket en Dgraph"""
 
@@ -631,4 +632,3 @@ def insertar_ticket(client, ticket_data):
 
     print(f"Ticket insertado con UID: {ticket_uid}")
     return ticket_uid
-
