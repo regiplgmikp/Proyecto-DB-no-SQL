@@ -166,11 +166,11 @@ def printMenu(option=0):
         for key in mm_option6.keys():
             print(key, '--', mm_option6[key])
     
-def main():
-    client = get_dgraph_client()
+client = get_dgraph_client()
 
-    # Para cargar correctamente los datos de Cassandra
-    session = cass_session()
+# Para cargar correctamente los datos de Cassandra
+session = cass_session()
+def main():
 
     CLUSTER_IPS = os.getenv('CASSANDRA_CLUSTER_IPS', '')
     KEYSPACE = os.getenv('CASSANDRA_KEYSPACE', 'cassandra_final')
@@ -224,7 +224,7 @@ def main():
                     crear_ticket(client)
                 # Registro de Empresa
                 elif option == 4:
-                    crear_empresa(client)
+                    crear_empresa(client, session)
                     
             except ValueError:
                 print("Por favor, ingrese un número válido.")
