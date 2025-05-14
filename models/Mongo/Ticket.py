@@ -12,10 +12,10 @@ class TicketValidationError(Exception):
 class Ticket(BaseModel):
     idTicket: UUID = Field(default_factory=uuid4)
     idCliente: UUID
-    idAgente: UUID | None
+    idAgente: UUID | None = None
     idEmpresa: UUID
     fechaCreacion: datetime
-    fechaCierre: datetime | None
+    fechaCierre: datetime | None = None
     comentarios: list[str] | None = []
     estado: int
     prioridad: int
