@@ -65,7 +65,8 @@ def crear_empresa(client):
     nombre = solicitar_input("Ingrese el nombre del empresa: ")
     correo = solicitar_input("Ingrese el correo del empresa: ", Validaciones.validar_formato_correo)
     telefono = solicitar_input("Ingrese el teléfono del empresa: ", Validaciones.validar_telefono)
-    direccion = solicitar_input("Inserte la dirección de la empresa: ", Validaciones.validar_ubicacion)
+    direccion = solicitar_input("Inserte la dirección de la empresa: ")
+    ubicacion = solicitar_input("Inserte la ubicacion de la empresa (longitud, latitud) :",Validaciones.validar_ubicacion)
 
     # Asignar valores a cada diccionario
     # Mongo
@@ -78,7 +79,7 @@ def crear_empresa(client):
         # Dgraph
     dgraph_empresa['idEmpresa'] = idEmpresa
     dgraph_empresa['nombreEmpresa'] = nombre
-    dgraph_empresa['direccion'] = direccion
+    dgraph_empresa['ubicacion'] = ubicacion
 
     try: 
         # Insertar empresa a bases de datos
