@@ -443,25 +443,31 @@ def insertar_empresa(client, empresa_data):
     """Inserta una nueva empresa en Dgraph"""
     txn = client.txn()
     try:
-        # coordenadas estén en el formato correcto
         if 'ubicacion' in empresa_data:
+            longitud, latitud = empresa_data['ubicacion']
             empresa_data['ubicacion'] = {
                 'type': 'Point',
-                'coordinates': empresa_data['ubicacion']['coordinates']
+                'coordinates': [longitud, latitud]
             }
-        
-        # Crear la mutación
+
         mutation = {
             'uid': f"_:{empresa_data['idEmpresa']}",
             'idEmpresa': str(empresa_data['idEmpresa']),
             'nombre': empresa_data['nombreEmpresa'],
             'ubicacion': empresa_data.get('ubicacion', {})
         }
-        
+
+        print("Mutación enviada a Dgraph:")
+        print(json.dumps(mutation, indent=2))
+
         response = txn.mutate(set_obj=mutation, commit_now=True)
         empresa_uid = response.uids.get(empresa_data['idEmpresa'])
+
         print(f"Empresa insertada con UID: {empresa_uid}")
         return empresa_uid
+
+    except Exception as e:
+        print(f"Error en la inserción de empresa: {e}")
     finally:
         txn.discard()
 
