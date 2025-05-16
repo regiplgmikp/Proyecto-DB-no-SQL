@@ -2,6 +2,7 @@
 import models.Mongo.populate as populate
 from models.Mongo.MongoModel import MongoModel
 from models.Utils.validaciones import Validaciones
+from models.Utils.validaciones import solicitar_input
 from models.Mongo.consultas import (
     obtenerEntidades,
     clientesConTicketsAbiertosPorFecha,
@@ -133,7 +134,8 @@ def printMenu(option=0):
         22:	"Historial de cambios en la prioridad de un ticket", # Cassandra
         23:	"Historial de asignación de agentes a un ticket", # Cassandra
         24:	"Historial de estados del ticket", # Cassandra
-        25:	"Historial de tickets creados en empresa" # Cassandra
+        25:	"Historial de tickets creados en empresa", # Cassandra
+        26: "Historial de tickets creados en empresa después de x fecha" # Cassandra
     }
 
     # Consultas de empresas
@@ -431,6 +433,11 @@ def main():
                 elif option == 25:
                     id_empresa = input("Ingrese ID de la empresa: ")
                     CassHistorial.historial_empresa(session, id_empresa)
+                # "Historial de tickets creados en empresa en x fecha" # Cassandra
+                elif option == 26:
+                    id_empresa = input("Ingrese ID de la empresa: ")
+                    fecha = solicitar_input("Ingrese la fecha desde la que desea buscar: ", Validaciones.validar_fecha)
+                    CassHistorial.historial_empresa_fecha(session, id_empresa, fecha)
             
             except ValueError:
                 print("Por favor, ingrese un número válido.")

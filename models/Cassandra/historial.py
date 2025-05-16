@@ -1,5 +1,6 @@
 # HISTORIALES DE CASSANDRA
 import uuid
+import datetime
 
 # Diccionarios a utilizar
 from models.Utils.dictionaries import estadoCuenta as estadoCuentaDict
@@ -169,5 +170,32 @@ def historial_empresa(session, id_empresa_str):
     rows = session.execute(SELECT_TICKETS_EMPRESA, (id_empresa,))
     # Resultados del query
     print(f"📝 Historial de tickets en empresa {id_empresa_str}:")
+    for row in rows:
+        print(f"- {row.fecha} | {row.idticket}")
+
+# Historial de tickets creados en empresas en x fecha
+def historial_empresa_fecha(session, id_empresa_str, fecha):
+    # Convertimos id_empresa_str a uuid
+    try:
+        id_empresa = uuid.UUID(id_empresa_str)
+
+    except ValueError:
+        print("No hay ninguna empresa con ese ID")
+        return
+    
+    # Convertir fecha a un datetime
+    if(isinstance(fecha, str)):
+        fecha = datetime.fromisoformat(fecha)
+
+    # Query para el historial de tickets en empresa 
+    SELECT_TICKETS_EMPRESA_POR_FECHA = """
+        SELECT idEmpresa, toDate(fecha) as fecha, idTicket
+        FROM empresa
+        WHERE idEmpresa = %s AND fecha >= minTimeuuid(%s)
+    """
+
+    rows = session.execute(SELECT_TICKETS_EMPRESA_POR_FECHA, (id_empresa, fecha))
+    # Resultados del query
+    print(f"📝 Historial de tickets en empresa {id_empresa_str} desde el {fecha}:")
     for row in rows:
         print(f"- {row.fecha} | {row.idticket}")
